@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Sorter Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        header {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 25px;
+            gap: 25px;
+        }
+        
+        .input-section, .output-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #38bdf8;
+            font-size: 1.3rem;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+        }
+        
+        .controls {
+            background: rgba(30, 41, 59, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .option-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .sort-btn {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+        }
+        
+        .sort-btn:hover {
+            background: linear-gradient(135deg, #0284c7, #0ea5e9);
+            transform: translateY(-2px);
+        }
+        
+        .clear-btn {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+        }
+        
+        .clear-btn:hover {
+            background: rgba(220, 38, 38, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #38bdf8;
+        }
+        
+        .example {
+            background: rgba(30, 41, 59, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .example h3 {
+            color: #38bdf8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .example pre {
+            background: rgba(15, 23, 42, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #94a3b8;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-sort-alpha-down"></i> Text Sorter Tool</h1>
+            <p class="subtitle">Sort lines of text alphabetically or numerically. Paste your text, choose sorting options, and get organized results instantly.</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-section">
+                <h2 class="section-title"><i class="fas fa-keyboard"></i> Input Text</h2>
+                <textarea id="input-text" placeholder="Enter your text here, one item per line...">Apple
+banana
+100
+42
+Zebra
+cherry
+15
+300
+orange
+25</textarea>
+                
+                <div class="controls">
+                    <div class="options">
+                        <div class="option-group">
+                            <label class="option-label"><i class="fas fa-sort"></i> Sorting Method</label>
+                            <select id="sort-method">
+                                <option value="alphabetical">Alphabetical (A-Z)</option>
+                                <option value="reverse-alphabetical">Reverse Alphabetical (Z-A)</option>
+                                <option value="numerical">Numerical (Low to High)</option>
+                                <option value="reverse-numerical">Reverse Numerical (High to Low)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label class="option-label"><i class="fas fa-font"></i> Case Sensitivity</label>
+                            <select id="case-sensitive">
+                                <option value="insensitive">Case Insensitive</option>
+                                <option value="sensitive">Case Sensitive</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button id="sort-btn" class="sort-btn">
+                            <i class="fas fa-sort-amount-down"></i> Sort Text
+                        </button>
+                        <button id="clear-btn" class="clear-btn">
+                            <i class="fas fa-trash-alt"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="example">
+                    <h3><i class="fas fa-lightbulb"></i> Example Format</h3>
+                    <pre>Apple
+banana
+Cherry
+100
+25
+300</pre>
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <h2 class="section-title"><i class="fas fa-list-ol"></i> Sorted Output</h2>
+                <textarea id="output-text" readonly placeholder="Your sorted text will appear here..."></textarea>
+                
+                <div class="example">
+                    <h3><i class="fas fa-info-circle"></i> How It Works</h3>
+                    <p style="color: #94a3b8; line-height: 1.6; margin-top: 10px;">
+                        <strong>Alphabetical Sort:</strong> Sorts text lines from A to Z<br>
+                        <strong>Numerical Sort:</strong> Sorts numbers from low to high<br>
+                        <strong>Case Sensitive:</strong> Differentiates between uppercase and lowercase<br>
+                        <strong>Mixed Content:</strong> Non-numeric items appear first in numerical sorts
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Text Sorter Tool &copy; 2023 | Sort lines alphabetically or numerically with ease</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputText = document.getElementById('input-text');
+            const outputText = document.getElementById('output-text');
+            const sortBtn = document.getElementById('sort-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const sortMethod = document.getElementById('sort-method');
+            const caseSensitive = document.getElementById('case-sensitive');
+            
+            // Initialize with sorted text
+            sortText();
+            
+            // Sort button event
+            sortBtn.addEventListener('click', sortText);
+            
+            // Clear button event
+            clearBtn.addEventListener('click', function() {
+                inputText.value = '';
+                outputText.value = '';
+                inputText.focus();
+            });
+            
+            // Sort text function
+            function sortText() {
+                const text = inputText.value;
+                if (!text.trim()) {
+                    outputText.value = '';
+                    return;
+                }
+                
+                const lines = text.split('\n');
+                const method = sortMethod.value;
+                const caseSensitivity = caseSensitive.value;
+                
+                // Remove empty lines
+                const nonEmptyLines = lines.filter(line => line.trim() !== '');
+                
+                let sortedLines;
+                
+                if (method.includes('alphabetical')) {
+                    // Alphabetical sorting
+                    if (caseSensitivity === 'insensitive') {
+                        sortedLines = nonEmptyLines.sort((a, b) => {
+                            return method === 'alphabetical' ? 
+                                a.localeCompare(b, undefined, {sensitivity: 'base'}) : 
+                                b.localeCompare(a, undefined, {sensitivity: 'base'});
+                        });
+                    } else {
+                        sortedLines = nonEmptyLines.sort((a, b) => {
+                            return method === 'alphabetical' ? 
+                                a.localeCompare(b) : 
+                                b.localeCompare(a);
+                        });
+                    }
+                } else {
+                    // Numerical sorting
+                    const numericLines = [];
+                    const nonNumericLines = [];
+                    
+                    // Separate numeric and non-numeric lines
+                    nonEmptyLines.forEach(line => {
+                        const trimmedLine = line.trim();
+                        if (trimmedLine === '') return;
+                        
+                        // Check if the line is numeric
+                        const num = parseFloat(trimmedLine);
+                        if (!isNaN(num) && isFinite(num)) {
+                            numericLines.push({str: line, num: num});
+                        } else {
+                            nonNumericLines.push(line);
+                        }
+                    });
+                    
+                    // Sort non-numeric lines alphabetically (case insensitive)
+                    nonNumericLines.sort((a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}));
+                    
+                    // Sort numeric lines
+                    if (method === 'numerical') {
+                        numericLines.sort((a, b) => a.num - b.num);
+                    } else {
+                        numericLines.sort((a, b) => b.num - a.num);
+                    }
+                    
+                    // Combine the arrays
+                    sortedLines = [
+                        ...nonNumericLines,
+                        ...numericLines.map(item => item.str)
+                    ];
+                }
+                
+                outputText.value = sortedLines.join('\n');
+            }
+            
+            // Auto-sort when options change
+            sortMethod.addEventListener('change', sortText);
+            caseSensitive.addEventListener('change', sortText);
+        });
+    </script>
+</body>
+</html>

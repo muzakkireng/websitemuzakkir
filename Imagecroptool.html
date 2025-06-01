@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Crop Tool - Multi Tool Hub</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css" />
+  <style>
+    body {
+      background: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background-color: rgba(18, 18, 18, 0.9);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    .drop-zone {
+      border: 2px dashed #555;
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      color: #aaa;
+      margin-top: 1rem;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .drop-zone.dragover {
+      border-color: #00e676;
+      background-color: rgba(30, 30, 30, 0.6);
+    }
+
+    .crop-area, .preview-area {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    #image {
+      max-width: 100%;
+      display: none;
+    }
+
+    .controls {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    select, button {
+      padding: 0.5rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #333;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    select:focus, button:focus {
+      outline: none;
+    }
+
+    .preview {
+      margin-top: 1rem;
+    }
+
+    canvas {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Image Crop Tool</h1>
+
+    <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+    <div class="drop-zone" id="dropZone">Drag & Drop Image Here or Click to Upload</div>
+
+    <div class="controls">
+      <label for="aspectRatio">Aspect Ratio:</label>
+      <select id="aspectRatio">
+        <option value="NaN">Freeform</option>
+        <option value="4/3">4:3</option>
+        <option value="16/9">16:9</option>
+        <option value="16/10">16:10</option>
+        <option value="3/2">3:2</option>
+        <option value="1">1:1</option>
+      </select>
+      <button id="cropBtn">Crop</button>
+    </div>
+
+    <div class="crop-area">
+      <img id="image" />
+    </div>
+
+    <div class="preview-area">
+      <h2>Preview</h2>
+      <div class="preview">
+        <canvas id="previewCanvas"></canvas>
+      </div>
+      <button id="downloadBtn" style="display: none;">Download</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
+  <script>
+    let cropper;
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const image = document.getElementById('image');
+    const aspectRatioSelect = document.getElementById('aspectRatio');
+    const cropBtn = document.getElementById('cropBtn');
+    const previewCanvas = document.getElementById('previewCanvas');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif', 'image/tiff', 'image/webp'];
+
+    function handleFile(file) {
+      if (!file || !validTypes.includes(file.type)) {
+        alert('Unsupported file type.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          canvas.toBlob(blob => {
+            const url = URL.createObjectURL(blob);
+            image.src = url;
+            image.style.display = 'block';
+
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(image, {
+              aspectRatio: NaN,
+              viewMode: 1,
+              background: false,
+              autoCropArea: 1
+            });
+          }, 'image/jpeg', 0.8);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      handleFile(file);
+    });
+    fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+    aspectRatioSelect.addEventListener('change', () => {
+      if (cropper) {
+        const aspectRatio = eval(aspectRatioSelect.value);
+        cropper.setAspectRatio(aspectRatio);
+      }
+    });
+
+    cropBtn.addEventListener('click', () => {
+      if (!cropper) return;
+      const canvas = cropper.getCroppedCanvas();
+      previewCanvas.width = canvas.width;
+      previewCanvas.height = canvas.height;
+      previewCanvas.getContext('2d').drawImage(canvas, 0, 0);
+      downloadBtn.style.display = 'inline-block';
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'cropped-image.png';
+      link.href = previewCanvas.toDataURL('image/png');
+      link.click();
+    });
+  </script>
+</body>
+</html>

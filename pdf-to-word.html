@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Converter - PDF to Word & Word to PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('your-background-image.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .drop-zone {
+            border: 2px dashed #007bff;
+            padding: 50px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone:hover {
+            background-color: #f0f8ff;
+            border-color: #0056b3;
+        }
+
+        .conversion-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .cloud-storage {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .cloud-storage button {
+            margin: 0 10px;
+            background-color: #28a745;
+        }
+
+        #file-list {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>File Converter</h1>
+        
+        <div class="conversion-options">
+            <button onclick="setConversionType('pdfToWord')">PDF to Word</button>
+            <button onclick="setConversionType('wordToPdf')">Word to PDF</button>
+        </div>
+
+        <div class="drop-zone" id="dropZone"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event)">
+            Drag and drop files here or click to select
+            <input type="file" id="fileInput" hidden accept=".pdf,.doc,.docx" />
+        </div>
+
+        <div class="cloud-storage">
+            <button onclick="handleCloudStorage('google')">Google Drive</button>
+            <button onclick="handleCloudStorage('onedrive')">OneDrive</button>
+        </div>
+
+        <div id="file-list"></div>
+    </div>
+
+    <script>
+        let conversionType = 'pdfToWord';
+
+        function setConversionType(type) {
+            conversionType = type;
+            document.getElementById('fileInput').accept = type === 'pdfToWord' 
+                ? '.pdf' 
+                : '.doc,.docx';
+        }
+
+        // Drag and drop handlers
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.target.style.backgroundColor = '#e3f2fd';
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.target.style.backgroundColor = '';
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        // File input handler
+        document.getElementById('dropZone').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // File handling
+        function handleFiles(files) {
+            const fileList = document.getElementById('file-list');
+            fileList.innerHTML = '';
+            
+            for (const file of files) {
+                if (validateFile(file)) {
+                    // Add file processing logic here
+                    fileList.innerHTML += `<p>${file.name} - Ready for conversion</p>`;
+                } else {
+                    alert('Invalid file type selected');
+                }
+            }
+        }
+
+        function validateFile(file) {
+            const validTypes = conversionType === 'pdfToWord' 
+                ? ['application/pdf']
+                : ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            
+            return validTypes.includes(file.type);
+        }
+
+        // Cloud storage integration
+        async function handleCloudStorage(provider) {
+            try {
+                // Add cloud storage API integration here
+                if (provider === 'google') {
+                    // Implement Google Drive Picker API
+                    alert('Google Drive integration coming soon');
+                } else if (provider === 'onedrive') {
+                    // Implement OneDrive Picker API
+                    alert('OneDrive integration coming soon');
+                }
+            } catch (error) {
+                console.error('Cloud storage error:', error);
+            }
+        }
+    </script>
+
+    <!-- Add Cloud Storage SDKs -->
+    <!-- Google Drive Picker API -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    
+    <!-- OneDrive SDK -->
+    <script src="https://js.live.net/v7.2/OneDrive.js"></script>
+</body>
+</html>

@@ -1,0 +1,474 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Cleaner - Remove Duplicate Lines</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #27ae60;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --gray: #95a5a6;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .controls {
+            padding: 25px;
+            background: var(--light);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .option-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .option label {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--gray);
+            color: var(--dark);
+        }
+        
+        .btn-outline:hover {
+            background: var(--light);
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 400px;
+        }
+        
+        .panel {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .counter {
+            background: var(--light);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        textarea {
+            width: 100%;
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+        
+        textarea:focus {
+            border-color: var(--primary);
+        }
+        
+        .input-area textarea {
+            background: #f8f9fa;
+        }
+        
+        .output-area textarea {
+            background: #f0f7ff;
+        }
+        
+        .divider {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            color: var(--gray);
+        }
+        
+        .divider i {
+            font-size: 1.5rem;
+        }
+        
+        .stats {
+            padding: 20px;
+            background: var(--light);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px var(--shadow);
+            min-width: 150px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .success {
+            color: var(--success);
+        }
+        
+        .instructions {
+            padding: 25px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+        
+        .instructions h2 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .instructions ul {
+            padding-left: 25px;
+            color: var(--dark);
+            line-height: 1.8;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .divider {
+                padding: 10px;
+            }
+            
+            .divider i {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Text Cleaner</h1>
+            <p class="subtitle">Remove duplicate lines from your text while preserving order</p>
+        </header>
+        
+        <div class="controls">
+            <div class="option-group">
+                <div class="option">
+                    <input type="checkbox" id="caseSensitive" checked>
+                    <label for="caseSensitive">Case Sensitive</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="trimWhitespace">
+                    <label for="trimWhitespace">Trim Whitespace</label>
+                </div>
+            </div>
+            <button id="processBtn" class="btn btn-primary">
+                <i>→</i> Remove Duplicates
+            </button>
+        </div>
+        
+        <div class="content">
+            <div class="panel input-area">
+                <div class="panel-header">
+                    <span>Input Text</span>
+                    <span class="counter">Lines: <span id="inputLineCount">0</span></span>
+                </div>
+                <textarea id="inputText" placeholder="Paste your text with duplicate lines here..."></textarea>
+            </div>
+            
+            <div class="divider">
+                <i>⇄</i>
+            </div>
+            
+            <div class="panel output-area">
+                <div class="panel-header">
+                    <span>Cleaned Output</span>
+                    <span class="counter">Lines: <span id="outputLineCount">0</span></span>
+                </div>
+                <textarea id="outputText" placeholder="Your cleaned text will appear here..." readonly></textarea>
+            </div>
+        </div>
+        
+        <div class="controls" style="justify-content: center;">
+            <button id="copyBtn" class="btn btn-success">
+                <i>⎘</i> Copy to Clipboard
+            </button>
+            <button id="clearBtn" class="btn btn-outline">
+                <i>×</i> Clear All
+            </button>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Original Lines</div>
+                <div id="originalLines" class="stat-value">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Duplicate Lines</div>
+                <div id="duplicateLines" class="stat-value">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Unique Lines</div>
+                <div id="uniqueLines" class="stat-value success">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Reduction</div>
+                <div id="reduction" class="stat-value">0%</div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>How to Use This Tool</h2>
+            <ul>
+                <li><strong>Paste your text</strong> in the left text area (lists, data, logs, etc.)</li>
+                <li>Use the options to control case sensitivity and whitespace trimming</li>
+                <li>Click "Remove Duplicates" to process your text</li>
+                <li>Copy the cleaned results with the "Copy to Clipboard" button</li>
+                <li>Clear both fields with the "Clear All" button when you're done</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputText = document.getElementById('inputText');
+            const outputText = document.getElementById('outputText');
+            const processBtn = document.getElementById('processBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const caseSensitive = document.getElementById('caseSensitive');
+            const trimWhitespace = document.getElementById('trimWhitespace');
+            const inputLineCount = document.getElementById('inputLineCount');
+            const outputLineCount = document.getElementById('outputLineCount');
+            const originalLines = document.getElementById('originalLines');
+            const duplicateLines = document.getElementById('duplicateLines');
+            const uniqueLines = document.getElementById('uniqueLines');
+            const reduction = document.getElementById('reduction');
+            
+            // Count lines in textarea
+            function countLines(text) {
+                if (!text) return 0;
+                return text.split('\n').length;
+            }
+            
+            // Update line count display
+            function updateLineCounts() {
+                const inputCount = countLines(inputText.value);
+                const outputCount = countLines(outputText.value);
+                
+                inputLineCount.textContent = inputCount;
+                outputLineCount.textContent = outputCount;
+                
+                return {inputCount, outputCount};
+            }
+            
+            // Process text to remove duplicates
+            function removeDuplicates() {
+                const text = inputText.value;
+                if (!text) return;
+                
+                const lines = text.split('\n');
+                const caseSensitiveMode = caseSensitive.checked;
+                const trimMode = trimWhitespace.checked;
+                
+                const uniqueLinesSet = new Set();
+                const resultLines = [];
+                
+                lines.forEach(line => {
+                    let processedLine = line;
+                    
+                    if (trimMode) {
+                        processedLine = processedLine.trim();
+                    }
+                    
+                    let comparisonLine = processedLine;
+                    if (!caseSensitiveMode) {
+                        comparisonLine = comparisonLine.toLowerCase();
+                    }
+                    
+                    if (!uniqueLinesSet.has(comparisonLine)) {
+                        uniqueLinesSet.add(comparisonLine);
+                        resultLines.push(processedLine);
+                    }
+                });
+                
+                const cleanedText = resultLines.join('\n');
+                outputText.value = cleanedText;
+                
+                // Update stats
+                const inputCount = lines.length;
+                const outputCount = resultLines.length;
+                const dupCount = inputCount - outputCount;
+                const reductionPercent = inputCount > 0 ? 
+                    Math.round((dupCount / inputCount) * 100) : 0;
+                
+                originalLines.textContent = inputCount;
+                duplicateLines.textContent = dupCount;
+                uniqueLines.textContent = outputCount;
+                reduction.textContent = reductionPercent + '%';
+                
+                updateLineCounts();
+            }
+            
+            // Copy to clipboard
+            function copyToClipboard() {
+                if (!outputText.value) return;
+                
+                outputText.select();
+                document.execCommand('copy');
+                
+                // Show visual feedback
+                copyBtn.innerHTML = '<i>✓</i> Copied!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<i>⎘</i> Copy to Clipboard';
+                }, 2000);
+            }
+            
+            // Clear both textareas
+            function clearAll() {
+                inputText.value = '';
+                outputText.value = '';
+                updateLineCounts();
+                
+                // Reset stats
+                originalLines.textContent = '0';
+                duplicateLines.textContent = '0';
+                uniqueLines.textContent = '0';
+                reduction.textContent = '0%';
+            }
+            
+            // Event listeners
+            inputText.addEventListener('input', updateLineCounts);
+            processBtn.addEventListener('click', removeDuplicates);
+            copyBtn.addEventListener('click', copyToClipboard);
+            clearBtn.addEventListener('click', clearAll);
+            
+            // Initialize
+            updateLineCounts();
+        });
+    </script>
+</body>
+</html>

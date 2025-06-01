@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Rotator/Flipper</title>
+    <style>
+        /* Previous CSS remains the same */
+        body {
+            background-image: url('https://picsum.photos/1920/1080');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .drop-zone {
+            border: 2px dashed #666;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .drop-zone:hover {
+            border-color: #2196F3;
+            background: rgba(33, 150, 243, 0.1);
+        }
+
+        .preview-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            margin: 20px auto;
+            overflow: hidden;
+            border: 2px solid #ddd;
+        }
+
+        #previewImage {
+            position: absolute;
+            max-width: 100%;
+            max-height: 100%;
+            transition: transform 0.3s;
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #1976D2;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="handleDragLeave(event)">
+            Drag & Drop Image Here<br>or<br>
+            <button onclick="document.getElementById('fileInput').click()">Choose File</button>
+            <input type="file" id="fileInput" accept="image/*" hidden onchange="handleFileSelect(event)">
+        </div>
+
+        <div class="preview-container">
+            <img id="previewImage" alt="Preview" class="hidden">
+        </div>
+
+        <div class="controls">
+            <button onclick="rotateImage(90)">Rotate Right</button>
+            <button onclick="rotateImage(-90)">Rotate Left</button>
+            <button onclick="flipImage('horizontal')">Flip Horizontal</button>
+            <button onclick="flipImage('vertical')">Flip Vertical</button>
+            <button onclick="resetImage()">Reset</button>
+            <button onclick="downloadImage()">Download</button>
+        </div>
+    </div>
+
+    <script>
+        let currentRotation = 0;
+        let currentScaleX = 1;
+        let currentScaleY = 1;
+        let currentImageSrc = null;
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.target.style.borderColor = '#2196F3';
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.target.style.borderColor = '#666';
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleImageFile(files[0]);
+            }
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                handleImageFile(files[0]);
+            }
+        }
+
+        function handleImageFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const previewImage = document.getElementById('previewImage');
+                previewImage.classList.remove('hidden');
+                previewImage.src = e.target.result;
+                currentImageSrc = e.target.result;
+                resetTransforms();
+                updatePreview();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function rotateImage(degrees) {
+            currentRotation += degrees;
+            updatePreview();
+        }
+
+        function flipImage(direction) {
+            if (direction === 'horizontal') {
+                currentScaleX *= -1;
+            } else {
+                currentScaleY *= -1;
+            }
+            updatePreview();
+        }
+
+        function resetImage() {
+            resetTransforms();
+            updatePreview();
+        }
+
+        function resetTransforms() {
+            currentRotation = 0;
+            currentScaleX = 1;
+            currentScaleY = 1;
+        }
+
+        function updatePreview() {
+            const preview = document.getElementById('previewImage');
+            preview.style.transform = `
+                rotate(${currentRotation}deg)
+                scaleX(${currentScaleX})
+                scaleY(${currentScaleY})
+            `;
+        }
+
+        function downloadImage() {
+            if (!currentImageSrc) return;
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = () => {
+                // Calculate canvas size based on rotation
+                const isRotated = Math.abs(currentRotation % 180) !== 0;
+                canvas.width = isRotated ? img.height : img.width;
+                canvas.height = isRotated ? img.width : img.height;
+
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(currentRotation * Math.PI / 180);
+                ctx.scale(currentScaleX, currentScaleY);
+                ctx.drawImage(img, -img.width / 2, -img.height / 2);
+
+                const link = document.createElement('a');
+                link.download = 'transformed-image.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            };
+            img.src = currentImageSrc;
+        }
+    </script>
+</body>
+</html>

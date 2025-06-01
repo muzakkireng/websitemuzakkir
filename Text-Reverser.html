@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Reverser</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(25, 25, 35, 0.9);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #6a93ff;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 18px;
+            border-radius: 12px;
+            background: rgba(30, 30, 40, 0.8);
+            border: 2px solid rgba(106, 17, 203, 0.4);
+            color: #fff;
+            font-size: 1.1rem;
+            resize: vertical;
+            min-height: 150px;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #reverseBtn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+        }
+
+        #reverseBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(37, 117, 252, 0.4);
+        }
+
+        #resetBtn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #resetBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .output-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #6a93ff;
+        }
+
+        #output {
+            background: rgba(30, 30, 40, 0.8);
+            border: 2px solid rgba(37, 117, 252, 0.4);
+            border-radius: 12px;
+            padding: 18px;
+            min-height: 150px;
+            font-size: 1.1rem;
+            white-space: pre-wrap;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 15px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: rgba(30, 30, 40, 0.8);
+            border-radius: 10px;
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        .stat-box .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #6a93ff;
+            margin-bottom: 5px;
+        }
+
+        .stat-box .label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-exchange-alt"></i> Text Reverser</h1>
+            <p>Reverse any text, sentence, or paragraph with a single click</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-group">
+                <label for="inputText"><i class="fas fa-pen"></i> Enter your text:</label>
+                <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
+            </div>
+            
+            <div class="button-group">
+                <button id="reverseBtn">
+                    <i class="fas fa-sync-alt"></i> Reverse Text
+                </button>
+                <button id="resetBtn">
+                    <i class="fas fa-trash-alt"></i> Clear All
+                </button>
+            </div>
+            
+            <div class="output-group">
+                <label for="output"><i class="fas fa-arrow-down"></i> Reversed text:</label>
+                <div id="output"></div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="number" id="charCount">0</div>
+                    <div class="label">Characters</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="wordCount">0</div>
+                    <div class="label">Words</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="lineCount">0</div>
+                    <div class="label">Lines</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Text Reverser Tool &copy; 2023 | Reverse any text instantly</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputText = document.getElementById('inputText');
+            const outputDiv = document.getElementById('output');
+            const reverseBtn = document.getElementById('reverseBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const charCount = document.getElementById('charCount');
+            const wordCount = document.getElementById('wordCount');
+            const lineCount = document.getElementById('lineCount');
+            
+            // Function to reverse text
+            function reverseString(str) {
+                return str.split('').reverse().join('');
+            }
+            
+            // Update statistics
+            function updateStats() {
+                const text = inputText.value;
+                
+                // Character count
+                charCount.textContent = text.length;
+                
+                // Word count
+                const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+                wordCount.textContent = words;
+                
+                // Line count
+                const lines = text ? (text.match(/\n/g) || '').length + 1 : 0;
+                lineCount.textContent = lines;
+            }
+            
+            // Reverse button event
+            reverseBtn.addEventListener('click', () => {
+                const text = inputText.value;
+                const reversedText = reverseString(text);
+                outputDiv.textContent = reversedText;
+                updateStats();
+            });
+            
+            // Reset button event
+            resetBtn.addEventListener('click', () => {
+                inputText.value = '';
+                outputDiv.textContent = '';
+                charCount.textContent = '0';
+                wordCount.textContent = '0';
+                lineCount.textContent = '0';
+            });
+            
+            // Update stats as user types
+            inputText.addEventListener('input', updateStats);
+            
+            // Initialize stats
+            updateStats();
+        });
+    </script>
+</body>
+</html>

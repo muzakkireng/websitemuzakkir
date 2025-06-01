@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Contrast Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --dark: #1d3557;
+            --light: #f8f9fa;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #457b9d;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .color-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .color-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .color-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .color-input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .color-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        
+        .color-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .color-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .color-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .preview-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        
+        .preview-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+            color: var(--primary);
+        }
+        
+        .result-label {
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+        
+        .compliance-badge {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .badge-pass {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .badge-warning {
+            background-color: #fff8e1;
+            color: #f57f17;
+        }
+        
+        .badge-fail {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .standards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .standard-card {
+            padding: 20px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .standard-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .standard-details {
+            line-height: 1.6;
+            color: #495057;
+        }
+        
+        .requirements {
+            margin-top: 15px;
+            padding-left: 20px;
+        }
+        
+        .requirements li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .swap-btn {
+            background: #e9ecef;
+            color: var(--dark);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+            transition: all 0.3s;
+        }
+        
+        .swap-btn:hover {
+            background: #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Accessibility Contrast Checker</h1>
+            <p class="subtitle">Test your color combinations for WCAG compliance. Ensure your content is accessible to people with visual impairments by checking the contrast ratio between your text and background colors.</p>
+        </header>
+        
+        <main>
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-palette"></i> Color Selection</h2>
+                
+                <div class="color-controls">
+                    <div class="color-panel">
+                        <label class="color-label">Text Color</label>
+                        <div class="color-input-group">
+                            <div class="color-preview" id="fgPreview" style="background-color: #1d3557;"></div>
+                            <input type="text" class="color-input" id="fgColor" value="#1d3557" placeholder="Enter hex color">
+                        </div>
+                    </div>
+                    
+                    <div class="color-panel">
+                        <label class="color-label">Background Color</label>
+                        <div class="color-input-group">
+                            <div class="color-preview" id="bgPreview" style="background-color: #f8f9fa;"></div>
+                            <input type="text" class="color-input" id="bgColor" value="#f8f9fa" placeholder="Enter hex color">
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <button class="swap-btn" id="swapBtn">
+                        <i class="fas fa-exchange-alt"></i> Swap Colors
+                    </button>
+                </div>
+                
+                <div class="preview-section">
+                    <div class="preview-text" id="previewText">
+                        This is how your text will look with these colors
+                    </div>
+                </div>
+                
+                <button class="btn" id="checkBtn">
+                    <i class="fas fa-check-circle"></i> Check Contrast
+                </button>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-chart-bar"></i> Contrast Results</h2>
+                
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">Contrast Ratio</div>
+                        <div class="result-value" id="ratioValue">7.8:1</div>
+                        <div class="compliance-badge badge-pass">Excellent</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-label">WCAG Level AA</div>
+                        <div class="result-value" id="aaValue">PASS</div>
+                        <div class="compliance-badge badge-pass">Compliant</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-label">WCAG Level AAA</div>
+                        <div class="result-value" id="aaaValue">PASS</div>
+                        <div class="compliance-badge badge-pass">Compliant</div>
+                    </div>
+                </div>
+                
+                <div class="standards">
+                    <div class="standard-card">
+                        <h3 class="standard-title"><i class="fas fa-universal-access"></i> WCAG Standards</h3>
+                        <div class="standard-details">
+                            <p>The Web Content Accessibility Guidelines (WCAG) define minimum contrast ratios for text:</p>
+                            <ul class="requirements">
+                                <li><strong>Level AA:</strong> At least 4.5:1 for normal text, 3:1 for large text (18pt+ or 14pt bold)</li>
+                                <li><strong>Level AAA:</strong> At least 7:1 for normal text, 4.5:1 for large text</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="standard-card">
+                        <h3 class="standard-title"><i class="fas fa-lightbulb"></i> Best Practices</h3>
+                        <div class="standard-details">
+                            <ul class="requirements">
+                                <li>Aim for at least 4.5:1 contrast ratio for body text</li>
+                                <li>Use higher contrast (7:1) for important content</li>
+                                <li>Avoid pure black text on pure white for reduced eye strain</li>
+                                <li>Test with real users when possible</li>
+                                <li>Check different text sizes and weights</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>Contrast Checker Tool Designed for Web Accessibility</p>
+            
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const fgColorInput = document.getElementById('fgColor');
+            const bgColorInput = document.getElementById('bgColor');
+            const fgPreview = document.getElementById('fgPreview');
+            const bgPreview = document.getElementById('bgPreview');
+            const previewText = document.getElementById('previewText');
+            const ratioValue = document.getElementById('ratioValue');
+            const aaValue = document.getElementById('aaValue');
+            const aaaValue = document.getElementById('aaaValue');
+            const swapBtn = document.getElementById('swapBtn');
+            const checkBtn = document.getElementById('checkBtn');
+            
+            // Initialize
+            updatePreview();
+            checkContrast();
+            
+            // Event listeners
+            fgColorInput.addEventListener('input', updatePreview);
+            bgColorInput.addEventListener('input', updatePreview);
+            fgColorInput.addEventListener('change', checkContrast);
+            bgColorInput.addEventListener('change', checkContrast);
+            swapBtn.addEventListener('click', swapColors);
+            checkBtn.addEventListener('click', checkContrast);
+            
+            function updatePreview() {
+                const fgColor = validateColor(fgColorInput.value) ? fgColorInput.value : '#1d3557';
+                const bgColor = validateColor(bgColorInput.value) ? bgColorInput.value : '#f8f9fa';
+                
+                fgPreview.style.backgroundColor = fgColor;
+                bgPreview.style.backgroundColor = bgColor;
+                previewText.style.color = fgColor;
+                previewText.style.backgroundColor = bgColor;
+                
+                fgColorInput.value = fgColor;
+                bgColorInput.value = bgColor;
+            }
+            
+            function swapColors() {
+                const temp = fgColorInput.value;
+                fgColorInput.value = bgColorInput.value;
+                bgColorInput.value = temp;
+                updatePreview();
+                checkContrast();
+            }
+            
+            function checkContrast() {
+                const fgColor = fgColorInput.value;
+                const bgColor = bgColorInput.value;
+                
+                if (!validateColor(fgColor) {
+                    alert('Please enter a valid text color in hex format');
+                    return;
+                }
+                
+                if (!validateColor(bgColor)) {
+                    alert('Please enter a valid background color in hex format');
+                    return;
+                }
+                
+                // Get luminance values
+                const fgLuminance = getLuminance(fgColor);
+                const bgLuminance = getLuminance(bgColor);
+                
+                // Calculate contrast ratio
+                const lighter = Math.max(fgLuminance, bgLuminance);
+                const darker = Math.min(fgLuminance, bgLuminance);
+                const ratio = (lighter + 0.05) / (darker + 0.05);
+                const ratioFormatted = ratio.toFixed(1);
+                
+                // Update ratio display
+                ratioValue.textContent = ratioFormatted + ':1';
+                
+                // Check compliance
+                const aaCompliant = ratio >= 4.5;
+                const aaaCompliant = ratio >= 7;
+                
+                // Update compliance displays
+                aaValue.textContent = aaCompliant ? 'PASS' : 'FAIL';
+                aaValue.parentElement.querySelector('.compliance-badge').className = 
+                    aaCompliant ? 'compliance-badge badge-pass' : 'compliance-badge badge-fail';
+                aaValue.parentElement.querySelector('.compliance-badge').textContent = 
+                    aaCompliant ? 'Compliant' : 'Not Compliant';
+                
+                aaaValue.textContent = aaaCompliant ? 'PASS' : 'FAIL';
+                aaaValue.parentElement.querySelector('.compliance-badge').className = 
+                    aaaCompliant ? 'compliance-badge badge-pass' : 'compliance-badge badge-fail';
+                aaaValue.parentElement.querySelector('.compliance-badge').textContent = 
+                    aaaCompliant ? 'Compliant' : 'Not Compliant';
+                
+                // Update ratio badge
+                let ratioStatus = '';
+                if (ratio >= 7) {
+                    ratioStatus = 'Excellent';
+                } else if (ratio >= 4.5) {
+                    ratioStatus = 'Good';
+                } else {
+                    ratioStatus = 'Poor';
+                }
+                
+                ratioValue.parentElement.querySelector('.compliance-badge').textContent = ratioStatus;
+                ratioValue.parentElement.querySelector('.compliance-badge').className = 
+                    ratio >= 4.5 ? 'compliance-badge badge-pass' : 
+                    ratio >= 3 ? 'compliance-badge badge-warning' : 'compliance-badge badge-fail';
+            }
+            
+            function validateColor(color) {
+                return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
+            }
+            
+            function getLuminance(hex) {
+                // Convert hex to RGB
+                let r, g, b;
+                if (hex.length === 4) {
+                    r = parseInt(hex[1] + hex[1], 16);
+                    g = parseInt(hex[2] + hex[2], 16);
+                    b = parseInt(hex[3] + hex[3], 16);
+                } else {
+                    r = parseInt(hex.substr(1, 2), 16);
+                    g = parseInt(hex.substr(3, 2), 16);
+                    b = parseInt(hex.substr(5, 2), 16);
+                }
+                
+                // Convert to relative luminance
+                [r, g, b] = [r, g, b].map(c => {
+                    c /= 255;
+                    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+                });
+                
+                return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            }
+        });
+    </script>
+</body>
+</html>

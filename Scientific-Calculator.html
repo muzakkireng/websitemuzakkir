@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Scientific Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            padding: 20px;
+        }
+        
+        .calculator-container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0f172a, #1e293b);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        header h1 {
+            color: #fff;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        
+        header p {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        
+        .display {
+            background: #0d1524;
+            padding: 25px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .history {
+            color: #64748b;
+            font-size: 1.2rem;
+            min-height: 24px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .result {
+            color: #fff;
+            font-size: 2.8rem;
+            font-weight: 300;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            padding: 25px;
+        }
+        
+        .keypad button {
+            border: none;
+            outline: none;
+            padding: 18px 10px;
+            border-radius: 12px;
+            font-size: 1.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: rgba(30, 41, 59, 0.7);
+            color: #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .keypad button:hover {
+            background: rgba(56, 72, 101, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .keypad button:active {
+            transform: translateY(0);
+            background: rgba(30, 41, 59, 1);
+        }
+        
+        .number {
+            background: rgba(15, 23, 42, 0.7) !important;
+        }
+        
+        .number:hover {
+            background: rgba(30, 41, 59, 0.8) !important;
+        }
+        
+        .operator {
+            background: rgba(124, 58, 237, 0.2) !important;
+            color: #c4b5fd !important;
+        }
+        
+        .operator:hover {
+            background: rgba(139, 92, 246, 0.3) !important;
+        }
+        
+        .function {
+            background: rgba(6, 182, 212, 0.2) !important;
+            color: #67e8f9 !important;
+            font-size: 1.3rem !important;
+        }
+        
+        .equals {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
+            color: white !important;
+            grid-column: span 2;
+        }
+        
+        .clear {
+            background: rgba(220, 38, 38, 0.2) !important;
+            color: #fca5a5 !important;
+        }
+        
+        .memory {
+            background: rgba(245, 158, 11, 0.2) !important;
+            color: #fcd34d !important;
+            font-size: 1.2rem !important;
+        }
+        
+        .constant {
+            background: rgba(16, 185, 129, 0.2) !important;
+            color: #6ee7b7 !important;
+        }
+        
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            padding: 0 25px 20px;
+        }
+        
+        .mode-btn {
+            background: rgba(30, 41, 59, 0.7);
+            color: #94a3b8;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.active {
+            background: rgba(56, 72, 101, 0.8);
+            color: #e2e8f0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        @media (max-width: 600px) {
+            .keypad {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .keypad button {
+                padding: 15px 5px;
+                font-size: 1.2rem;
+            }
+            
+            .result {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> Advanced Scientific Calculator</h1>
+            <p>Perform complex calculations with ease</p>
+        </header>
+        
+        <div class="display">
+            <div class="history" id="history"></div>
+            <div class="result" id="result">0</div>
+        </div>
+        
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="deg-btn">DEG</button>
+            <button class="mode-btn" id="rad-btn">RAD</button>
+        </div>
+        
+        <div class="keypad">
+            <!-- Row 1 -->
+            <button class="function" data-value="sin">sin</button>
+            <button class="function" data-value="cos">cos</button>
+            <button class="function" data-value="tan">tan</button>
+            <button class="memory" data-value="mc">MC</button>
+            <button class="memory" data-value="mr">MR</button>
+            
+            <!-- Row 2 -->
+            <button class="function" data-value="asin">sin<sup>-1</sup></button>
+            <button class="function" data-value="acos">cos<sup>-1</sup></button>
+            <button class="function" data-value="atan">tan<sup>-1</sup></button>
+            <button class="memory" data-value="m+">M+</button>
+            <button class="memory" data-value="m-">M-</button>
+            
+            <!-- Row 3 -->
+            <button class="function" data-value="log">log</button>
+            <button class="function" data-value="ln">ln</button>
+            <button class="function" data-value="sqrt">√</button>
+            <button class="constant" data-value="π">π</button>
+            <button class="constant" data-value="e">e</button>
+            
+            <!-- Row 4 -->
+            <button class="function" data-value="pow">x<sup>y</sup></button>
+            <button class="function" data-value="exp">e<sup>x</sup></button>
+            <button class="function" data-value="fact">x!</button>
+            <button class="clear" data-value="clear">C</button>
+            <button class="clear" data-value="backspace">⌫</button>
+            
+            <!-- Row 5 -->
+            <button class="number" data-value="7">7</button>
+            <button class="number" data-value="8">8</button>
+            <button class="number" data-value="9">9</button>
+            <button class="operator" data-value="/">÷</button>
+            <button class="operator" data-value="%">%</button>
+            
+            <!-- Row 6 -->
+            <button class="number" data-value="4">4</button>
+            <button class="number" data-value="5">5</button>
+            <button class="number" data-value="6">6</button>
+            <button class="operator" data-value="*">×</button>
+            <button class="function" data-value="(">(</button>
+            
+            <!-- Row 7 -->
+            <button class="number" data-value="1">1</button>
+            <button class="number" data-value="2">2</button>
+            <button class="number" data-value="3">3</button>
+            <button class="operator" data-value="-">-</button>
+            <button class="function" data-value=")">)</button>
+            
+            <!-- Row 8 -->
+            <button class="number" data-value="0">0</button>
+            <button class="number" data-value=".">.</button>
+            <button class="operator" data-value="+">+</button>
+            <button class="equals" data-value="=">=</button>
+        </div>
+        
+        <footer>
+            <p>Advanced Scientific Calculator &copy; 2023 | toolbyte1.blogspot.com</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Calculator state
+            let currentInput = '0';
+            let calculationHistory = '';
+            let result = 0;
+            let memory = 0;
+            let isRadians = false;
+            
+            // DOM elements
+            const resultElement = document.getElementById('result');
+            const historyElement = document.getElementById('history');
+            const degBtn = document.getElementById('deg-btn');
+            const radBtn = document.getElementById('rad-btn');
+            
+            // Update display
+            function updateDisplay() {
+                resultElement.textContent = currentInput;
+                historyElement.textContent = calculationHistory;
+            }
+            
+            // Handle button clicks
+            document.querySelectorAll('.keypad button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const value = button.getAttribute('data-value');
+                    
+                    switch(value) {
+                        case 'clear':
+                            currentInput = '0';
+                            calculationHistory = '';
+                            break;
+                        case 'backspace':
+                            currentInput = currentInput.length > 1 ? currentInput.slice(0, -1) : '0';
+                            break;
+                        case '=':
+                            calculateResult();
+                            break;
+                        case 'mc':
+                            memory = 0;
+                            break;
+                        case 'mr':
+                            currentInput = memory.toString();
+                            break;
+                        case 'm+':
+                            memory += parseFloat(currentInput) || 0;
+                            break;
+                        case 'm-':
+                            memory -= parseFloat(currentInput) || 0;
+                            break;
+                        case 'π':
+                            currentInput = Math.PI.toString();
+                            break;
+                        case 'e':
+                            currentInput = Math.E.toString();
+                            break;
+                        case 'deg-btn':
+                        case 'rad-btn':
+                            // Handled separately
+                            break;
+                        default:
+                            if (currentInput === '0' && value !== '.') {
+                                currentInput = value;
+                            } else {
+                                currentInput += value;
+                            }
+                    }
+                    
+                    updateDisplay();
+                });
+            });
+            
+            // Calculate result
+            function calculateResult() {
+                try {
+                    // Save current input to history
+                    calculationHistory = currentInput;
+                    
+                    // Replace constants and functions
+                    let expression = currentInput
+                        .replace(/π/g, Math.PI)
+                        .replace(/e/g, Math.E)
+                        .replace(/√/g, 'Math.sqrt')
+                        .replace(/log/g, 'Math.log10')
+                        .replace(/ln/g, 'Math.log')
+                        .replace(/pow/g, '**')
+                        .replace(/exp/g, 'Math.exp');
+                    
+                    // Handle trigonometric functions with degree/radian conversion
+                    const trigFunctions = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan'];
+                    trigFunctions.forEach(func => {
+                        const regex = new RegExp(`${func}\\(([^)]+)\\)`, 'g');
+                        expression = expression.replace(regex, (match, angle) => {
+                            let radAngle = parseFloat(angle);
+                            if (!isRadians) {
+                                radAngle = radAngle * Math.PI / 180;
+                            }
+                            return `Math.${func}(${radAngle})`;
+                        });
+                    });
+                    
+                    // Handle factorial
+                    expression = expression.replace(/(\d+)!/g, (match, num) => {
+                        const n = parseInt(num);
+                        let fact = 1;
+                        for (let i = 2; i <= n; i++) {
+                            fact *= i;
+                        }
+                        return fact;
+                    });
+                    
+                    // Evaluate the expression
+                    result = eval(expression);
+                    
+                    // Update current input with result
+                    currentInput = result.toString();
+                    
+                    // Handle very large numbers
+                    if (currentInput.length > 12) {
+                        currentInput = result.toExponential(6);
+                    }
+                } catch (error) {
+                    currentInput = 'Error';
+                }
+                
+                updateDisplay();
+            }
+            
+            // Toggle between degrees and radians
+            degBtn.addEventListener('click', () => {
+                isRadians = false;
+                degBtn.classList.add('active');
+                radBtn.classList.remove('active');
+            });
+            
+            radBtn.addEventListener('click', () => {
+                isRadians = true;
+                radBtn.classList.add('active');
+                degBtn.classList.remove('active');
+            });
+            
+            // Initialize display
+            updateDisplay();
+        });
+    </script>
+</body>
+</html>

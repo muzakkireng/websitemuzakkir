@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Compressor Tool</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
+    <style>
+        :root {
+            --primary: #2a2a2a;
+            --secondary: #3a3a3a;
+            --accent: #00ff88;
+            --text: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .tool-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+
+        .upload-section {
+            border: 2px dashed var(--secondary);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            margin-bottom: 2rem;
+        }
+
+        .upload-section.dragover {
+            border-color: var(--accent);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .upload-label {
+            cursor: pointer;
+            display: block;
+            font-size: 1.1rem;
+        }
+
+        .quality-section {
+            margin-bottom: 2rem;
+        }
+
+        .quality-label {
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .quality-slider {
+            width: 100%;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .quality-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--accent), #00ccff);
+            color: var(--primary);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            display: block;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .preview-section {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 5px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .processing {
+            text-align: center;
+            margin: 2rem 0;
+            display: none;
+        }
+
+        .error-message {
+            color: #ff4444;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .upload-section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="tool-title">Image Compressor</h1>
+        
+        <div class="upload-section" id="dropZone">
+            <input type="file" id="fileInput" accept="image/*">
+            <label class="upload-label" for="fileInput">
+                📁 Drag & Drop or Click to Upload<br>
+                <small>(PNG, JPG, JPEG, BMP, GIF, TIFF, WEBP)</small>
+            </label>
+        </div>
+
+        <div class="quality-section">
+            <label class="quality-label">Compression Quality: <span id="qualityValue">80</span>%</label>
+            <input type="range" class="quality-slider" id="qualitySlider" min="10" max="100" value="80">
+        </div>
+
+        <button class="btn" id="compressBtn" disabled>Compress Image</button>
+        <div class="processing" id="processing">⏳ Compressing Image...</div>
+        <div class="error-message" id="errorMsg"></div>
+
+        <div class="preview-section">
+            <img class="preview-img" id="previewImg" alt="Compressed preview">
+            <a class="btn" id="downloadBtn" download style="display: none;">Download Compressed Image</a>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const qualitySlider = document.getElementById('qualitySlider');
+        const qualityValue = document.getElementById('qualityValue');
+        const compressBtn = document.getElementById('compressBtn');
+        const processing = document.getElementById('processing');
+        const previewImg = document.getElementById('previewImg');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const errorMsg = document.getElementById('errorMsg');
+
+        let currentFile = null;
+
+        // Update quality percentage display
+        qualitySlider.addEventListener('input', () => {
+            qualityValue.textContent = qualitySlider.value;
+        });
+
+        // Handle file selection
+        const handleFile = (file) => {
+            if (!file.type.startsWith('image/')) {
+                showError('Please select a valid image file');
+                return;
+            }
+
+            const allowedTypes = [
+                'image/png', 'image/jpeg', 'image/bmp', 
+                'image/gif', 'image/tiff', 'image/webp'
+            ];
+
+            if (!allowedTypes.includes(file.type)) {
+                showError('Unsupported file format');
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                showError('File size exceeds 5MB limit');
+                return;
+            }
+
+            currentFile = file;
+            compressBtn.disabled = false;
+            errorMsg.textContent = '';
+        };
+
+        // Drag and drop handlers
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) handleFile(file);
+        });
+
+        // File input change handler
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file) handleFile(file);
+        });
+
+        // Compression handler
+        compressBtn.addEventListener('click', () => {
+            if (!currentFile) return;
+
+            processing.style.display = 'block';
+            previewImg.style.display = 'none';
+            downloadBtn.style.display = 'none';
+
+            const quality = qualitySlider.value / 100;
+
+            new Compressor(currentFile, {
+                quality: quality,
+                mimeType: 'auto',
+                success(result) {
+                    const url = URL.createObjectURL(result);
+                    
+                    previewImg.src = url;
+                    previewImg.style.display = 'block';
+                    
+                    downloadBtn.href = url;
+                    downloadBtn.download = `compressed_${currentFile.name}`;
+                    downloadBtn.style.display = 'block';
+                    
+                    processing.style.display = 'none';
+                },
+                error(err) {
+                    showError('Error compressing image');
+                    processing.style.display = 'none';
+                }
+            });
+        });
+
+        // Error handling
+        function showError(message) {
+            errorMsg.textContent = message;
+            setTimeout(() => {
+                errorMsg.textContent = '';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

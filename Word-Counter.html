@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SEO Content Analyzer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: url('https://source.unsplash.com/1600x900/?seo,writing') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+
+    h2 {
+      color: #fff;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    textarea {
+      width: 100%;
+      height: 200px;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .stats {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .stats p {
+      margin: 8px 0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>SEO Content Word & Character Counter</h2>
+
+  <textarea id="content" placeholder="Paste or type your content here..."></textarea>
+
+  <div class="stats" id="stats">
+    <p><strong>Words:</strong> <span id="wordCount">0</span></p>
+    <p><strong>Characters (with spaces):</strong> <span id="charCount">0</span></p>
+    <p><strong>Characters (no spaces):</strong> <span id="charNoSpaceCount">0</span></p>
+    <p><strong>Estimated Reading Time:</strong> <span id="readingTime">0</span> min</p>
+  </div>
+
+  <script>
+    const textarea = document.getElementById("content");
+    const wordCount = document.getElementById("wordCount");
+    const charCount = document.getElementById("charCount");
+    const charNoSpaceCount = document.getElementById("charNoSpaceCount");
+    const readingTime = document.getElementById("readingTime");
+
+    textarea.addEventListener("input", () => {
+      const text = textarea.value;
+      const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+      const charsWithSpaces = text.length;
+      const charsWithoutSpaces = text.replace(/\s/g, '').length;
+      const estimatedTime = Math.ceil(words.length / 200);
+
+      wordCount.textContent = words.length;
+      charCount.textContent = charsWithSpaces;
+      charNoSpaceCount.textContent = charsWithoutSpaces;
+      readingTime.textContent = estimatedTime;
+    });
+  </script>
+
+</body>
+</html>

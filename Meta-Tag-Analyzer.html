@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meta Tag Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 40px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input[type="url"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #007BFF;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .results {
+      margin-top: 25px;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      display: none;
+    }
+    .meta-item {
+      margin-bottom: 10px;
+    }
+    .meta-item strong {
+      display: inline-block;
+      width: 120px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Meta Tag Analyzer</h2>
+    <input type="url" id="urlInput" placeholder="Enter website URL (e.g. https://example.com)">
+    <button onclick="analyzeMeta()">Check Meta Tags</button>
+
+    <div class="results" id="results"></div>
+  </div>
+
+  <script>
+    async function analyzeMeta() {
+      const url = document.getElementById('urlInput').value.trim();
+      const results = document.getElementById('results');
+      results.style.display = 'none';
+      results.innerHTML = '';
+
+      if (!url) {
+        alert("Please enter a valid URL.");
+        return;
+      }
+
+      try {
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        const response = await fetch(proxyUrl);
+        const data = await response.json();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data.contents, 'text/html');
+
+        const title = doc.querySelector('title')?.innerText || 'Not found';
+        const description = doc.querySelector('meta[name="description"]')?.content || 'Not found';
+        const keywords = doc.querySelector('meta[name="keywords"]')?.content || 'Not found';
+        const ogTitle = doc.querySelector('meta[property="og:title"]')?.content || 'Not found';
+        const ogDesc = doc.querySelector('meta[property="og:description"]')?.content || 'Not found';
+
+        results.innerHTML = `
+          <div class="meta-item"><strong>Title:</strong> ${title}</div>
+          <div class="meta-item"><strong>Description:</strong> ${description}</div>
+          <div class="meta-item"><strong>Keywords:</strong> ${keywords}</div>
+          <div class="meta-item"><strong>OG Title:</strong> ${ogTitle}</div>
+          <div class="meta-item"><strong>OG Description:</strong> ${ogDesc}</div>
+        `;
+        results.style.display = 'block';
+      } catch (err) {
+        results.innerHTML = `<p style="color:red;">Failed to fetch meta tags. Make sure the website allows CORS or try a different URL.</p>`;
+        results.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
