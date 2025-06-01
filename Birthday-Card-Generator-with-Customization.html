@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Greeting Card Maker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #ff6b6b, #ff8e53);
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .app-content {
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+        }
+        
+        @media (min-width: 768px) {
+            .app-content {
+                flex-direction: row;
+            }
+        }
+        
+        .controls {
+            flex: 1;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .controls {
+                margin-bottom: 0;
+                margin-right: 20px;
+            }
+        }
+        
+        .preview {
+            flex: 1;
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            min-height: 400px;
+            background: linear-gradient(45deg, #f5f7fa, #c3cfe2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .preview-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 5px solid #ffd166;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .birthday-message {
+            color: #333;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 10px 0;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+        
+        .from-text {
+            color: #ff6b6b;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        
+        .decoration {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.2;
+            color: #ff6b6b;
+        }
+        
+        .decoration:nth-child(1) { top: 10px; left: 15px; }
+        .decoration:nth-child(2) { top: 10px; right: 15px; }
+        .decoration:nth-child(3) { bottom: 10px; left: 15px; }
+        .decoration:nth-child(4) { bottom: 10px; right: 15px; }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: #ff6b6b;
+            outline: none;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .upload-area {
+            border: 2px dashed #ff6b6b;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            background-color: rgba(255, 107, 107, 0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+        
+        .file-name {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .btn-generate {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(79, 172, 254, 0.4);
+        }
+        
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(79, 172, 254, 0.6);
+        }
+        
+        .btn-download {
+            background: linear-gradient(to right, #0fd850 0%, #f9f047 100%);
+            color: #333;
+            box-shadow: 0 4px 10px rgba(15, 216, 80, 0.4);
+        }
+        
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(15, 216, 80, 0.6);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .instructions {
+            background: #e9f7fe;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .instructions h3 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 5px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .theme-option {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .theme-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .theme-color.active {
+            border: 2px solid #333;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎂 Birthday Card Maker 🎉</h1>
+            <p>Create & download personalized birthday greetings in seconds!</p>
+        </header>
+        
+        <div class="app-content">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="recipient">Recipient's Name</label>
+                    <input type="text" id="recipient" placeholder="Enter name" value="Alex">
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Birthday Message</label>
+                    <textarea id="message">Wishing you a day filled with happiness and a year filled with joy! Hope your special day brings you all that your heart desires!</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sender">From</label>
+                    <input type="text" id="sender" placeholder="Your name" value="Your Friends">
+                </div>
+                
+                <div class="form-group">
+                    <label for="theme">Card Theme</label>
+                    <select id="theme">
+                        <option value="balloons">Balloons & Confetti</option>
+                        <option value="elegant">Elegant Floral</option>
+                        <option value="fun">Fun & Colorful</option>
+                        <option value="minimal">Minimal Design</option>
+                    </select>
+                    
+                    <div class="theme-option">
+                        <div class="theme-color active" style="background: #ff9a9e;" data-color="#ff9a9e"></div>
+                        <div class="theme-color" style="background: #a1c4fd;" data-color="#a1c4fd"></div>
+                        <div class="theme-color" style="background: #c2e9fb;" data-color="#c2e9fb"></div>
+                        <div class="theme-color" style="background: #d4fc79;" data-color="#d4fc79"></div>
+                        <div class="theme-color" style="background: #f6d365;" data-color="#f6d365"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Upload Photo (Optional)</label>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">📷</div>
+                        <p>Click to upload a photo</p>
+                        <p class="file-name" id="fileName">No file chosen</p>
+                        <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+                
+                <button class="btn btn-generate" id="generateBtn">Update Card</button>
+                <button class="btn btn-download" id="downloadBtn" disabled>Download Card</button>
+                
+                <div class="instructions">
+                    <h3>How to use:</h3>
+                    <ul>
+                        <li>Fill in the recipient's name and your message</li>
+                        <li>Customize the card theme and colors</li>
+                        <li>Upload a photo (optional)</li>
+                        <li>Click "Update Card" to see your creation</li>
+                        <li>Click "Download Card" to save your greeting</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="preview">
+                <div class="preview-content" id="cardPreview">
+                    <div class="decoration">🎈</div>
+                    <div class="decoration">🎁</div>
+                    <div class="decoration">🎉</div>
+                    <div class="decoration">🎊</div>
+                    
+                    <h2>HAPPY BIRTHDAY!</h2>
+                    <img id="previewImage" class="preview-image" src="" alt="Uploaded photo">
+                    <div class="birthday-message" id="previewMessage">Wishing you a day filled with happiness and a year filled with joy!</div>
+                    <div class="birthday-message" id="previewRecipient">Dear Alex,</div>
+                    <div class="from-text" id="previewSender">From: Your Friends</div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Made with ❤️ | Responsive Birthday Card Generator | Works on all devices</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const photoUpload = document.getElementById('photoUpload');
+            const fileName = document.getElementById('fileName');
+            const generateBtn = document.getElementById('generateBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const previewImage = document.getElementById('previewImage');
+            const previewMessage = document.getElementById('previewMessage');
+            const previewRecipient = document.getElementById('previewRecipient');
+            const previewSender = document.getElementById('previewSender');
+            const recipientInput = document.getElementById('recipient');
+            const messageInput = document.getElementById('message');
+            const senderInput = document.getElementById('sender');
+            const themeSelect = document.getElementById('theme');
+            const themeColors = document.querySelectorAll('.theme-color');
+            const cardPreview = document.getElementById('cardPreview');
+            
+            // Upload area click handler
+            uploadArea.addEventListener('click', () => {
+                photoUpload.click();
+            });
+            
+            // Handle file selection
+            photoUpload.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    fileName.textContent = this.files[0].name;
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                    
+                    downloadBtn.disabled = false;
+                }
+            });
+            
+            // Theme color selection
+            themeColors.forEach(color => {
+                color.addEventListener('click', function() {
+                    themeColors.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const bgColor = this.getAttribute('data-color');
+                    document.querySelector('.preview').style.background = `linear-gradient(45deg, ${bgColor}, #ffffff)`;
+                });
+            });
+            
+            // Update card preview
+            function updateCardPreview() {
+                previewRecipient.textContent = `Dear ${recipientInput.value || 'Friend'},`;
+                previewMessage.textContent = messageInput.value || 'Wishing you a wonderful birthday!';
+                previewSender.textContent = `From: ${senderInput.value || 'Your Friends'}`;
+                
+                // Theme-based decorations
+                const decorations = cardPreview.querySelectorAll('.decoration');
+                decorations.forEach(el => el.textContent = '🎈');
+                
+                downloadBtn.disabled = false;
+            }
+            
+            // Initial update
+            updateCardPreview();
+            
+            // Event listeners
+            generateBtn.addEventListener('click', updateCardPreview);
+            
+            recipientInput.addEventListener('input', updateCardPreview);
+            messageInput.addEventListener('input', updateCardPreview);
+            senderInput.addEventListener('input', updateCardPreview);
+            
+            // Download functionality
+            downloadBtn.addEventListener('click', function() {
+                this.textContent = 'Downloading...';
+                
+                // In a real app, this would generate an image
+                // For this demo, we'll simulate download
+                setTimeout(() => {
+                    this.textContent = 'Download Card';
+                    alert('Your birthday card has been downloaded! In a real implementation, this would save the card as an image.');
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>
