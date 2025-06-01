@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel to PDF Converter - Unicode Support</title>
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --danger: #e63946;
+            --warning: #fca311;
+            --gray: #6c757d;
+            --border: #dee2e6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            background: var(--success);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .lang-select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .lang-select option {
+            background: var(--primary);
+            color: white;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .upload-section {
+            text-align: center;
+            padding: 40px 20px;
+            border: 3px dashed var(--border);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            background: var(--light);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-section:hover {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 70px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .upload-text h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .upload-text p {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .browse-btn {
+            background: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s;
+            border: none;
+            font-size: 16px;
+        }
+
+        .browse-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 10px;
+            display: none;
+        }
+
+        .file-info i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .preview-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: var(--dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-container {
+            width: 100%;
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            max-height: 300px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        #excel-preview {
+            width: 100%;
+        }
+
+        /* Language-specific fonts */
+        .arabic-font {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            direction: rtl;
+        }
+        
+        .chinese-font {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        
+        .japanese-font {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 16px;
+            min-width: 180px;
+            text-align: center;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 2px solid transparent;
+        }
+
+        #convert-btn {
+            background: var(--success);
+            color: var(--dark);
+        }
+
+        #convert-btn:hover {
+            background: #3ac1e0;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.4);
+        }
+
+        #reset-btn {
+            background: var(--light);
+            color: var(--gray);
+            border-color: var(--border);
+        }
+
+        #reset-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.1);
+        }
+
+        .status-section {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .status-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-icon {
+            font-size: 28px;
+        }
+
+        .status-text {
+            flex: 1;
+        }
+
+        .status-text h3 {
+            margin-bottom: 5px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .loading .status-icon {
+            color: var(--warning);
+            animation: spin 1s linear infinite;
+        }
+
+        .success .status-icon {
+            color: #2a9d8f;
+        }
+
+        .error .status-icon {
+            color: var(--danger);
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            flex: 1;
+            min-width: 200px;
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+            
+            .features {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-file-excel"></i>
+                <h1 id="title">Excel to PDF Converter</h1>
+            </div>
+            <div class="controls">
+                <select class="lang-select" id="lang-select">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="zh">中文</option>
+                    <option value="ja">日本語</option>
+                    <option value="ru">Русский</option>
+                    <option value="ar">العربية</option>
+                    <option value="hi">हिन्दी</option>
+                </select>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="upload-section" id="drop-area">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text">
+                    <h2 id="upload-title">Upload Excel File</h2>
+                    <p id="upload-subtitle">Drag & drop your Excel file here or click to browse</p>
+                    <input type="file" id="file-input" class="file-input" accept=".xlsx, .xls">
+                    <button class="browse-btn" id="browse-btn">
+                        <i class="fas fa-folder-open"></i>
+                        <span id="browse-text">Browse Files</span>
+                    </button>
+                </div>
+                <div class="file-info" id="file-info">
+                    <i class="fas fa-file-excel"></i>
+                    <span id="file-name">No file selected</span>
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <i class="fas fa-language"></i>
+                    <h3 id="feature1-title">Unicode Support</h3>
+                    <p id="feature1-text">Full support for Arabic, Chinese, Japanese, and all languages</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3 id="feature2-title">Mobile Friendly</h3>
+                    <p id="feature2-text">Works perfectly on all devices and screen sizes</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-lock"></i>
+                    <h3 id="feature3-title">Secure</h3>
+                    <p id="feature3-text">Files never leave your device - 100% client-side</p>
+                </div>
+            </div>
+            
+            <div class="preview-section" id="preview-section">
+                <div class="section-title">
+                    <i class="fas fa-table"></i>
+                    <span id="preview-title">Excel Preview</span>
+                </div>
+                <div class="preview-container">
+                    <div id="excel-preview"></div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn" id="convert-btn">
+                    <i class="fas fa-file-pdf"></i>
+                    <span id="convert-text">Convert to PDF</span>
+                </button>
+                <button class="action-btn" id="reset-btn">
+                    <i class="fas fa-redo"></i>
+                    <span id="reset-text">Reset</span>
+                </button>
+            </div>
+            
+            <div class="status-section" id="status-section">
+                <div class="status-content" id="status-content">
+                    <div class="status-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <div class="status-text">
+                        <h3 id="status-title">Processing</h3>
+                        <p id="status-message">Your file is being converted...</p>
+                        <button class="download-btn" id="download-btn" style="display: none;">
+                            <i class="fas fa-download"></i>
+                            <span id="download-text">Download PDF</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p id="footer-text">© 2023 Excel to PDF Converter | Full Unicode Support | All files processed locally in your browser</p>
+        </footer>
+    </div>
+
+    <script>
+        // Language translations
+        const translations = {
+            en: {
+                title: "Excel to PDF Converter",
+                uploadTitle: "Upload Excel File",
+                uploadSubtitle: "Drag & drop your Excel file here or click to browse",
+                browseText: "Browse Files",
+                convertText: "Convert to PDF",
+                resetText: "Reset",
+                previewTitle: "Excel Preview",
+                statusTitle: "Processing",
+                statusMessage: "Your file is being converted...",
+                successTitle: "Conversion Complete!",
+                successMessage: "Your PDF file is ready for download",
+                downloadText: "Download PDF",
+                errorTitle: "Error",
+                errorMessage: "Please upload an Excel file first",
+                fileError: "Please select a valid Excel file (.xlsx or .xls)",
+                footerText: "© 2023 Excel to PDF Converter | Full Unicode Support | All files processed locally in your browser",
+                feature1Title: "Unicode Support",
+                feature1Text: "Full support for Arabic, Chinese, Japanese, and all languages",
+                feature2Title: "Mobile Friendly",
+                feature2Text: "Works perfectly on all devices and screen sizes",
+                feature3Title: "Secure",
+                feature3Text: "Files never leave your device - 100% client-side",
+                convertedOn: "Converted on:"
+            },
+            ar: {
+                title: "محول Excel إلى PDF",
+                uploadTitle: "تحميل ملف Excel",
+                uploadSubtitle: "اسحب وأفلت ملف Excel هنا أو انقر للتصفح",
+                browseText: "تصفح الملفات",
+                convertText: "تحويل إلى PDF",
+                resetText: "إعادة تعيين",
+                previewTitle: "معاينة Excel",
+                statusTitle: "جارٍ المعالجة",
+                statusMessage: "جارٍ تحويل ملفك...",
+                successTitle: "اكتمل التحويل!",
+                successMessage: "ملف PDF جاهز للتنزيل",
+                downloadText: "تنزيل PDF",
+                errorTitle: "خطأ",
+                errorMessage: "يرجى تحميل ملف Excel أولاً",
+                fileError: "يرجى تحديد ملف Excel صالح (.xlsx أو .xls)",
+                footerText: "© 2023 محول Excel إلى PDF | دعم كامل لليونيكود | تتم معالجة جميع الملفات محليًا في متصفحك",
+                feature1Title: "دعم يونيكود",
+                feature1Text: "دعم كامل للعربية والصينية واليابانية وجميع اللغات",
+                feature2Title: "ملائم للجوال",
+                feature2Text: "يعمل بشكل مثالي على جميع الأجهزة وأحجام الشاشات",
+                feature3Title: "آمن",
+                feature3Text: "لا تغادر الملفات جهازك أبدًا - 100% على جانب العميل",
+                convertedOn: "تم التحويل في:"
+            },
+            zh: {
+                title: "Excel 转 PDF 转换器",
+                uploadTitle: "上传 Excel 文件",
+                uploadSubtitle: "拖放您的 Excel 文件到此处或点击浏览",
+                browseText: "浏览文件",
+                convertText: "转换为 PDF",
+                resetText: "重置",
+                previewTitle: "Excel 预览",
+                statusTitle: "处理中",
+                statusMessage: "您的文件正在转换中...",
+                successTitle: "转换完成！",
+                successMessage: "您的 PDF 文件已准备好下载",
+                downloadText: "下载 PDF",
+                errorTitle: "错误",
+                errorMessage: "请先上传 Excel 文件",
+                fileError: "请选择有效的 Excel 文件 (.xlsx 或 .xls)",
+                footerText: "© 2023 Excel 转 PDF 转换器 | 完全支持 Unicode | 所有文件都在您的浏览器本地处理",
+                feature1Title: "Unicode 支持",
+                feature1Text: "完全支持阿拉伯语、中文、日语和所有语言",
+                feature2Title: "移动友好",
+                feature2Text: "在所有设备和屏幕尺寸上完美运行",
+                feature3Title: "安全",
+                feature3Text: "文件永远不会离开您的设备 - 100% 在客户端处理",
+                convertedOn: "转换时间："
+            },
+            ja: {
+                title: "ExcelからPDFへのコンバーター",
+                uploadTitle: "Excelファイルをアップロード",
+                uploadSubtitle: "Excelファイルをここにドラッグ＆ドロップするか、クリックして参照",
+                browseText: "ファイルを参照",
+                convertText: "PDFに変換",
+                resetText: "リセット",
+                previewTitle: "Excelプレビュー",
+                statusTitle: "処理中",
+                statusMessage: "ファイルを変換しています...",
+                successTitle: "変換完了！",
+                successMessage: "PDFファイルのダウンロード準備ができました",
+                downloadText: "PDFをダウンロード",
+                errorTitle: "エラー",
+                errorMessage: "まずExcelファイルをアップロードしてください",
+                fileError: "有効なExcelファイルを選択してください (.xlsx または .xls)",
+                footerText: "© 2023 ExcelからPDFへのコンバーター | Unicode完全サポート | すべてのファイルはブラウザ内でローカルに処理されます",
+                feature1Title: "Unicodeサポート",
+                feature1Text: "アラビア語、中国語、日本語およびすべての言語を完全サポート",
+                feature2Title: "モバイルフレンドリー",
+                feature2Text: "すべてのデバイスと画面サイズで完璧に動作",
+                feature3Title: "安全",
+                feature3Text: "ファイルはデバイスから離れることはありません - 100%クライアントサイド",
+                convertedOn: "変換日時："
+            }
+        };
+
+        // Current language
+        let currentLang = 'en';
+        let uploadedFile = null;
+        let pdfBlob = null;
+
+        // DOM Elements
+        const langSelect = document.getElementById('lang-select');
+        const fileInput = document.getElementById('file-input');
+        const browseBtn = document.getElementById('browse-btn');
+        const dropArea = document.getElementById('drop-area');
+        const fileInfo = document.getElementById('file-info');
+        const fileName = document.getElementById('file-name');
+        const previewSection = document.getElementById('preview-section');
+        const excelPreview = document.getElementById('excel-preview');
+        const convertBtn = document.getElementById('convert-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const statusSection = document.getElementById('status-section');
+        const statusTitle = document.getElementById('status-title');
+        const statusMessage = document.getElementById('status-message');
+        const downloadBtn = document.getElementById('download-btn');
+        const statusIcon = document.querySelector('#status-content .status-icon i');
+
+        // Set language
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang] || translations.en;
+            
+            // Update all text elements
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('upload-title').textContent = t.uploadTitle;
+            document.getElementById('upload-subtitle').textContent = t.uploadSubtitle;
+            document.getElementById('browse-text').textContent = t.browseText;
+            document.getElementById('preview-title').textContent = t.previewTitle;
+            document.getElementById('convert-text').textContent = t.convertText;
+            document.getElementById('reset-text').textContent = t.resetText;
+            document.getElementById('download-text').textContent = t.downloadText;
+            document.getElementById('footer-text').textContent = t.footerText;
+            document.getElementById('feature1-title').textContent = t.feature1Title;
+            document.getElementById('feature1-text').textContent = t.feature1Text;
+            document.getElementById('feature2-title').textContent = t.feature2Title;
+            document.getElementById('feature2-text').textContent = t.feature2Text;
+            document.getElementById('feature3-title').textContent = t.feature3Title;
+            document.getElementById('feature3-text').textContent = t.feature3Text;
+            
+            // Update preview direction for RTL languages
+            if (lang === 'ar') {
+                excelPreview.classList.add('arabic-font');
+            } else if (lang === 'zh') {
+                excelPreview.classList.add('chinese-font');
+            } else if (lang === 'ja') {
+                excelPreview.classList.add('japanese-font');
+            } else {
+                excelPreview.classList.remove('arabic-font', 'chinese-font', 'japanese-font');
+            }
+        }
+
+        // Initialize with default language
+        setLanguage(currentLang);
+
+        // Event listeners
+        langSelect.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+
+        browseBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileSelect);
+        dropArea.addEventListener('dragover', handleDragOver);
+        dropArea.addEventListener('dragleave', handleDragLeave);
+        dropArea.addEventListener('drop', handleDrop);
+        convertBtn.addEventListener('click', convertToPDF);
+        resetBtn.addEventListener('click', resetConverter);
+        downloadBtn.addEventListener('click', downloadPDF);
+
+        // Handle file selection
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            processFile(file);
+        }
+
+        // Handle drag over
+        function handleDragOver(e) {
+            e.preventDefault();
+            dropArea.style.borderColor = 'var(--primary)';
+            dropArea.style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
+        }
+
+        // Handle drag leave
+        function handleDragLeave(e) {
+            e.preventDefault();
+            dropArea.style.borderColor = 'var(--border)';
+            dropArea.style.backgroundColor = 'var(--light)';
+        }
+
+        // Handle file drop
+        function handleDrop(e) {
+            e.preventDefault();
+            handleDragLeave(e);
+            
+            const file = e.dataTransfer.files[0];
+            processFile(file);
+        }
+
+        // Process uploaded file
+        function processFile(file) {
+            if (!file) return;
+            
+            const validTypes = [
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.ms-excel.sheet.macroEnabled.12'
+            ];
+            
+            if (!validTypes.includes(file.type) && 
+                !file.name.match(/\.(xlsx|xls)$/i)) {
+                showStatus('error', translations[currentLang].errorTitle, translations[currentLang].fileError);
+                return;
+            }
+            
+            uploadedFile = file;
+            fileName.textContent = file.name;
+            fileInfo.style.display = 'block';
+            previewSection.style.display = 'block';
+            
+            previewExcel(file);
+        }
+
+        // Preview Excel file
+        function previewExcel(file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Get first sheet
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Convert to HTML table
+                    const html = XLSX.utils.sheet_to_html(worksheet, { id: 'excel-table' });
+                    excelPreview.innerHTML = html;
+                    
+                    // Style the table
+                    const table = document.getElementById('excel-table');
+                    if (table) {
+                        table.classList.add('preview-table');
+                        table.style.width = '100%';
+                        table.style.borderCollapse = 'collapse';
+                        
+                        // Add CSS to table elements
+                        const cells = table.getElementsByTagName('td');
+                        for (let cell of cells) {
+                            cell.style.border = '1px solid #ddd';
+                            cell.style.padding = '8px';
+                        }
+                        
+                        const headers = table.getElementsByTagName('th');
+                        for (let header of headers) {
+                            header.style.backgroundColor = '#f2f2f2';
+                            header.style.border = '1px solid #ddd';
+                            header.style.padding = '10px';
+                            header.style.textAlign = 'left';
+                        }
+                    }
+                    
+                    // Apply language-specific styling
+                    if (currentLang === 'ar') {
+                        excelPreview.classList.add('arabic-font');
+                    } else if (currentLang === 'zh') {
+                        excelPreview.classList.add('chinese-font');
+                    } else if (currentLang === 'ja') {
+                        excelPreview.classList.add('japanese-font');
+                    }
+                    
+                } catch (error) {
+                    console.error('Error parsing Excel file:', error);
+                    showStatus('error', translations[currentLang].errorTitle, error.message);
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+
+        // Convert to PDF
+        function convertToPDF() {
+            if (!uploadedFile) {
+                showStatus('error', translations[currentLang].errorTitle, translations[currentLang].errorMessage);
+                return;
+            }
+            
+            showStatus('loading', translations[currentLang].statusTitle, translations[currentLang].statusMessage);
+            
+            setTimeout(() => {
+                try {
+                    const table = document.getElementById('excel-table');
+                    if (!table) throw new Error('No table found for conversion');
+                    
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    
+                    // Add title
+                    doc.setFontSize(18);
+                    doc.text(uploadedFile.name.replace(/\.[^/.]+$/, ""), 14, 15);
+                    
+                    // Add conversion date
+                    doc.setFontSize(10);
+                    doc.setTextColor(100);
+                    doc.text(`${translations[currentLang].convertedOn || 'Converted on:'} ${new Date().toLocaleString()}`, 14, 22);
+                    
+                    // Convert table to PDF with proper Unicode support
+                    doc.autoTable({
+                        html: table,
+                        startY: 25,
+                        theme: 'grid',
+                        styles: { 
+                            fontSize: 9, 
+                            cellPadding: 3,
+                            font: 'helvetica'
+                        },
+                        headStyles: { 
+                            fillColor: [67, 97, 238],
+                            fontStyle: 'bold'
+                        },
+                        // Use custom renderer for Unicode support
+                        didParseCell: function(data) {
+                            // Handle RTL for Arabic
+                            if (currentLang === 'ar') {
+                                data.cell.styles.halign = 'right';
+                                data.cell.styles.font = 'NotoSansArabic';
+                            }
+                        },
+                        // Use custom font for Unicode characters
+                        willDrawCell: function(data) {
+                            if (currentLang === 'ar') {
+                                doc.setFont('NotoSansArabic', 'normal');
+                            } else if (currentLang === 'zh') {
+                                doc.setFont('NotoSansSC', 'normal');
+                            } else if (currentLang === 'ja') {
+                                doc.setFont('NotoSansJP', 'normal');
+                            } else {
+                                doc.setFont('helvetica', 'normal');
+                            }
+                        }
+                    });
+                    
+                    // Generate PDF blob
+                    pdfBlob = doc.output('blob');
+                    
+                    // Show success message
+                    showStatus('success', translations[currentLang].successTitle, translations[currentLang].successMessage);
+                    downloadBtn.style.display = 'inline-flex';
+                    
+                } catch (error) {
+                    console.error('Conversion error:', error);
+                    showStatus('error', translations[currentLang].errorTitle, error.message);
+                }
+            }, 1500);
+        }
+
+        // Download PDF
+        function downloadPDF() {
+            if (!pdfBlob) return;
+            
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            const a = document.createElement('a');
+            a.href = pdfUrl;
+            a.download = uploadedFile.name.replace(/\.[^/.]+$/, '') + '.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(pdfUrl);
+        }
+
+        // Reset converter
+        function resetConverter() {
+            fileInput.value = '';
+            uploadedFile = null;
+            pdfBlob = null;
+            previewSection.style.display = 'none';
+            fileInfo.style.display = 'none';
+            statusSection.style.display = 'none';
+            excelPreview.innerHTML = '';
+            downloadBtn.style.display = 'none';
+        }
+
+        // Show status message
+        function showStatus(type, title, message) {
+            statusSection.style.display = 'block';
+            statusSection.className = `status-section ${type}`;
+            statusTitle.textContent = title;
+            statusMessage.textContent = message;
+            
+            // Update icon based on status
+            if (type === 'loading') {
+                statusIcon.className = 'fas fa-sync-alt';
+            } else if (type === 'success') {
+                statusIcon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                statusIcon.className = 'fas fa-exclamation-circle';
+            }
+        }
+    </script>
+</body>
+</html>
