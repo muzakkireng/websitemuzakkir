@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word & Character Counter</title>
+    <title>Character Counter Tool | Free Online Text Analysis Utility</title>
+    <meta name="description" content="Free online character counter tool that instantly counts characters, words, and sentences. Perfect for social media, SEO content, and writing projects.">
     <style>
         * {
             margin: 0;
@@ -13,359 +13,452 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #2ec4b6;
+            --warning: #ff9f1c;
+            --danger: #e71d36;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
         body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
-            background-color: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 800px;
-            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         header {
-            background: linear-gradient(to right, #4b6cb7, #182848);
-            color: white;
-            padding: 30px 20px;
             text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
         }
         
         h1 {
             font-size: 2.8rem;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .subtitle {
             font-size: 1.2rem;
-            opacity: 0.9;
-            font-weight: 300;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto;
         }
         
-        .content {
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        @media (min-width: 992px) {
+            .main-content {
+                grid-template-columns: 1.5fr 1fr;
+            }
+        }
+        
+        .counter-section {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             padding: 30px;
+            transition: var(--transition);
         }
         
-        .input-area {
-            margin-bottom: 30px;
+        .counter-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .input-container {
+            margin-bottom: 25px;
         }
         
         textarea {
             width: 100%;
-            height: 200px;
+            min-height: 250px;
             padding: 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
             font-size: 1.1rem;
+            border: 2px solid #e1e5eb;
+            border-radius: var(--border-radius);
             resize: vertical;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
         
         textarea:focus {
             outline: none;
-            border-color: #4b6cb7;
-            box-shadow: 0 0 0 3px rgba(75, 108, 183, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(76, 201, 240, 0.2);
         }
         
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-        
-        button {
-            background: linear-gradient(to right, #4b6cb7, #182848);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        .counter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .counter-box {
-            background: #f8f9ff;
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-        
-        .counter-box:hover {
-            transform: translateY(-5px);
-            background: #f0f4ff;
-        }
-        
-        .counter-title {
-            font-size: 1.1rem;
-            color: #555;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-        
-        .counter-value {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #182848;
-        }
-        
-        .highlight {
-            background: linear-gradient(to right, #4b6cb7, #182848);
-            color: white;
-        }
-        
-        .highlight .counter-title {
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .highlight .counter-value {
-            color: white;
-        }
-        
-        .stats {
-            margin-top: 30px;
-            background: #f8f9ff;
-            border-radius: 12px;
-            padding: 20px;
-        }
-        
-        .stats-title {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #182848;
-            text-align: center;
-        }
-        
-        .stats-grid {
+        .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
+            margin-bottom: 25px;
         }
         
-        .stat-item {
+        .stat-box {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 20px;
             text-align: center;
-            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #555;
         }
         
         .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #4b6cb7;
-            margin-bottom: 5px;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary);
         }
         
-        .stat-label {
+        .progress-container {
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
             font-size: 0.9rem;
             color: #666;
         }
         
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #777;
-            font-size: 0.9rem;
-            border-top: 1px solid #eee;
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
         }
         
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .controls {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            button {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .counter-grid {
-                grid-template-columns: 1fr;
-            }
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid #dee2e6;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-3px);
+        }
+        
+        .btn-reset {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background: #c1121f;
+            transform: translateY(-3px);
+        }
+        
+        .seo-content {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+        }
+        
+        .seo-content h2 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .content-section {
+            margin-bottom: 30px;
+        }
+        
+        .content-section h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+        }
+        
+        .benefits-list {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        
+        .benefits-list li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .faq-item {
+            margin-bottom: 20px;
+            border: 1px solid #eaeaea;
+            border-radius: var(--border-radius);
+            padding: 15px;
+        }
+        
+        .faq-item h4 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, rgba(76, 201, 240, 0.3), rgba(76, 201, 240, 0));
+            padding: 2px 5px;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Word & Character Counter</h1>
-            <p class="subtitle">Real-time text analysis tool</p>
+            <h1>Character Counter Tool</h1>
+            <p class="subtitle">Free online utility to count characters, words, and sentences in your text. Perfect for social media, SEO content, academic writing, and more.</p>
         </header>
         
-        <div class="content">
-            <div class="input-area">
-                <textarea id="textInput" placeholder="Start typing or paste your text here...">This is a sample text to demonstrate the word and character counter. Feel free to delete this and type your own content. The counter will update in real-time as you type!</textarea>
+        <div class="main-content">
+            <div class="counter-section">
+                <div class="input-container">
+                    <textarea id="text-input" placeholder="Type or paste your text here...">Character counters are essential tools for writers, marketers, and social media managers. They help ensure your content fits within platform limits and meets specific requirements. This tool provides real-time statistics as you type!</textarea>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <h3>Characters</h3>
+                        <div class="stat-value" id="char-count">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Words</h3>
+                        <div class="stat-value" id="word-count">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Sentences</h3>
+                        <div class="stat-value" id="sentence-count">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Paragraphs</h3>
+                        <div class="stat-value" id="paragraph-count">0</div>
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-labels">
+                        <span>0%</span>
+                        <span id="progress-text">Character Usage</span>
+                        <span>100%</span>
+                    </div>
+                </div>
                 
                 <div class="controls">
-                    <button id="clearBtn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                        </svg>
-                        Clear Text
-                    </button>
-                    <button id="sampleBtn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
-                            <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
-                        </svg>
-                        Sample Text
-                    </button>
+                    <button class="btn-primary" onclick="copyText()">Copy Text</button>
+                    <button class="btn-secondary" onclick="clearText()">Clear Text</button>
+                    <button class="btn-reset" onclick="resetCounter()">Reset All</button>
                 </div>
             </div>
             
-            <div class="counter-grid">
-                <div class="counter-box highlight">
-                    <div class="counter-title">Words</div>
-                    <div class="counter-value" id="wordCount">0</div>
+            <div class="seo-content">
+                <h2>Why Use a Character Counter?</h2>
+                
+                <div class="content-section">
+                    <h3>The Importance of Character Counting</h3>
+                    <p>Character counting is crucial in many contexts. Social media platforms like Twitter impose strict character limits (280 characters). Meta descriptions for SEO should be under 160 characters. SMS messages have 160-character limits. Academic papers often have strict word count requirements.</p>
+                    <p>This tool helps you stay within these limits while optimizing your content for maximum impact.</p>
                 </div>
                 
-                <div class="counter-box">
-                    <div class="counter-title">Characters</div>
-                    <div class="counter-value" id="charCount">0</div>
+                <div class="content-section">
+                    <h3>Benefits of Using Our Character Counter</h3>
+                    <ul class="benefits-list">
+                        <li><span class="highlight">Real-time analysis</span> - See counts update as you type</li>
+                        <li><span class="highlight">Multi-metric tracking</span> - Characters, words, sentences, paragraphs</li>
+                        <li><span class="highlight">Visual progress indicator</span> - Track your usage against limits</li>
+                        <li><span class="highlight">Responsive design</span> - Works on all devices: desktop, tablet, and mobile</li>
+                        <li><span class="highlight">Completely free</span> - No signup required, no hidden fees</li>
+                        <li><span class="highlight">Privacy focused</span> - Your text never leaves your browser</li>
+                    </ul>
                 </div>
                 
-                <div class="counter-box">
-                    <div class="counter-title">Characters (no spaces)</div>
-                    <div class="counter-value" id="charNoSpacesCount">0</div>
+                <div class="content-section">
+                    <h3>Platform Character Limits</h3>
+                    <p>Different platforms have different requirements:</p>
+                    <ul class="benefits-list">
+                        <li><strong>Twitter:</strong> 280 characters</li>
+                        <li><strong>Facebook:</strong> 63,206 characters (posts), 250 characters (comments)</li>
+                        <li><strong>Instagram:</strong> 2,200 characters (captions)</li>
+                        <li><strong>LinkedIn:</strong> 3,000 characters (posts)</li>
+                        <li><strong>SEO Meta Description:</strong> 150-160 characters recommended</li>
+                    </ul>
                 </div>
                 
-                <div class="counter-box">
-                    <div class="counter-title">Sentences</div>
-                    <div class="counter-value" id="sentenceCount">0</div>
-                </div>
-            </div>
-            
-            <div class="stats">
-                <div class="stats-title">Additional Statistics</div>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-value" id="paragraphCount">0</div>
-                        <div class="stat-label">Paragraphs</div>
+                <div class="content-section">
+                    <h3>Frequently Asked Questions</h3>
+                    <div class="faq-item">
+                        <h4>Does this tool store my text?</h4>
+                        <p>No, all processing happens in your browser. Your text is never sent to any server.</p>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="avgWordLength">0.0</div>
-                        <div class="stat-label">Avg. Word Length</div>
+                    <div class="faq-item">
+                        <h4>What counts as a word?</h4>
+                        <p>A word is any sequence of characters separated by spaces. "Hello-world" counts as one word.</p>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="longestWord">0</div>
-                        <div class="stat-label">Longest Word</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="readingTime">0</div>
-                        <div class="stat-label">Reading Time (min)</div>
+                    <div class="faq-item">
+                        <h4>How are sentences counted?</h4>
+                        <p>Sentences are detected by punctuation marks: periods, exclamation points, and question marks.</p>
                     </div>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>Word & Character Counter Tool &copy; 2023</p>
+            <p>&copy; 2023 Character Counter Tool | | All processing happens in your browser - no files are uploaded to any server</p>
+           
         </footer>
     </div>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const textInput = document.getElementById('textInput');
-            const wordCount = document.getElementById('wordCount');
-            const charCount = document.getElementById('charCount');
-            const charNoSpacesCount = document.getElementById('charNoSpacesCount');
-            const sentenceCount = document.getElementById('sentenceCount');
-            const paragraphCount = document.getElementById('paragraphCount');
-            const avgWordLength = document.getElementById('avgWordLength');
-            const longestWord = document.getElementById('longestWord');
-            const readingTime = document.getElementById('readingTime');
-            const clearBtn = document.getElementById('clearBtn');
-            const sampleBtn = document.getElementById('sampleBtn');
-            
-            // Initial update
+        // DOM Elements
+        const textInput = document.getElementById('text-input');
+        const charCount = document.getElementById('char-count');
+        const wordCount = document.getElementById('word-count');
+        const sentenceCount = document.getElementById('sentence-count');
+        const paragraphCount = document.getElementById('paragraph-count');
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+        
+        // Initialize with example text
+        window.addEventListener('DOMContentLoaded', () => {
             updateCounts();
-            
-            // Update counts as user types
-            textInput.addEventListener('input', updateCounts);
-            
-            // Clear text
-            clearBtn.addEventListener('click', function() {
-                textInput.value = '';
-                updateCounts();
-                textInput.focus();
-            });
-            
-            // Insert sample text
-            sampleBtn.addEventListener('click', function() {
-                textInput.value = "This is a sample text to demonstrate the word and character counter. Feel free to delete this and type your own content. The counter will update in real-time as you type!\n\nTry writing multiple paragraphs to see how the paragraph count increases. The tool also calculates additional statistics like average word length and estimated reading time.";
-                updateCounts();
-                textInput.focus();
-            });
-            
-            function updateCounts() {
-                const text = textInput.value;
-                
-                // Word count
-                const words = text.match(/\b\w+\b/g) || [];
-                wordCount.textContent = words.length;
-                
-                // Character count (with spaces)
-                charCount.textContent = text.length;
-                
-                // Character count (without spaces)
-                charNoSpacesCount.textContent = text.replace(/\s+/g, '').length;
-                
-                // Sentence count
-                const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-                sentenceCount.textContent = sentences.length;
-                
-                // Paragraph count
-                const paragraphs = text.split('\n').filter(p => p.trim().length > 0);
-                paragraphCount.textContent = paragraphs.length;
-                
-                // Calculate average word length
-                const totalLetters = words.reduce((acc, word) => acc + word.length, 0);
-                const avgLength = words.length ? (totalLetters / words.length).toFixed(1) : 0;
-                avgWordLength.textContent = avgLength;
-                
-                // Find longest word
-                const longest = words.reduce((longest, word) => word.length > longest ? word.length : longest, 0);
-                longestWord.textContent = longest;
-                
-                // Calculate reading time (200 words per minute)
-                const minutes = Math.ceil(words.length / 200);
-                readingTime.textContent = minutes;
-            }
         });
+        
+        // Update counts as user types
+        textInput.addEventListener('input', updateCounts);
+        
+        // Update all counts and progress
+        function updateCounts() {
+            const text = textInput.value;
+            
+            // Character count (including spaces)
+            const charCountValue = text.length;
+            charCount.textContent = charCountValue.toLocaleString();
+            
+            // Word count
+            const words = text.match(/\b\w+\b/g) || [];
+            const wordCountValue = words.length;
+            wordCount.textContent = wordCountValue.toLocaleString();
+            
+            // Sentence count
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            const sentenceCountValue = sentences.length;
+            sentenceCount.textContent = sentenceCountValue.toLocaleString();
+            
+            // Paragraph count
+            const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+            const paragraphCountValue = paragraphs.length;
+            paragraphCount.textContent = paragraphCountValue.toLocaleString();
+            
+            // Progress indicator (based on 280 character Twitter limit)
+            const maxChars = 280;
+            const progressPercentage = Math.min(100, (charCountValue / maxChars) * 100);
+            progressFill.style.width = `${progressPercentage}%`;
+            
+            // Update progress text
+            progressText.textContent = charCountValue > maxChars ? 
+                `Exceeded limit by ${charCountValue - maxChars} characters` : 
+                `${maxChars - charCountValue} characters remaining`;
+            
+            // Change progress color based on usage
+            if (progressPercentage > 90) {
+                progressFill.style.background = 'linear-gradient(to right, var(--warning), var(--danger))';
+            } else if (progressPercentage > 70) {
+                progressFill.style.background = 'linear-gradient(to right, var(--accent), var(--warning))';
+            } else {
+                progressFill.style.background = 'linear-gradient(to right, var(--accent), var(--primary))';
+            }
+        }
+        
+        // Copy text to clipboard
+        function copyText() {
+            textInput.select();
+            document.execCommand('copy');
+            alert('Text copied to clipboard!');
+        }
+        
+        // Clear text area
+        function clearText() {
+            textInput.value = '';
+            updateCounts();
+        }
+        
+        // Reset counter and text
+        function resetCounter() {
+            textInput.value = '';
+            updateCounts();
+            progressFill.style.background = 'linear-gradient(to right, var(--accent), var(--primary))';
+        }
     </script>
 </body>
 </html>
