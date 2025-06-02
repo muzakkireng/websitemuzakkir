@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Binary Converter | Online Tool for Binary Translation</title>
+    <meta name="description" content="Free online tool to convert text to binary code instantly. Learn about binary systems and how text encoding works. Perfect for students, developers, and tech enthusiasts.">
+    <meta name="keywords" content="text to binary, binary converter, binary translator, ascii to binary, text encoding, binary code generator">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1550439062-609e1531270e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f0f0f0;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            color: #4df0ff;
+            text-shadow: 0 0 10px rgba(77, 240, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #c0c0c0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .converter-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(20, 30, 48, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .info-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 40, 58, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #4df0ff;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4df0ff;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        textarea, input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #3a506b;
+            background: rgba(10, 15, 25, 0.7);
+            color: white;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #4df0ff;
+        }
+
+        button {
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+        }
+
+        .result-container {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(10, 15, 25, 0.7);
+            border-radius: 8px;
+            border: 1px solid #3a506b;
+            min-height: 150px;
+            word-wrap: break-word;
+        }
+
+        .result-title {
+            color: #4df0ff;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .binary-result {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            letter-spacing: 1px;
+        }
+
+        .info-content h3 {
+            font-size: 1.5rem;
+            margin: 20px 0 10px;
+            color: #4df0ff;
+        }
+
+        .info-content p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        .example {
+            background: rgba(10, 15, 25, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .feature {
+            background: rgba(77, 240, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .feature h4 {
+            color: #4df0ff;
+            margin-bottom: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 30px;
+            border-top: 1px solid #3a506b;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Text to Binary Converter</h1>
+            <p class="tagline">Instantly convert any text to binary code. Free online tool for developers, students, and tech enthusiasts.</p>
+        </header>
+
+        <div class="main-content">
+            <section class="converter-section">
+                <h2 class="section-title">Convert Text to Binary</h2>
+                <div class="input-group">
+                    <label for="text-input">Enter your text:</label>
+                    <textarea id="text-input" rows="4" placeholder="Type or paste your text here...">Hello World!</textarea>
+                </div>
+                
+                <div class="input-group">
+                    <button id="convert-btn">Convert to Binary</button>
+                    <button id="clear-btn">Clear All</button>
+                </div>
+                
+                <div class="result-container">
+                    <div class="result-title">Binary Result:</div>
+                    <div id="binary-result" class="binary-result">01001000 01100101 01101100 01101100 01101111 00100000 01010111 01101111 01110010 01101100 01100100 00100001</div>
+                </div>
+            </section>
+            
+            <section class="info-section">
+                <h2 class="section-title">About Binary Encoding</h2>
+                <div class="info-content">
+                    <p>Binary code is the fundamental language of computers. It represents text, computer processor instructions, and other data using a two-symbol system: 0 and 1.</p>
+                    
+                    <h3>How Text to Binary Conversion Works</h3>
+                    <p>Each character in your text is converted to its corresponding ASCII (American Standard Code for Information Interchange) value. This numerical value is then converted to its 8-bit binary representation.</p>
+                    
+                    <div class="example">
+                        'H' → ASCII 72 → Binary 01001000<br>
+                        'e' → ASCII 101 → Binary 01100101<br>
+                        'l' → ASCII 108 → Binary 01101100
+                    </div>
+                    
+                    <h3>Common Uses of Binary Code</h3>
+                    <div class="features">
+                        <div class="feature">
+                            <h4>Computer Systems</h4>
+                            <p>All data in computers is ultimately stored and processed as binary.</p>
+                        </div>
+                        <div class="feature">
+                            <h4>Digital Communications</h4>
+                            <p>Binary is used in networking protocols and data transmission.</p>
+                        </div>
+                        <div class="feature">
+                            <h4>Programming</h4>
+                            <p>Low-level programming and hardware interaction often involves binary.</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Binary in Modern Computing</h3>
+                    <p>While programmers typically work with higher-level languages, understanding binary is essential for:</p>
+                    <ul style="padding-left: 20px; margin: 15px 0;">
+                        <li style="margin-bottom: 8px;">Debugging low-level issues</li>
+                        <li style="margin-bottom: 8px;">Working with file formats and encodings</li>
+                        <li style="margin-bottom: 8px;">Understanding computer architecture</li>
+                        <li style="margin-bottom: 8px;">Cybersecurity and reverse engineering</li>
+                    </ul>
+                    
+                    <p>Our tool provides an easy way to visualize how computers represent human-readable text in binary format.</p>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>Text to Binary Converter &copy; 2025</p>
+            <p style="margin-top: 10px; color: #aaa;">This tool converts text to binary using ASCII encoding. All conversions happen locally in your browser for privacy.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textInput = document.getElementById('text-input');
+            const convertBtn = document.getElementById('convert-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const binaryResult = document.getElementById('binary-result');
+            
+            // Convert text to binary
+            function textToBinary(text) {
+                return text.split('').map(char => {
+                    const binary = char.charCodeAt(0).toString(2);
+                    return binary.padStart(8, '0');
+                }).join(' ');
+            }
+            
+            // Convert button event
+            convertBtn.addEventListener('click', function() {
+                const text = textInput.value;
+                binaryResult.textContent = textToBinary(text);
+            });
+            
+            // Clear button event
+            clearBtn.addEventListener('click', function() {
+                textInput.value = '';
+                binaryResult.textContent = '';
+            });
+            
+            // Initialize with example
+            binaryResult.textContent = textToBinary('Hello World!');
+        });
+    </script>
+</body>
+</html>
