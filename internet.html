@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Open Source Internet Speed & IP Checker</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; text-align: center; padding: 40px; }
+    .container { background: #fff; border-radius: 10px; padding: 30px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h1 { font-size: 24px; margin-bottom: 20px; }
+    .info, .speed { font-size: 18px; margin: 10px 0; }
+    button { margin-top: 20px; padding: 12px 24px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 6px; }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🌐 Internet Speed </h1>
+
+  <div class="info">
+    <p>IP Address: <span id="ip">Loading...</span></p>
+    <p>Location: <span id="location">--</span></p>
+    <p>ISP: <span id="isp">--</span></p>
+  </div>
+
+  <hr>
+
+  <div class="speed">
+    <p>Download Speed: <span id="download">--</span> Mbps</p>
+    <p>Upload Speed: <span id="upload">--</span> Mbps</p>
+    <p>Ping: <span id="ping">--</span> ms</p>
+    <button onclick="startSpeedTest()">Start Speed Test</button>
+  </div>
+</div>
+
+<!-- Include LibreSpeed's speedtest.js -->
+<script src="https://cdn.jsdelivr.net/gh/librespeed/speedtest/speedtest.js"></script>
+
+<script>
+// Get IP and Location from ip-api.com (Open Source)
+fetch('http://ip-api.com/json/')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('ip').textContent = data.query;
+    document.getElementById('location').textContent = `${data.city}, ${data.country}`;
+    document.getElementById('isp').textContent = data.isp;
+  });
+
+// Start LibreSpeed test
+function startSpeedTest() {
+  const st = new Speedtest();
+  st.onupdate = data => {
+    document.getElementById("download").textContent = (data.download / 1e6).toFixed(2);
+    document.getElementById("upload").textContent = (data.upload / 1e6).toFixed(2);
+    document.getElementById("ping").textContent = data.ping.toFixed(2);
+  };
+  st.onend = () => console.log("Test complete.");
+  st.start();
+}
+</script>
+
+</body>
+</html>
