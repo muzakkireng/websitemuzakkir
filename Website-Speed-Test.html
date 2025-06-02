@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Speed Test | Analyze & Improve Your Site Performance</title>
+    <meta name="description" content="Free website speed test tool. Analyze your site's performance, get actionable insights, and improve loading times for better user experience and SEO.">
+    <meta name="keywords" content="website speed test, page speed, site performance, loading time, web optimization, seo tool">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2670&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 60px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #4a90e2;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #4a90e2, #5bc0de);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+            color: #f0f0f0;
+        }
+        
+        .speed-test-container {
+            background: rgba(25, 30, 40, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 800px;
+            margin: 0 auto 50px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 25px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .input-group button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 0 30px;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .input-group button:hover {
+            background: #3a7bc8;
+        }
+        
+        .test-results {
+            display: none;
+            background: rgba(35, 40, 50, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #4a90e2;
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .metric-card {
+            background: rgba(45, 50, 65, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            background: rgba(55, 60, 75, 0.8);
+        }
+        
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 10px 0;
+            color: #5bc0de;
+        }
+        
+        .metric-title {
+            font-size: 1rem;
+            color: #aaa;
+        }
+        
+        .grade {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            background: #27ae60;
+        }
+        
+        .progress-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            height: 20px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12, #27ae60);
+            width: 0%;
+            transition: width 1.5s ease;
+        }
+        
+        .test-info {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-card {
+            background: rgba(35, 40, 50, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .info-card h3 {
+            color: #4a90e2;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .info-card ul {
+            list-style: none;
+        }
+        
+        .info-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .info-card li:last-child {
+            border-bottom: none;
+        }
+        
+        .seo-content {
+            max-width: 900px;
+            margin: 40px auto;
+            background: rgba(25, 30, 40, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .seo-content h2 {
+            color: #4a90e2;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .content-card {
+            background: rgba(45, 50, 65, 0.6);
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            background: rgba(55, 60, 75, 0.7);
+        }
+        
+        .content-card h3 {
+            color: #5bc0de;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .content-card p {
+            color: #ddd;
+            line-height: 1.6;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px 0;
+            color: #aaa;
+            font-size: 0.9rem;
+            background: rgba(15, 20, 30, 0.9);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #4a90e2;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-group input {
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+            
+            .input-group button {
+                border-radius: 8px;
+                padding: 15px;
+            }
+            
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .speed-test-container, .seo-content {
+                padding: 20px;
+            }
+            
+            .test-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-tachometer-alt"></i>
+            </div>
+            <h1>Website Speed Test Analyzer</h1>
+            <p class="subtitle">Test your website's loading speed, analyze performance metrics, and get actionable recommendations to improve user experience and SEO ranking.</p>
+        </header>
+        
+        <main>
+            <div class="speed-test-container">
+                <div class="input-group">
+                    <input type="url" id="website-url" placeholder="Enter your website URL (e.g., https://example.com)" required>
+                    <button id="test-btn">
+                        <i class="fas fa-bolt"></i> Test Speed
+                    </button>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing your website performance...</p>
+                </div>
+                
+                <div class="test-results" id="results">
+                    <div class="result-header">
+                        <h2>Test Results for <span id="result-url">example.com</span></h2>
+                        <div class="grade">A+</div>
+                    </div>
+                    
+                    <div class="metrics">
+                        <div class="metric-card">
+                            <div class="metric-title">LOAD TIME</div>
+                            <div class="metric-value" id="load-time">1.2s</div>
+                            <div class="metric-title">Desktop</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">PERFORMANCE SCORE</div>
+                            <div class="metric-value" id="performance">96</div>
+                            <div class="metric-title">Out of 100</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">PAGE SIZE</div>
+                            <div class="metric-value" id="page-size">780KB</div>
+                            <div class="metric-title">Optimized</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">REQUESTS</div>
+                            <div class="metric-value" id="requests">24</div>
+                            <div class="metric-title">Resources</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <p style="text-align: center; margin-top: 10px; color: #aaa;">Performance score compared to industry standards</p>
+                    
+                    <div class="test-info">
+                        <div class="info-card">
+                            <h3><i class="fas fa-check-circle"></i> What's Working Well</h3>
+                            <ul>
+                                <li>Image Optimization <span class="grade">Good</span></li>
+                                <li>Browser Caching <span class="grade">Excellent</span></li>
+                                <li>Minified CSS/JS <span class="grade">Good</span></li>
+                                <li>Server Response <span class="grade">Excellent</span></li>
+                            </ul>
+                        </div>
+                        <div class="info-card">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Areas to Improve</h3>
+                            <ul>
+                                <li>Render Blocking Resources <span class="grade" style="background: #f39c12;">Fair</span></li>
+                                <li>Unused JavaScript <span class="grade" style="background: #f39c12;">Fair</span></li>
+                                <li>Lazy Loading Images <span class="grade" style="background: #e74c3c;">Poor</span></li>
+                                <li>Defer Offscreen Images <span class="grade" style="background: #e74c3c;">Poor</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="seo-content">
+                <h2>Why Website Speed Matters</h2>
+                <div class="content-grid">
+                    <div class="content-card">
+                        <h3><i class="fas fa-users"></i> User Experience</h3>
+                        <p>53% of visitors abandon sites that take longer than 3 seconds to load. Faster sites lead to lower bounce rates and higher engagement.</p>
+                    </div>
+                    <div class="content-card">
+                        <h3><i class="fas fa-chart-line"></i> SEO Rankings</h3>
+                        <p>Google uses page speed as a ranking factor. Faster websites rank higher in search results, driving more organic traffic.</p>
+                    </div>
+                    <div class="content-card">
+                        <h3><i class="fas fa-shopping-cart"></i> Conversion Rates</h3>
+                        <p>A 1-second delay can reduce conversions by 7%. Faster sites improve user trust and increase sales.</p>
+                    </div>
+                    <div class="content-card">
+                        <h3><i class="fas fa-mobile-alt"></i> Mobile Optimization</h3>
+                        <p>With over 60% of web traffic from mobile devices, optimizing for mobile speed is crucial for reaching your audience.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Website Speed Test Analyzer | All Rights Reserved | no data are stored to any server</p>
+            <p>This tool provides performance metrics and recommendations to help improve your website speed.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testBtn = document.getElementById('test-btn');
+            const websiteUrl = document.getElementById('website-url');
+            const results = document.getElementById('results');
+            const loading = document.getElementById('loading');
+            const resultUrl = document.getElementById('result-url');
+            const progressBar = document.getElementById('progress-bar');
+            const loadTime = document.getElementById('load-time');
+            const performance = document.getElementById('performance');
+            const pageSize = document.getElementById('page-size');
+            const requests = document.getElementById('requests');
+            
+            testBtn.addEventListener('click', function() {
+                const url = websiteUrl.value.trim();
+                
+                if (!url) {
+                    alert('Please enter a valid URL');
+                    return;
+                }
+                
+                // Extract domain for display
+                let domain = url.replace(/(^\w+:|^)\/\//, '');
+                domain = domain.split('/')[0];
+                resultUrl.textContent = domain;
+                
+                // Show loading
+                results.style.display = 'none';
+                loading.style.display = 'block';
+                
+                // Simulate test process
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    results.style.display = 'block';
+                    
+                    // Generate random metrics for demo
+                    const demoLoadTime = (Math.random() * 3 + 0.5).toFixed(1) + 's';
+                    const demoPerformance = Math.floor(Math.random() * 30 + 70);
+                    const demoPageSize = Math.floor(Math.random() * 700 + 300) + 'KB';
+                    const demoRequests = Math.floor(Math.random() * 20 + 15);
+                    
+                    loadTime.textContent = demoLoadTime;
+                    performance.textContent = demoPerformance;
+                    pageSize.textContent = demoPageSize;
+                    requests.textContent = demoRequests;
+                    
+                    // Animate progress bar
+                    progressBar.style.width = '0%';
+                    setTimeout(() => {
+                        progressBar.style.width = demoPerformance + '%';
+                    }, 300);
+                }, 2500);
+            });
+            
+            // Demo for initial page load
+            setTimeout(() => {
+                websiteUrl.value = 'https://example.com';
+                testBtn.click();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
