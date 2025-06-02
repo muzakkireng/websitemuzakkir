@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online speech to text converter. Convert your voice to text in real-time. Works on all devices - no installation required.">
+    <meta name="keywords" content="speech to text, voice recognition, dictation, transcription, voice typing">
+    <title>Free Speech to Text Converter | Real-Time Voice Transcription</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            width: 100%;
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin: 20px 0;
+            width: 100%;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .app-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .app-header h2 {
+            font-size: 2.2rem;
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .app-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .app-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .app-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .input-section, .output-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .mic-control {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .mic-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, #3498db, #1a2a6c);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .mic-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .mic-btn.listening {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+        
+        .mic-btn i {
+            font-size: 3rem;
+        }
+        
+        .status {
+            text-align: center;
+            font-size: 1.2rem;
+            min-height: 30px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .text-display {
+            background: #f8f9fa;
+            border-radius: 10px;
+            min-height: 200px;
+            padding: 20px;
+            border: 1px solid #e1e4e8;
+            font-size: 1.1rem;
+            overflow-y: auto;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(to right, #3498db, #1a2a6c);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn.copy {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+        }
+        
+        .btn.clear {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+        }
+        
+        .btn.save {
+            background: linear-gradient(to right, #9b59b6, #8e44ad);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-card i {
+            font-size: 3rem;
+            color: #1a2a6c;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #1a2a6c;
+        }
+        
+        .seo-content {
+            padding: 40px 0;
+            color: white;
+            width: 100%;
+        }
+        
+        .seo-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .seo-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .seo-section h3 {
+            font-size: 1.8rem;
+            margin: 30px 0 15px;
+            color: #ffcc00;
+        }
+        
+        .seo-section p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .faq {
+            margin-top: 40px;
+        }
+        
+        .faq-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .faq-question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #ffcc00;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            width: 100%;
+            margin-top: auto;
+        }
+        
+        footer p {
+            opacity: 0.8;
+        }
+        
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        select {
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 2px solid #3498db;
+            background: white;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #3498db;
+        }
+        
+        .instructions h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Speech to Text Converter</h1>
+            <p>Convert your spoken words into text in real-time. Free, fast, and works on all devices - no installation required!</p>
+        </header>
+        
+        <div class="card">
+            <div class="app-container">
+                <div class="app-header">
+                    <h2>Voice to Text Converter</h2>
+                    <p>Click the microphone and start speaking to see your words appear as text</p>
+                </div>
+                
+                <div class="app-content">
+                    <div class="input-section">
+                        <div class="language-selector">
+                            <select id="language-select">
+                                <option value="en-US">English (US)</option>
+                                <option value="en-GB">English (UK)</option>
+                                <option value="es-ES">Spanish</option>
+                                <option value="fr-FR">French</option>
+                                <option value="de-DE">German</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mic-control">
+                            <button id="mic-btn" class="mic-btn">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="status" id="status">
+                            Click the microphone to start
+                        </div>
+                        
+                        <div class="instructions">
+                            <h3>How to use:</h3>
+                            <ol>
+                                <li>Select your language from the dropdown</li>
+                                <li>Click the microphone button</li>
+                                <li>Allow microphone access when prompted</li>
+                                <li>Start speaking clearly into your microphone</li>
+                                <li>Click the microphone again to stop</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="output-section">
+                        <h3>Transcription Result:</h3>
+                        <div class="text-display" id="output-text" contenteditable="true">
+                            Your transcribed text will appear here...
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn copy" id="copy-btn">
+                                <i class="fas fa-copy"></i> Copy Text
+                            </button>
+                            <button class="btn clear" id="clear-btn">
+                                <i class="fas fa-trash-alt"></i> Clear Text
+                            </button>
+                            <button class="btn save" id="save-btn">
+                                <i class="fas fa-save"></i> Save as File
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>Mobile Friendly</h3>
+                <p>Works perfectly on all smartphones and tablets with responsive design.</p>
+            </div>
+            
+            <div class="feature-card">
+                <i class="fas fa-bolt"></i>
+                <h3>Real-Time Results</h3>
+                <p>See your speech converted to text instantly as you speak.</p>
+            </div>
+            
+            <div class="feature-card">
+                <i class="fas fa-globe"></i>
+                <h3>Multi-Language</h3>
+                <p>Supports multiple languages for global accessibility.</p>
+            </div>
+        </div>
+        
+        <div class="seo-content">
+            <div class="seo-section">
+                <h2>Free Online Speech to Text Converter</h2>
+                
+                <h3>Transform Your Voice into Text Effortlessly</h3>
+                <p>Our Speech to Text Converter is a powerful, free online tool that allows you to convert spoken words into written text in real-time. Whether you're a student, professional, content creator, or someone with accessibility needs, our tool makes it easy to transcribe speech without any downloads or installations.</p>
+                
+                <h3>Key Features of Our Voice to Text Tool</h3>
+                <p><strong>High Accuracy:</strong> Utilizing advanced speech recognition technology, our converter delivers accurate transcriptions for clear speech.</p>
+                <p><strong>Multi-Platform Support:</strong> Works seamlessly on Windows, macOS, iOS, and Android devices. Access your transcriptions anywhere, anytime.</p>
+                <p><strong>Privacy Focused:</strong> All processing happens in your browser - your voice data never leaves your device.</p>
+                <p><strong>No Signup Required:</strong> Start converting immediately without creating an account or providing personal information.</p>
+                <p><strong>Completely Free:</strong> Enjoy unlimited speech-to-text conversion without any hidden costs or subscriptions.</p>
+                
+                <h3>Practical Applications</h3>
+                <p><strong>Content Creation:</strong> Quickly draft blog posts, articles, or social media content by speaking instead of typing.</p>
+                <p><strong>Note Taking:</strong> Capture meeting notes, lecture points, or brainstorming sessions hands-free.</p>
+                <p><strong>Accessibility:</strong> Makes digital content creation accessible for individuals with mobility challenges.</p>
+                <p><strong>Language Learning:</strong> Practice pronunciation and get instant transcription feedback.</p>
+                <p><strong>Productivity:</strong> Dictate emails, messages, or documents while multitasking.</p>
+                
+                <div class="faq">
+                    <h3>Frequently Asked Questions</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Is this speech to text converter really free?</div>
+                        <p>Yes, our tool is completely free to use with no hidden fees. You can convert unlimited speech without any restrictions.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Do I need to install any software?</div>
+                        <p>No installation required! Our speech recognition works directly in your web browser on both desktop and mobile devices.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">How accurate is the transcription?</div>
+                        <p>Accuracy depends on microphone quality, background noise, and speaking clarity. In optimal conditions, accuracy is over 90% for supported languages.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Does it work on smartphones?</div>
+                        <p>Yes, our converter is fully responsive and works perfectly on all modern smartphones including iPhone and Android devices.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 Speech to Text Converter |All processing happens in your browser - no files are uploaded to any server</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const micBtn = document.getElementById('mic-btn');
+            const outputText = document.getElementById('output-text');
+            const status = document.getElementById('status');
+            const copyBtn = document.getElementById('copy-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const saveBtn = document.getElementById('save-btn');
+            const languageSelect = document.getElementById('language-select');
+            
+            let recognition;
+            let isListening = false;
+            
+            // Initialize Speech Recognition
+            function initSpeechRecognition() {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                
+                if (!SpeechRecognition) {
+                    status.textContent = "Speech recognition not supported in this browser. Try Chrome or Edge.";
+                    micBtn.disabled = true;
+                    return;
+                }
+                
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = languageSelect.value;
+                
+                recognition.onstart = () => {
+                    isListening = true;
+                    micBtn.classList.add('listening');
+                    status.textContent = "Listening... Speak now";
+                };
+                
+                recognition.onresult = (event) => {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                            transcript += event.results[i][0].transcript;
+                        } else {
+                            transcript += event.results[i][0].transcript;
+                        }
+                    }
+                    
+                    outputText.textContent = transcript;
+                };
+                
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error', event.error);
+                    status.textContent = "Error: " + event.error;
+                    stopRecognition();
+                };
+                
+                recognition.onend = () => {
+                    if (isListening) {
+                        recognition.start(); // Restart if still listening
+                    }
+                };
+            }
+            
+            // Start/stop speech recognition
+            function toggleRecognition() {
+                if (!recognition) {
+                    initSpeechRecognition();
+                }
+                
+                if (!isListening) {
+                    try {
+                        recognition.lang = languageSelect.value;
+                        recognition.start();
+                    } catch (error) {
+                        status.textContent = "Error accessing microphone. Please check permissions.";
+                        console.error(error);
+                    }
+                } else {
+                    stopRecognition();
+                }
+            }
+            
+            function stopRecognition() {
+                if (recognition) {
+                    recognition.stop();
+                }
+                isListening = false;
+                micBtn.classList.remove('listening');
+                status.textContent = "Click the microphone to start";
+            }
+            
+            // Event Listeners
+            micBtn.addEventListener('click', toggleRecognition);
+            
+            copyBtn.addEventListener('click', () => {
+                const text = outputText.textContent;
+                if (text.trim() === "") return;
+                
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Text';
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text: ', err);
+                    });
+            });
+            
+            clearBtn.addEventListener('click', () => {
+                outputText.textContent = '';
+            });
+            
+            saveBtn.addEventListener('click', () => {
+                const text = outputText.textContent;
+                if (text.trim() === "") return;
+                
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'transcription.txt';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 0);
+            });
+            
+            languageSelect.addEventListener('change', () => {
+                if (recognition) {
+                    recognition.lang = languageSelect.value;
+                    if (isListening) {
+                        stopRecognition();
+                        setTimeout(() => {
+                            toggleRecognition();
+                        }, 300);
+                    }
+                }
+            });
+            
+            // Initialize on page load
+            initSpeechRecognition();
+        });
+    </script>
+</body>
+</html>
