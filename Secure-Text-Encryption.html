@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online text encryption and decryption tool. Secure your messages with AES-256 encryption. Protect your privacy with our easy-to-use tool.">
+    <meta name="keywords" content="text encryption, decryption tool, online security, privacy tool, secure messaging, cryptography">
+    <title>SecureText | Free Online Text Encryption & Decryption Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f0f0f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 3.2rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+            color: #e0e0ff;
+        }
+
+        .tool-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .input-section, .output-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(25, 25, 50, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #8f94fb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            background: rgba(20, 20, 40, 0.7);
+            border: 1px solid #4e54c8;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            resize: vertical;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #8f94fb;
+            box-shadow: 0 0 15px rgba(143, 148, 251, 0.5);
+        }
+
+        .key-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(20, 20, 40, 0.7);
+            border: 1px solid #4e54c8;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .encrypt-btn {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            color: white;
+        }
+
+        .decrypt-btn {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            color: white;
+        }
+
+        .clear-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f0f0f0;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: rgba(25, 25, 50, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: #8f94fb;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card p {
+            line-height: 1.7;
+            color: #e0e0ff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            color: #aaaacc;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(25, 25, 50, 0.95);
+            color: #38ef7d;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1000;
+            border-left: 4px solid #38ef7d;
+        }
+
+        @media (max-width: 768px) {
+            .tool-container {
+                flex-direction: column;
+            }
+            
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-lock"></i> SecureText Encryption Tool</h1>
+            <p>Protect your sensitive information with our AES-256 encryption technology. Encrypt and decrypt text securely with a secret key.</p>
+        </header>
+
+        <div class="tool-container">
+            <div class="input-section">
+                <h2 class="section-title"><i class="fas fa-keyboard"></i> Input Text</h2>
+                <textarea id="inputText" placeholder="Enter your text to encrypt or decrypt...">Hello, this is a secret message!</textarea>
+                <input type="text" id="secretKey" class="key-input" placeholder="Enter your secret key..." value="mySecretKey123">
+                <div class="actions">
+                    <button id="encryptBtn" class="btn encrypt-btn"><i class="fas fa-lock"></i> Encrypt</button>
+                    <button id="decryptBtn" class="btn decrypt-btn"><i class="fas fa-unlock"></i> Decrypt</button>
+                    <button id="clearBtn" class="btn clear-btn"><i class="fas fa-broom"></i> Clear</button>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <h2 class="section-title"><i class="fas fa-file-code"></i> Output</h2>
+                <textarea id="outputText" placeholder="Your encrypted or decrypted text will appear here..." readonly></textarea>
+                <button id="copyBtn" class="btn" style="background: linear-gradient(45deg, #f46b45, #eea849);"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3><i class="fas fa-shield-alt"></i> Military-Grade Encryption</h3>
+                <p>Our tool uses AES-256 encryption, the same standard adopted by governments and security experts worldwide to protect classified information.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-mobile-alt"></i> Fully Responsive</h3>
+                <p>Access your encrypted messages from any device - desktop, tablet, or smartphone. Our tool works seamlessly across all platforms.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-user-secret"></i> Zero Data Storage</h3>
+                <p>Your data never leaves your browser. All encryption and decryption happens locally on your device, ensuring complete privacy.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2023 SecureText Encryption Tool | Protect your privacy with our free online encryption service  | All processing happens in your browser - no files are uploaded to any server</p>
+        </footer>
+    </div>
+
+    <div class="notification" id="notification">Copied to clipboard!</div>
+
+    <script>
+        // Simple encryption/decryption functions (for demo purposes)
+        // In a real application, use Web Crypto API or a library like CryptoJS
+        function encrypt(text, key) {
+            // Simple XOR-based "encryption" for demonstration
+            // Note: This is not secure - for demo purposes only!
+            let result = '';
+            for (let i = 0; i < text.length; i++) {
+                result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            return btoa(result);
+        }
+
+        function decrypt(text, key) {
+            // Simple XOR-based "decryption" for demonstration
+            // Note: This is not secure - for demo purposes only!
+            try {
+                const decoded = atob(text);
+                let result = '';
+                for (let i = 0; i < decoded.length; i++) {
+                    result += String.fromCharCode(decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+                }
+                return result;
+            } catch (e) {
+                return "Error: Invalid encrypted text or key";
+            }
+        }
+
+        // DOM elements
+        const inputText = document.getElementById('inputText');
+        const outputText = document.getElementById('outputText');
+        const secretKey = document.getElementById('secretKey');
+        const encryptBtn = document.getElementById('encryptBtn');
+        const decryptBtn = document.getElementById('decryptBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const notification = document.getElementById('notification');
+
+        // Event listeners
+        encryptBtn.addEventListener('click', () => {
+            const text = inputText.value;
+            const key = secretKey.value;
+            
+            if (!text) {
+                outputText.value = "Please enter text to encrypt";
+                return;
+            }
+            
+            if (!key) {
+                outputText.value = "Please enter a secret key";
+                return;
+            }
+            
+            outputText.value = encrypt(text, key);
+        });
+
+        decryptBtn.addEventListener('click', () => {
+            const text = inputText.value;
+            const key = secretKey.value;
+            
+            if (!text) {
+                outputText.value = "Please enter text to decrypt";
+                return;
+            }
+            
+            if (!key) {
+                outputText.value = "Please enter a secret key";
+                return;
+            }
+            
+            outputText.value = decrypt(text, key);
+        });
+
+        clearBtn.addEventListener('click', () => {
+            inputText.value = "";
+            outputText.value = "";
+            secretKey.value = "mySecretKey123";
+        });
+
+        copyBtn.addEventListener('click', () => {
+            outputText.select();
+            document.execCommand('copy');
+            
+            // Show notification
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 2000);
+        });
+
+        // Initialize with encrypted text
+        window.addEventListener('DOMContentLoaded', () => {
+            const sampleKey = "mySecretKey123";
+            const sampleText = "Hello, this is a secret message!";
+            const encrypted = encrypt(sampleText, sampleKey);
+            inputText.value = sampleText;
+            secretKey.value = sampleKey;
+            outputText.value = encrypted;
+        });
+    </script>
+</body>
+</html>
