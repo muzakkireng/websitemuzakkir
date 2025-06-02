@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online Text Repeater tool. Repeat any text multiple times with custom separators. Perfect for social media, SEO, and content creation.">
+    <meta name="keywords" content="text repeater, repeat text, text multiplier, text generator, online tool, SEO tool">
+    <title>Text Repeater | Multiply Your Text Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4a6cf7;
+            --primary-dark: #3a58d8;
+            --secondary: #f5f8ff;
+            --text: #333;
+            --light-text: #666;
+            --border: #e1e5f1;
+            --success: #10b981;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f8 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary), #6a11cb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--light-text);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 992px) {
+            .app-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .input-section, .output-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .input-section:hover, .output-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            background: var(--secondary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        textarea, input, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .counter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .counter button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--secondary);
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .counter button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .counter input {
+            max-width: 100px;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #e0e7ff;
+        }
+
+        .btn-copy {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-copy:hover {
+            opacity: 0.9;
+        }
+
+        /* Output Section */
+        .output-container {
+            position: relative;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            min-height: 200px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #fafbff;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .output-text {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .output-placeholder {
+            color: #aaa;
+            font-style: italic;
+            text-align: center;
+            padding: 30px;
+        }
+
+        /* Features Section */
+        .features {
+            margin: 50px 0;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        /* SEO Content */
+        .seo-content {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .seo-content h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .seo-content p {
+            margin-bottom: 15px;
+        }
+
+        .seo-content ul {
+            padding-left: 25px;
+            margin: 20px 0;
+        }
+
+        .seo-content li {
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: auto;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Text Repeater</h1>
+            <p>Multiply your text with our free online tool. Perfect for social media, content creation, and SEO purposes.</p>
+        </header>
+        
+        <main>
+            <div class="app-container">
+                <div class="input-section">
+                    <h2 class="section-title"><i class="fas fa-edit"></i> Input Your Text</h2>
+                    <div class="form-group">
+                        <label for="inputText">Text to Repeat</label>
+                        <textarea id="inputText" placeholder="Enter the text you want to repeat...">Hello, world!</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="repeatCount">Number of Repetitions</label>
+                        <div class="counter">
+                            <button id="decrease"><i class="fas fa-minus"></i></button>
+                            <input type="number" id="repeatCount" min="1" max="1000" value="5">
+                            <button id="increase"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="separator">Separator</label>
+                        <select id="separator">
+                            <option value="none">None</option>
+                            <option value="space">Space</option>
+                            <option value="newline" selected>New Line</option>
+                            <option value="comma">Comma</option>
+                            <option value="dash">Dash (-)</option>
+                            <option value="custom">Custom Separator</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="customSeparatorGroup" style="display: none;">
+                        <label for="customSeparator">Custom Separator</label>
+                        <input type="text" id="customSeparator" placeholder="Enter your custom separator">
+                    </div>
+                    
+                    <div class="controls">
+                        <button id="repeatBtn" class="btn btn-primary"><i class="fas fa-redo"></i> Repeat Text</button>
+                        <button id="resetBtn" class="btn btn-secondary"><i class="fas fa-trash-alt"></i> Reset</button>
+                    </div>
+                </div>
+                
+                <div class="output-section">
+                    <h2 class="section-title"><i class="fas fa-clipboard"></i> Output</h2>
+                    <div class="output-container">
+                        <div id="outputText" class="output-text">
+                            <div class="output-placeholder">Your repeated text will appear here...</div>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <button id="copyBtn" class="btn btn-copy"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+                        <button id="clearBtn" class="btn btn-secondary"><i class="fas fa-times"></i> Clear Output</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="features">
+                <h2>Why Use Our Text Repeater?</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                        <h3>Lightning Fast</h3>
+                        <p>Generate repeated text in milliseconds with our optimized algorithm</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>Fully Responsive</h3>
+                        <p>Works perfectly on all devices - desktop, tablet, and mobile</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                        <h3>Secure & Private</h3>
+                        <p>Your data never leaves your browser - no server processing</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="seo-content">
+                <h2>What is a Text Repeater?</h2>
+                <p>A text repeater is an online tool that duplicates any given text multiple times. It's a simple yet powerful utility that can be used for various purposes across different fields.</p>
+                
+                <h2>Practical Applications of Text Repeater</h2>
+                <ul>
+                    <li><strong>Social Media Marketing:</strong> Create repetitive text patterns for visual impact in posts</li>
+                    <li><strong>Content Creation:</strong> Generate placeholder text or repetitive patterns for design mockups</li>
+                    <li><strong>SEO Testing:</strong> Check how search engines handle repeated content</li>
+                    <li><strong>Education:</strong> Create exercises for students to practice patterns</li>
+                    <li><strong>Coding:</strong> Generate test data for developers and QA engineers</li>
+                    <li><strong>Art Projects:</strong> Create text-based patterns for digital art</li>
+                </ul>
+                
+                <h2>How to Use Our Text Repeater Tool</h2>
+                <p>Our text repeater is designed with simplicity in mind:</p>
+                <ol>
+                    <li>Enter the text you want to repeat in the input box</li>
+                    <li>Set the number of repetitions using the counter or input field</li>
+                    <li>Choose a separator (space, new line, comma, dash, or custom)</li>
+                    <li>Click "Repeat Text" to generate your output</li>
+                    <li>Copy or clear the result as needed</li>
+                </ol>
+                
+                <h2>Benefits of Our Tool</h2>
+                <p>Unlike other text repeaters, our tool offers:</p>
+                <ul>
+                    <li>No character limits - repeat as much text as you need</li>
+                    <li>Real-time processing with no server delay</li>
+                    <li>Multiple separator options for different use cases</li>
+                    <li>Completely free with no registration required</li>
+                    <li>Responsive design that works on all devices</li>
+                </ul>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Text Repeater Tool | All Rights Reserved | All processing happens in your browser - no files are uploaded to any server</p>
+            <p>Created with ❤️ for content creators, marketers, and developers</p>
+
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const inputText = document.getElementById('inputText');
+            const repeatCount = document.getElementById('repeatCount');
+            const separator = document.getElementById('separator');
+            const customSeparatorGroup = document.getElementById('customSeparatorGroup');
+            const customSeparator = document.getElementById('customSeparator');
+            const repeatBtn = document.getElementById('repeatBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const outputText = document.getElementById('outputText');
+            const decreaseBtn = document.getElementById('decrease');
+            const increaseBtn = document.getElementById('increase');
+            
+            // Event Listeners
+            repeatBtn.addEventListener('click', repeatText);
+            resetBtn.addEventListener('click', resetForm);
+            copyBtn.addEventListener('click', copyToClipboard);
+            clearBtn.addEventListener('click', clearOutput);
+            separator.addEventListener('change', toggleCustomSeparator);
+            decreaseBtn.addEventListener('click', () => adjustCount(-1));
+            increaseBtn.addEventListener('click', () => adjustCount(1));
+            repeatCount.addEventListener('input', validateCount);
+            
+            // Functions
+            function repeatText() {
+                const text = inputText.value.trim();
+                let count = parseInt(repeatCount.value);
+                
+                if (!text) {
+                    alert('Please enter some text to repeat');
+                    return;
+                }
+                
+                if (count < 1) count = 1;
+                if (count > 1000) count = 1000;
+                repeatCount.value = count;
+                
+                let separatorValue = '';
+                switch(separator.value) {
+                    case 'space':
+                        separatorValue = ' ';
+                        break;
+                    case 'newline':
+                        separatorValue = '\n';
+                        break;
+                    case 'comma':
+                        separatorValue = ', ';
+                        break;
+                    case 'dash':
+                        separatorValue = ' - ';
+                        break;
+                    case 'custom':
+                        separatorValue = customSeparator.value;
+                        break;
+                    default:
+                        separatorValue = '';
+                }
+                
+                let result = '';
+                for (let i = 0; i < count; i++) {
+                    result += text;
+                    if (i < count - 1) {
+                        result += separatorValue;
+                    }
+                }
+                
+                outputText.innerHTML = '';
+                outputText.textContent = result;
+            }
+            
+            function resetForm() {
+                inputText.value = '';
+                repeatCount.value = '5';
+                separator.value = 'newline';
+                customSeparatorGroup.style.display = 'none';
+                customSeparator.value = '';
+                outputText.innerHTML = '<div class="output-placeholder">Your repeated text will appear here...</div>';
+            }
+            
+            function copyToClipboard() {
+                const text = outputText.textContent;
+                if (!text || text.includes('Your repeated text')) {
+                    alert('No output to copy');
+                    return;
+                }
+                
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy to Clipboard';
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
+                        alert('Failed to copy text to clipboard');
+                    });
+            }
+            
+            function clearOutput() {
+                outputText.innerHTML = '<div class="output-placeholder">Your repeated text will appear here...</div>';
+            }
+            
+            function toggleCustomSeparator() {
+                if (separator.value === 'custom') {
+                    customSeparatorGroup.style.display = 'block';
+                } else {
+                    customSeparatorGroup.style.display = 'none';
+                }
+            }
+            
+            function adjustCount(change) {
+                let count = parseInt(repeatCount.value) + change;
+                if (count < 1) count = 1;
+                if (count > 1000) count = 1000;
+                repeatCount.value = count;
+            }
+            
+            function validateCount() {
+                let count = parseInt(repeatCount.value);
+                if (isNaN(count) || count < 1) repeatCount.value = 1;
+                if (count > 1000) repeatCount.value = 1000;
+            }
+            
+            // Initialize
+            resetForm();
+        });
+    </script>
+</body>
+</html>
