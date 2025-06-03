@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online XML Formatter and Validator tool. Beautify, validate, and format XML documents with our user-friendly interface. Works on all devices.">
+    <meta name="keywords" content="XML formatter, XML validator, XML beautifier, XML tool, online XML, XML parser">
+    <title>XML Formatter & Validator | Free Online Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://source.unsplash.com/random/1920x1080/?code,xml') no-repeat center center fixed;
+            background-size: cover;
+            color: #f8f9fa;
+            min-height: 100vh;
+        }
+        .container {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .card {
+            background-color: rgba(33, 37, 41, 0.9);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .card-header {
+            background-color: rgba(0, 123, 255, 0.8);
+            color: white;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+        }
+        textarea {
+            min-height: 200px;
+            background-color: #212529;
+            color: #f8f9fa;
+            border: 1px solid #495057;
+        }
+        .result-area {
+            background-color: #212529;
+            color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            min-height: 200px;
+            border: 1px solid #495057;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .success {
+            color: #28a745;
+        }
+        .footer {
+            background-color: rgba(33, 37, 41, 0.9);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #0d6efd;
+        }
+        .feature-card {
+            height: 100%;
+            transition: transform 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h1 class="display-4 mb-3">XML Formatter & Validator</h1>
+                <p class="lead">Free online tool to format, validate, and beautify your XML documents. Works perfectly on all devices.</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h3 class="mb-0"><i class="fas fa-code me-2"></i>Input XML</h3>
+                    </div>
+                    <div class="card-body">
+                        <textarea id="xmlInput" class="form-control mb-3" placeholder="Paste your XML here..."></textarea>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button id="formatBtn" class="btn btn-primary"><i class="fas fa-indent me-2"></i>Format</button>
+                            <button id="validateBtn" class="btn btn-primary"><i class="fas fa-check-circle me-2"></i>Validate</button>
+                            <button id="minifyBtn" class="btn btn-primary"><i class="fas fa-compress-alt me-2"></i>Minify</button>
+                            <button id="clearBtn" class="btn btn-outline-light"><i class="fas fa-trash-alt me-2"></i>Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h3 class="mb-0"><i class="fas fa-file-code me-2"></i>Result</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="result" class="result-area">Your formatted or validated XML will appear here...</div>
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <button id="copyBtn" class="btn btn-outline-light"><i class="fas fa-copy me-2"></i>Copy</button>
+                            <button id="downloadBtn" class="btn btn-outline-light"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0"><i class="fas fa-info-circle me-2"></i>About XML Formatter & Validator</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Our free online XML Formatter and Validator tool helps developers work with XML documents more efficiently. Whether you need to format messy XML code, validate XML against standards, or minify XML for production, our tool provides a simple solution.</p>
+                        
+                        <h4 class="mt-4">Why Use Our XML Tool?</h4>
+                        <div class="row mt-3">
+                            <div class="col-md-4 mb-3">
+                                <div class="card feature-card p-3">
+                                    <div class="text-center">
+                                        <i class="fas fa-mobile-alt feature-icon"></i>
+                                        <h5>Responsive Design</h5>
+                                        <p>Works perfectly on all devices - desktop, tablet, and mobile.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card feature-card p-3">
+                                    <div class="text-center">
+                                        <i class="fas fa-shield-alt feature-icon"></i>
+                                        <h5>Privacy Focused</h5>
+                                        <p>All processing happens in your browser - your data never leaves your device.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card feature-card p-3">
+                                    <div class="text-center">
+                                        <i class="fas fa-bolt feature-icon"></i>
+                                        <h5>Fast Processing</h5>
+                                        <p>Instant formatting and validation using open-source libraries.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0"><i class="fas fa-question-circle me-2"></i>How to Use This XML Tool</h3>
+                    </div>
+                    <div class="card-body">
+                        <ol>
+                            <li>Paste your XML code into the input box</li>
+                            <li>Click "Format" to beautify the XML with proper indentation</li>
+                            <li>Click "Validate" to check for XML syntax errors</li>
+                            <li>Click "Minify" to remove all unnecessary whitespace</li>
+                            <li>Copy or download the result for use in your projects</li>
+                        </ol>
+                        
+                        <h4 class="mt-4">What is XML?</h4>
+                        <p>XML (eXtensible Markup Language) is a markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable. It is widely used for data representation and exchange between systems.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer text-center mt-4">
+            <p class="mb-0">© 2023 XML Formatter & Validator | Open Source Tool | <a href="#" class="text-light">Privacy Policy</a></p>
+        </div>
+    </div>
+
+    <!-- Open Source Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xmldom/0.6.0/xmldom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xml-formatter/1.2.0/xml-formatter.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const xmlInput = document.getElementById('xmlInput');
+            const result = document.getElementById('result');
+            const formatBtn = document.getElementById('formatBtn');
+            const validateBtn = document.getElementById('validateBtn');
+            const minifyBtn = document.getElementById('minifyBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            // Format XML
+            formatBtn.addEventListener('click', function() {
+                try {
+                    const formatted = formatXML(xmlInput.value);
+                    result.innerHTML = highlightXML(formatted);
+                    result.classList.remove('error');
+                    result.classList.add('success');
+                } catch (e) {
+                    result.textContent = 'Error: ' + e.message;
+                    result.classList.remove('success');
+                    result.classList.add('error');
+                }
+            });
+
+            // Validate XML
+            validateBtn.addEventListener('click', function() {
+                try {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlInput.value, "text/xml");
+                    
+                    if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
+                        throw new Error('Invalid XML: ' + xmlDoc.getElementsByTagName("parsererror")[0].textContent);
+                    }
+                    
+                    result.innerHTML = highlightXML(formatXML(xmlInput.value));
+                    result.textContent = '✅ Valid XML\n\n' + result.textContent;
+                    result.classList.remove('error');
+                    result.classList.add('success');
+                } catch (e) {
+                    result.textContent = '❌ ' + e.message;
+                    result.classList.remove('success');
+                    result.classList.add('error');
+                }
+            });
+
+            // Minify XML
+            minifyBtn.addEventListener('click', function() {
+                try {
+                    const minified = minifyXML(xmlInput.value);
+                    result.textContent = minified;
+                    result.classList.remove('error');
+                    result.classList.add('success');
+                } catch (e) {
+                    result.textContent = 'Error: ' + e.message;
+                    result.classList.remove('success');
+                    result.classList.add('error');
+                }
+            });
+
+            // Clear all
+            clearBtn.addEventListener('click', function() {
+                xmlInput.value = '';
+                result.textContent = 'Your formatted or validated XML will appear here...';
+                result.className = 'result-area';
+            });
+
+            // Copy result
+            copyBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText(result.textContent)
+                    .then(() => alert('Copied to clipboard!'))
+                    .catch(err => console.error('Could not copy text: ', err));
+            });
+
+            // Download result
+            downloadBtn.addEventListener('click', function() {
+                const blob = new Blob([result.textContent], { type: 'text/xml' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'formatted.xml';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            // Helper functions
+            function formatXML(xml) {
+                return xmlFormatter(xml, {
+                    indentation: '  ',
+                    collapseContent: true,
+                    lineSeparator: '\n'
+                });
+            }
+
+            function minifyXML(xml) {
+                return xml.replace(/>\s+</g, '><').trim();
+            }
+
+            function highlightXML(xml) {
+                return xml.replace(/</g, '&lt;')
+                         .replace(/>/g, '&gt;')
+                         .replace(/("[^"]*"|'[^']*')/g, '<span style="color:#ff9800;">$1</span>')
+                         .replace(/&lt;([^!\?\/])/g, '&lt;<span style="color:#4fc3f7;">$1')
+                         .replace(/&lt;\/[^&]*&gt;/g, function(match) {
+                             return match.replace(/(&lt;\/)([^&]*)(&gt;)/g, '$1<span style="color:#4fc3f7;">$2</span>$3');
+                         })
+                         .replace(/&lt;\?[^&]*\?&gt;/g, '<span style="color:#9ccc65;">$&</span>')
+                         .replace(/&lt;!--[^&]*--&gt;/g, '<span style="color:#9e9e9e;">$&</span>');
+            }
+        });
+    </script>
+</body>
+</html>
