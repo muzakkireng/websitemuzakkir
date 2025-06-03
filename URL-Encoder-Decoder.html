@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online URL Encoder and Decoder tool. Quickly encode or decode URLs for safe web transmission.">
+    <meta name="keywords" content="url encoder, url decoder, url encoding, url decoding, web tools, free encoder">
+    <title>URL Encoder/Decoder - Free Online Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center;
+            background-size: cover;
+            opacity: 0.15;
+            z-index: -1;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #e0e0e0;
+        }
+        
+        .tool-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .tool-section {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .tool-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: #1a2a6c;
+        }
+        
+        .tool-title i {
+            font-size: 1.8rem;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            border-color: #1a2a6c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.2);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .encode-btn {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .decode-btn {
+            background: #b21f1f;
+            color: white;
+        }
+        
+        .clear-btn {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .encode-btn:hover {
+            background: #0e1a4a;
+        }
+        
+        .decode-btn:hover {
+            background: #8c1818;
+        }
+        
+        .clear-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .info-section {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .info-section h2 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #1a2a6c;
+            transition: transform 0.3s;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .info-card h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 0.9rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .tool-container {
+                flex-direction: column;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            textarea {
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-link"></i> URL Encoder/Decoder</h1>
+            <p>A free online tool for encoding and decoding URLs. Ensure your URLs are properly formatted for web transmission.</p>
+        </header>
+        
+        <div class="tool-container">
+            <div class="tool-section">
+                <div class="tool-title">
+                    <i class="fas fa-lock"></i>
+                    <h2>URL Encoder</h2>
+                </div>
+                <textarea id="encode-input" placeholder="Enter text to encode..."></textarea>
+                <div class="btn-group">
+                    <button class="encode-btn" onclick="encodeURL()">
+                        <i class="fas fa-lock"></i> Encode URL
+                    </button>
+                    <button class="clear-btn" onclick="clearEncode()">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+                <textarea id="encode-output" placeholder="Encoded result will appear here..." readonly></textarea>
+            </div>
+            
+            <div class="tool-section">
+                <div class="tool-title">
+                    <i class="fas fa-lock-open"></i>
+                    <h2>URL Decoder</h2>
+                </div>
+                <textarea id="decode-input" placeholder="Enter URL to decode..."></textarea>
+                <div class="btn-group">
+                    <button class="decode-btn" onclick="decodeURL()">
+                        <i class="fas fa-lock-open"></i> Decode URL
+                    </button>
+                    <button class="clear-btn" onclick="clearDecode()">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+                <textarea id="decode-output" placeholder="Decoded result will appear here..." readonly></textarea>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h2><i class="fas fa-info-circle"></i> About URL Encoding</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>What is URL Encoding?</h3>
+                    <p>URL encoding converts characters into a format that can be transmitted over the Internet. URLs can only be sent using the ASCII character set, so non-ASCII characters and reserved characters must be converted.</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>When to Encode URLs?</h3>
+                    <p>You should encode URLs when including special characters, spaces, or non-ASCII characters in query parameters, path segments, or when constructing URLs dynamically in your applications.</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>Reserved Characters</h3>
+                    <p>Some characters are reserved and must be encoded: ! # $ & ' ( ) * + , / : ; = ? @ [ ] % and space. Encoding replaces these with a '%' followed by hexadecimal digits.</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>Common Use Cases</h3>
+                    <p>• Passing parameters in query strings<br>• Creating SEO-friendly URLs<br>• Handling form data submissions<br>• Working with APIs that require encoded parameters</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 URL Encoder/Decoder Tool | Free Online Utility</p>
+            <p>This tool uses JavaScript's built-in encodeURIComponent and decodeURIComponent functions for processing.</p>
+        </footer>
+    </div>
+
+    <script>
+        function encodeURL() {
+            const input = document.getElementById('encode-input').value;
+            const encoded = encodeURIComponent(input);
+            document.getElementById('encode-output').value = encoded;
+        }
+        
+        function decodeURL() {
+            const input = document.getElementById('decode-input').value;
+            try {
+                const decoded = decodeURIComponent(input.replace(/\+/g, ' '));
+                document.getElementById('decode-output').value = decoded;
+            } catch (e) {
+                document.getElementById('decode-output').value = "Error: Invalid URL encoding";
+            }
+        }
+        
+        function clearEncode() {
+            document.getElementById('encode-input').value = '';
+            document.getElementById('encode-output').value = '';
+        }
+        
+        function clearDecode() {
+            document.getElementById('decode-input').value = '';
+            document.getElementById('decode-output').value = '';
+        }
+    </script>
+</body>
+</html>
