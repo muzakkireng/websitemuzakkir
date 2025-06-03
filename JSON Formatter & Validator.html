@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online JSON Formatter and Validator tool. Beautify and validate your JSON data with our user-friendly interface. Works on all devices.">
+    <meta name="keywords" content="JSON formatter, JSON validator, JSON beautifier, JSON parser, JSON tool, online JSON, JSON lint">
+    <title>JSON Formatter & Validator | Free Online Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=2232&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #ddd;
+        }
+        
+        .tool-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .tool-container {
+                flex-direction: row;
+            }
+        }
+        
+        .input-section, .output-section {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #4CAF50;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 15px;
+            background: #222;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 4px;
+            resize: vertical;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        .secondary-btn {
+            background: #555;
+        }
+        
+        .secondary-btn:hover {
+            background: #666;
+        }
+        
+        .error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .success {
+            color: #4CAF50;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .seo-content {
+            margin-top: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 8px;
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #4CAF50;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+        }
+        
+        .github-link {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JSON Formatter & Validator</h1>
+            <p class="tagline">Free online tool to format, validate, and beautify your JSON data</p>
+        </header>
+        
+        <div class="tool-container">
+            <section class="input-section">
+                <h2>Input JSON</h2>
+                <textarea id="json-input" placeholder="Paste your JSON here..."></textarea>
+                <div class="buttons">
+                    <button id="format-btn">Format JSON</button>
+                    <button id="validate-btn">Validate JSON</button>
+                    <button id="minify-btn" class="secondary-btn">Minify JSON</button>
+                    <button id="clear-btn" class="secondary-btn">Clear</button>
+                </div>
+                <div id="validation-result"></div>
+            </section>
+            
+            <section class="output-section">
+                <h2>Formatted JSON</h2>
+                <textarea id="json-output" readonly placeholder="Formatted JSON will appear here..."></textarea>
+                <div class="buttons">
+                    <button id="copy-btn">Copy to Clipboard</button>
+                    <button id="download-btn" class="secondary-btn">Download JSON</button>
+                </div>
+            </section>
+        </div>
+        
+        <section class="seo-content">
+            <h3>What is JSON and Why Use This Tool?</h3>
+            <p>JSON (JavaScript Object Notation) is a lightweight data interchange format that's easy for humans to read and write, and easy for machines to parse and generate. Our JSON Formatter & Validator tool helps you:</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>Format messy JSON data into a readable, indented structure</li>
+                <li>Validate JSON syntax to catch errors before they cause problems</li>
+                <li>Minify JSON by removing whitespace to reduce file size</li>
+                <li>Convert between formatted and minified JSON with one click</li>
+            </ul>
+            
+            <h3 style="margin-top: 20px;">How to Use This JSON Tool</h3>
+            <p>Simply paste your JSON code into the input box and click "Format JSON" to beautify it with proper indentation. Click "Validate JSON" to check for syntax errors. Use the "Minify JSON" button to remove all unnecessary whitespace. Our tool works perfectly on all devices including smartphones, tablets, and desktop computers.</p>
+            
+            <h3 style="margin-top: 20px;">Common JSON Use Cases</h3>
+            <p>JSON is widely used in web development for APIs, configuration files, and data storage. Popular applications include:</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>API responses in web applications</li>
+                <li>Configuration files for software and services</li>
+                <li>Data storage in NoSQL databases like MongoDB</li>
+                <li>Data exchange between servers and web applications</li>
+            </ul>
+        </section>
+        
+        <footer>
+            <p>This JSON Formatter & Validator tool is completely free to use and open source. No data is stored on our servers.</p>
+            <p>Contribute to this project on <a href="https://github.com/yourusername/json-formatter" class="github-link" target="_blank" rel="noopener">GitHub</a>.</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const jsonInput = document.getElementById('json-input');
+            const jsonOutput = document.getElementById('json-output');
+            const formatBtn = document.getElementById('format-btn');
+            const validateBtn = document.getElementById('validate-btn');
+            const minifyBtn = document.getElementById('minify-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const validationResult = document.getElementById('validation-result');
+            
+            // Format JSON
+            formatBtn.addEventListener('click', function() {
+                try {
+                    const parsedJson = JSON.parse(jsonInput.value);
+                    jsonOutput.value = JSON.stringify(parsedJson, null, 4);
+                    validationResult.textContent = '✅ Valid JSON';
+                    validationResult.className = 'success';
+                } catch (e) {
+                    validationResult.textContent = '❌ Invalid JSON: ' + e.message;
+                    validationResult.className = 'error';
+                    jsonOutput.value = '';
+                }
+            });
+            
+            // Validate JSON
+            validateBtn.addEventListener('click', function() {
+                try {
+                    JSON.parse(jsonInput.value);
+                    validationResult.textContent = '✅ Valid JSON';
+                    validationResult.className = 'success';
+                } catch (e) {
+                    validationResult.textContent = '❌ Invalid JSON: ' + e.message;
+                    validationResult.className = 'error';
+                }
+            });
+            
+            // Minify JSON
+            minifyBtn.addEventListener('click', function() {
+                try {
+                    const parsedJson = JSON.parse(jsonInput.value);
+                    jsonOutput.value = JSON.stringify(parsedJson);
+                    validationResult.textContent = '✅ Valid JSON (minified)';
+                    validationResult.className = 'success';
+                } catch (e) {
+                    validationResult.textContent = '❌ Invalid JSON: ' + e.message;
+                    validationResult.className = 'error';
+                    jsonOutput.value = '';
+                }
+            });
+            
+            // Clear inputs
+            clearBtn.addEventListener('click', function() {
+                jsonInput.value = '';
+                jsonOutput.value = '';
+                validationResult.textContent = '';
+                validationResult.className = '';
+            });
+            
+            // Copy to clipboard
+            copyBtn.addEventListener('click', function() {
+                if (jsonOutput.value) {
+                    jsonOutput.select();
+                    document.execCommand('copy');
+                    alert('Copied to clipboard!');
+                }
+            });
+            
+            // Download JSON
+            downloadBtn.addEventListener('click', function() {
+                if (jsonOutput.value) {
+                    const blob = new Blob([jsonOutput.value], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'formatted.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
