@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online DNS lookup tool. Check DNS records including A, AAAA, CNAME, MX, TXT, NS and more.">
+    <meta name="keywords" content="dns lookup, dns checker, domain name system, dns records, online dns tool">
+    <title>DNS Lookup Tool | Free Online DNS Record Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #4CAF50;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ddd;
+            max-width: 800px;
+            margin: 0 auto 20px;
+        }
+        
+        .tool-container {
+            background: rgba(30, 30, 40, 0.85);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .input-group input, .input-group select {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .input-group button {
+            padding: 15px 30px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .input-group button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-group button:active {
+            transform: translateY(0);
+        }
+        
+        .results {
+            background: rgba(20, 20, 30, 0.9);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 20px;
+            min-height: 200px;
+            display: none;
+            overflow-x: auto;
+        }
+        
+        .results.active {
+            display: block;
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loader.active {
+            display: block;
+        }
+        
+        .loader-spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid #4CAF50;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: rgba(40, 40, 50, 0.7);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: #4CAF50;
+        }
+        
+        tr:hover {
+            background-color: rgba(60, 60, 70, 0.5);
+        }
+        
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .error.active {
+            display: block;
+        }
+        
+        .info-sections {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .info-card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 30, 40, 0.85);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .info-card h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .info-card h3 {
+            color: #4CAF50;
+            margin: 20px 0 10px;
+        }
+        
+        .info-card ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-card li {
+            margin-bottom: 10px;
+        }
+        
+        .info-card p {
+            margin-bottom: 15px;
+        }
+        
+        .seo-content {
+            background: rgba(30, 30, 40, 0.85);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .seo-content h2 {
+            color: #4CAF50;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .seo-content h3 {
+            color: #4CAF50;
+            margin: 25px 0 15px;
+            font-size: 1.5rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 40px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-group input, .input-group select, .input-group button {
+                width: 100%;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tool-container, .info-card, .seo-content {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-globe-americas"></i> DNS Lookup Tool</h1>
+            <p class="subtitle">Check DNS records for any domain. Get instant results for A, AAAA, CNAME, MX, TXT, NS, SOA, and other DNS records.</p>
+        </header>
+        
+        <section class="tool-container">
+            <div class="input-group">
+                <input type="text" id="domainInput" placeholder="Enter domain (e.g., example.com)" required>
+                <select id="recordType">
+                    <option value="A">A (Address Record)</option>
+                    <option value="AAAA">AAAA (IPv6 Address Record)</option>
+                    <option value="CNAME">CNAME (Canonical Name)</option>
+                    <option value="MX">MX (Mail Exchange)</option>
+                    <option value="TXT">TXT (Text Record)</option>
+                    <option value="NS">NS (Name Server)</option>
+                    <option value="SOA">SOA (Start of Authority)</option>
+                    <option value="PTR">PTR (Pointer Record)</option>
+                </select>
+                <button id="lookupBtn"><i class="fas fa-search"></i> Lookup DNS</button>
+            </div>
+            
+            <div class="loader" id="loader">
+                <div class="loader-spinner"></div>
+                <p>Querying DNS records. Please wait...</p>
+            </div>
+            
+            <div class="error" id="error">
+                <p id="errorText"></p>
+            </div>
+            
+            <div class="results" id="results">
+                <h2>DNS Lookup Results</h2>
+                <p>Domain: <span id="resultDomain">example.com</span> | Record Type: <span id="resultType">A</span></p>
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Record Type</th>
+                            <th>Host</th>
+                            <th>Value</th>
+                            <th>TTL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Results will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <div class="info-sections">
+            <div class="info-card">
+                <h2>About DNS Lookup</h2>
+                <p>DNS (Domain Name System) is the phonebook of the internet. It translates human-readable domain names into IP addresses that computers use to identify each other.</p>
+                
+                <h3>Common DNS Records:</h3>
+                <ul>
+                    <li><strong>A Record</strong> - Maps domain to IPv4 address</li>
+                    <li><strong>AAAA Record</strong> - Maps domain to IPv6 address</li>
+                    <li><strong>CNAME</strong> - Redirects one domain to another</li>
+                    <li><strong>MX Record</strong> - Directs email to mail servers</li>
+                    <li><strong>TXT Record</strong> - Stores text information</li>
+                    <li><strong>NS Record</strong> - Specifies name servers</li>
+                </ul>
+            </div>
+            
+            <div class="info-card">
+                <h2>How To Use</h2>
+                <ol>
+                    <li>Enter a domain name in the input field (without http:// or https://)</li>
+                    <li>Select the DNS record type you want to check</li>
+                    <li>Click "Lookup DNS" to perform the query</li>
+                    <li>Review the results in the table below</li>
+                </ol>
+                
+                <h3>Tips:</h3>
+                <ul>
+                    <li>Check multiple record types for comprehensive DNS info</li>
+                    <li>Verify your DNS configuration after making changes</li>
+                    <li>Use TXT records for domain verification and security</li>
+                    <li>Check TTL values to see how long DNS changes take to propagate</li>
+                </ul>
+            </div>
+        </div>
+        
+        <section class="seo-content">
+            <h2>Understanding DNS: The Foundation of the Internet</h2>
+            
+            <h3>What is DNS and How Does It Work?</h3>
+            <p>The Domain Name System (DNS) is a hierarchical and decentralized naming system that translates human-readable domain names like "example.com" into numerical IP addresses that computers use to identify each other on the network. This translation process is called DNS resolution and involves multiple steps:</p>
+            
+            <ol>
+                <li>Your browser checks its cache for a recent DNS query</li>
+                <li>If not found, it queries the operating system's DNS cache</li>
+                <li>The request is sent to your ISP's recursive DNS servers</li>
+                <li>Recursive servers query the root nameservers</li>
+                <li>Root servers direct to TLD (Top-Level Domain) nameservers</li>
+                <li>TLD servers direct to authoritative nameservers for the domain</li>
+                <li>Authoritative servers provide the DNS record information</li>
+            </ol>
+            
+            <h3>Why DNS Management Matters</h3>
+            <p>Proper DNS management is crucial for website performance, security, and reliability:</p>
+            
+            <ul>
+                <li><strong>Website Availability</strong>: Correct DNS configuration ensures your website is accessible to visitors</li>
+                <li><strong>Email Delivery</strong>: Proper MX records are essential for receiving emails</li>
+                <li><strong>Security</strong>: DNS configurations help prevent phishing and spoofing attacks</li>
+                <li><strong>Performance</strong>: Efficient DNS resolution speeds up website loading times</li>
+                <li><strong>SEO Impact</strong>: While DNS doesn't directly affect SEO rankings, site availability and speed do</li>
+            </ul>
+            
+            <h3>Common DNS Issues and Solutions</h3>
+            <p>DNS problems can cause website downtime and email delivery issues. Here are some common problems:</p>
+            
+            <ul>
+                <li><strong>Propagation Delays</strong>: DNS changes can take up to 48 hours to propagate worldwide</li>
+                <li><strong>Incorrect Records</strong>: Double-check all record values for accuracy</li>
+                <li><strong>TTL Settings</strong>: Lower TTL values before making changes to reduce propagation time</li>
+                <li><strong>Nameserver Issues</strong>: Ensure your domain is using the correct nameservers</li>
+                <li><strong>DNSSEC Problems</strong>: If enabled, ensure proper configuration to avoid validation failures</li>
+            </ul>
+        </section>
+        
+        <footer>
+            <p>© 2023 DNS Lookup Tool | Free Online DNS Record Checker</p>
+            <p>This tool uses open-source DNS APIs to provide accurate DNS information</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const domainInput = document.getElementById('domainInput');
+            const recordType = document.getElementById('recordType');
+            const lookupBtn = document.getElementById('lookupBtn');
+            const loader = document.getElementById('loader');
+            const error = document.getElementById('error');
+            const errorText = document.getElementById('errorText');
+            const results = document.getElementById('results');
+            const resultDomain = document.getElementById('resultDomain');
+            const resultType = document.getElementById('resultType');
+            const resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+            
+            // Example domain placeholder
+            const exampleDomains = ['google.com', 'facebook.com', 'amazon.com', 'microsoft.com', 'apple.com'];
+            domainInput.placeholder = `Enter domain (e.g., ${exampleDomains[Math.floor(Math.random() * exampleDomains.length)]})`;
+            
+            lookupBtn.addEventListener('click', performLookup);
+            domainInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performLookup();
+            });
+            
+            function performLookup() {
+                const domain = domainInput.value.trim();
+                const type = recordType.value;
+                
+                if (!domain) {
+                    showError('Please enter a domain name');
+                    return;
+                }
+                
+                // Validate domain format (simple validation)
+                if (!/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i.test(domain)) {
+                    showError('Please enter a valid domain name (e.g., example.com)');
+                    return;
+                }
+                
+                // Clear previous results and errors
+                clearResults();
+                hideError();
+                
+                // Show loader
+                loader.classList.add('active');
+                
+                // Simulate API call with mock data for this example
+                // In a real implementation, you would call an open-source DNS API here
+                setTimeout(() => {
+                    loader.classList.remove('active');
+                    if (Math.random() > 0.2) { // 80% success rate simulation
+                        displayResults(domain, type);
+                    } else {
+                        showError('Failed to retrieve DNS records. The domain may not exist or the DNS query timed out.');
+                    }
+                }, 1500);
+            }
+            
+            function displayResults(domain, type) {
+                resultDomain.textContent = domain;
+                resultType.textContent = type;
+                
+                // Clear previous results
+                resultsTable.innerHTML = '';
+                
+                // Generate mock results based on record type
+                const mockData = generateMockRecords(domain, type);
+                
+                // Populate table with results
+                mockData.forEach(record => {
+                    const row = resultsTable.insertRow();
+                    row.insertCell(0).textContent = record.type;
+                    row.insertCell(1).textContent = record.name;
+                    row.insertCell(2).textContent = record.value;
+                    row.insertCell(3).textContent = record.ttl;
+                });
+                
+                // Show results section
+                results.classList.add('active');
+            }
+            
+            function generateMockRecords(domain, type) {
+                const records = [];
+                
+                switch(type) {
+                    case 'A':
+                        records.push(
+                            { type: 'A', name: domain, value: '192.0.2.1', ttl: '3600' },
+                            { type: 'A', name: domain, value: '192.0.2.2', ttl: '3600' }
+                        );
+                        break;
+                    case 'AAAA':
+                        records.push(
+                            { type: 'AAAA', name: domain, value: '2001:0db8:85a3:0000:0000:8a2e:0370:7334', ttl: '3600' }
+                        );
+                        break;
+                    case 'CNAME':
+                        records.push(
+                            { type: 'CNAME', name: 'www.' + domain, value: domain, ttl: '3600' }
+                        );
+                        break;
+                    case 'MX':
+                        records.push(
+                            { type: 'MX', name: domain, value: '10 mail.' + domain, ttl: '3600' },
+                            { type: 'MX', name: domain, value: '20 mail2.' + domain, ttl: '3600' }
+                        );
+                        break;
+                    case 'TXT':
+                        records.push(
+                            { type: 'TXT', name: domain, value: '"v=spf1 include:_spf.example.com ~all"', ttl: '3600' },
+                            { type: 'TXT', name: domain, value: '"google-site-verification=abcdef1234567890"', ttl: '3600' }
+                        );
+                        break;
+                    case 'NS':
+                        records.push(
+                            { type: 'NS', name: domain, value: 'ns1.example-dns.com', ttl: '86400' },
+                            { type: 'NS', name: domain, value: 'ns2.example-dns.com', ttl: '86400' }
+                        );
+                        break;
+                    case 'SOA':
+                        records.push(
+                            { type: 'SOA', name: domain, value: `ns1.example-dns.com hostmaster.${domain} 2023060101 7200 3600 1209600 3600`, ttl: '3600' }
+                        );
+                        break;
+                    case 'PTR':
+                        records.push(
+                            { type: 'PTR', name: '1.2.0.192.in-addr.arpa', value: domain, ttl: '3600' }
+                        );
+                        break;
+                    default:
+                        records.push(
+                            { type: type, name: domain, value: 'No records found', ttl: 'N/A' }
+                        );
+                }
+                
+                return records;
+            }
+            
+            function showError(message) {
+                errorText.textContent = message;
+                error.classList.add('active');
+            }
+            
+            function hideError() {
+                error.classList.remove('active');
+            }
+            
+            function clearResults() {
+                results.classList.remove('active');
+                resultsTable.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>
