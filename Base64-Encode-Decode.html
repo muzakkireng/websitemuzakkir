@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online Base64 encoder and decoder tool. Quickly convert text to Base64 or decode Base64 back to text. Works on all devices.">
+    <meta name="keywords" content="Base64, encode, decode, converter, online tool, text conversion">
+    <title>Free Base64 Encode/Decode Tool | Online Converter</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=2232&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .tool-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .tool-container {
+                flex-direction: row;
+            }
+        }
+        
+        .tool-box {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            resize: vertical;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .result-container {
+            margin-top: 20px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+        }
+        
+        .copy-btn {
+            background-color: #2196F3;
+            width: auto;
+            display: inline-block;
+            padding: 8px 15px;
+            margin-top: 10px;
+        }
+        
+        .copy-btn:hover {
+            background-color: #0b7dda;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Base64 Encode/Decode Tool</h1>
+            <p>Free online converter for all your Base64 encoding and decoding needs</p>
+        </header>
+        
+        <div class="description">
+            <h2>What is Base64?</h2>
+            <p>Base64 is a binary-to-text encoding scheme that represents binary data in an ASCII string format. It's commonly used when there is a need to encode binary data that needs to be stored and transferred over media designed to deal with text. Our free online tool allows you to easily encode text to Base64 or decode Base64 back to readable text. This tool works on all devices including smartphones, tablets, and desktop computers.</p>
+            <p>Common uses for Base64 include encoding email attachments, embedding binary data in JSON or XML, and encoding credentials for basic authentication in HTTP headers.</p>
+        </div>
+        
+        <div class="tool-container">
+            <div class="tool-box">
+                <h2>Base64 Encode</h2>
+                <p>Convert text to Base64 format</p>
+                <textarea id="encode-input" placeholder="Enter text to encode..."></textarea>
+                <button onclick="encodeText()">Encode to Base64</button>
+                <div class="result-container">
+                    <h3>Encoded Result:</h3>
+                    <textarea id="encode-output" readonly placeholder="Your Base64 result will appear here..."></textarea>
+                    <button class="copy-btn" onclick="copyResult('encode-output')">Copy Result</button>
+                </div>
+            </div>
+            
+            <div class="tool-box">
+                <h2>Base64 Decode</h2>
+                <p>Convert Base64 back to text</p>
+                <textarea id="decode-input" placeholder="Enter Base64 to decode..."></textarea>
+                <button onclick="decodeText()">Decode from Base64</button>
+                <div class="result-container">
+                    <h3>Decoded Result:</h3>
+                    <textarea id="decode-output" readonly placeholder="Your decoded text will appear here..."></textarea>
+                    <button class="copy-btn" onclick="copyResult('decode-output')">Copy Result</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Base64 Encode/Decode Tool. All rights reserved.</p>
+            <p>This is Education Purpose only We are not collecting or Stored Data any ever.</p>
+        </footer>
+    </div>
+    
+    <script>
+        function encodeText() {
+            const input = document.getElementById('encode-input').value;
+            const encoded = btoa(unescape(encodeURIComponent(input)));
+            document.getElementById('encode-output').value = encoded;
+        }
+        
+        function decodeText() {
+            const input = document.getElementById('decode-input').value;
+            try {
+                const decoded = decodeURIComponent(escape(atob(input)));
+                document.getElementById('decode-output').value = decoded;
+            } catch (e) {
+                document.getElementById('decode-output').value = "Error: Invalid Base64 input";
+            }
+        }
+        
+        function copyResult(elementId) {
+            const resultText = document.getElementById(elementId);
+            resultText.select();
+            document.execCommand('copy');
+            alert('Copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
