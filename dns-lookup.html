@@ -3,11 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free online DNS lookup tool. Check DNS records including A, AAAA, CNAME, MX, TXT, NS and more.">
-    <meta name="keywords" content="dns lookup, dns checker, domain name system, dns records, online dns tool">
+    <meta name="description" content="Free DNS lookup tool to check DNS records including A, AAAA, CNAME, MX, TXT, NS, SOA and more">
+    <meta name="keywords" content="dns lookup, dns checker, domain lookup, dns records, network tools">
     <title>DNS Lookup Tool | Free Online DNS Record Checker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #1abc9c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -16,48 +31,60 @@
         }
         
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
             background-size: cover;
             background-attachment: fixed;
-            color: #fff;
+            color: var(--text-dark);
             line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
         }
         
         header {
             text-align: center;
-            padding: 40px 0;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 10px;
+            padding: 40px 20px;
+            background: var(--card-bg);
+            border-radius: 15px;
             margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
         }
         
         h1 {
             font-size: 2.8rem;
             margin-bottom: 15px;
-            color: #4CAF50;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            color: var(--primary);
         }
         
         .subtitle {
             font-size: 1.2rem;
-            color: #ddd;
+            color: var(--text-light);
             max-width: 800px;
             margin: 0 auto 20px;
         }
         
         .tool-container {
-            background: rgba(30, 30, 40, 0.85);
-            border-radius: 10px;
+            background: var(--card-bg);
+            border-radius: 15px;
             padding: 30px;
             margin-bottom: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow);
         }
         
         .input-group {
@@ -70,31 +97,44 @@
         .input-group input, .input-group select {
             flex: 1;
             min-width: 200px;
-            padding: 15px;
-            border: none;
-            border-radius: 5px;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 1rem;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .input-group input {
+            background: #f8f9fa;
         }
         
         .input-group button {
             padding: 15px 30px;
-            background: #4CAF50;
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: bold;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .input-group button:hover {
-            background: #45a049;
+            background: #2980b9;
             transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
         
         .input-group button:active {
@@ -102,13 +142,15 @@
         }
         
         .results {
-            background: rgba(20, 20, 30, 0.9);
-            border-radius: 8px;
+            background: #fff;
+            border-radius: 12px;
             padding: 25px;
             margin-top: 20px;
             min-height: 200px;
             display: none;
             overflow-x: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
         }
         
         .results.active {
@@ -118,7 +160,7 @@
         .loader {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 40px;
         }
         
         .loader.active {
@@ -126,8 +168,8 @@
         }
         
         .loader-spinner {
-            border: 5px solid rgba(255, 255, 255, 0.3);
-            border-top: 5px solid #4CAF50;
+            border: 5px solid rgba(52, 152, 219, 0.2);
+            border-top: 5px solid var(--primary);
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -140,35 +182,79 @@
             100% { transform: rotate(360deg); }
         }
         
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .result-info {
+            display: flex;
+            gap: 15px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .result-info span {
+            background: #f0f7ff;
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
-            background: rgba(40, 40, 50, 0.7);
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
         
         th, td {
-            padding: 12px 15px;
+            padding: 15px 20px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #f0f0f0;
         }
         
         th {
-            background-color: #2c3e50;
-            color: #4CAF50;
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
         }
         
         tr:hover {
-            background-color: rgba(60, 60, 70, 0.5);
+            background-color: #f9f9f9;
+        }
+        
+        .record-type {
+            font-weight: bold;
+            color: var(--primary);
         }
         
         .error {
-            color: #ff6b6b;
-            background: rgba(255, 0, 0, 0.1);
-            padding: 15px;
-            border-radius: 5px;
+            color: var(--danger);
+            background: rgba(231, 76, 60, 0.05);
+            padding: 20px;
+            border-radius: 8px;
             margin-top: 20px;
             display: none;
+            border: 1px solid rgba(231, 76, 60, 0.2);
         }
         
         .error.active {
@@ -185,65 +271,198 @@
         .info-card {
             flex: 1;
             min-width: 300px;
-            background: rgba(30, 30, 40, 0.85);
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent);
         }
         
         .info-card h2 {
-            color: #4CAF50;
+            color: var(--primary);
             margin-bottom: 20px;
             font-size: 1.8rem;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .info-card h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 3px;
         }
         
         .info-card h3 {
-            color: #4CAF50;
-            margin: 20px 0 10px;
+            color: var(--primary);
+            margin: 25px 0 15px;
+            font-size: 1.3rem;
         }
         
         .info-card ul {
-            padding-left: 20px;
+            padding-left: 25px;
             margin-bottom: 20px;
         }
         
         .info-card li {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .info-card li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
         }
         
         .info-card p {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            line-height: 1.8;
         }
         
         .seo-content {
-            background: rgba(30, 30, 40, 0.85);
-            border-radius: 10px;
-            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 40px;
             margin: 40px 0;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow);
         }
         
         .seo-content h2 {
-            color: #4CAF50;
+            color: var(--primary);
             font-size: 2rem;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             text-align: center;
+            position: relative;
+            padding-bottom: 20px;
+        }
+        
+        .seo-content h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 4px;
         }
         
         .seo-content h3 {
-            color: #4CAF50;
-            margin: 25px 0 15px;
+            color: var(--primary);
+            margin: 35px 0 20px;
             font-size: 1.5rem;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .seo-content h3::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+        
+        .seo-content p {
+            margin-bottom: 20px;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+        
+        .seo-content ul {
+            padding-left: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .seo-content li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 25px;
+            color: var(--text-light);
+        }
+        
+        .seo-content li::before {
+            content: "✓";
+            color: var(--success);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
         }
         
         footer {
             text-align: center;
             padding: 30px 0;
             margin-top: 40px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 10px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            color: var(--text-light);
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            flex: 1;
+            min-width: 250px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .feature-desc {
+            color: var(--text-light);
+            font-size: 0.95rem;
         }
         
         @media (max-width: 768px) {
@@ -260,8 +479,18 @@
             }
             
             th, td {
-                padding: 8px 10px;
+                padding: 12px 15px;
                 font-size: 0.9rem;
+            }
+            
+            .result-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .result-info {
+                flex-wrap: wrap;
             }
         }
         
@@ -276,6 +505,10 @@
             
             .subtitle {
                 font-size: 1rem;
+            }
+            
+            .seo-content {
+                padding: 25px 15px;
             }
         }
     </style>
@@ -313,13 +546,18 @@
             </div>
             
             <div class="results" id="results">
-                <h2>DNS Lookup Results</h2>
-                <p>Domain: <span id="resultDomain">example.com</span> | Record Type: <span id="resultType">A</span></p>
+                <div class="result-header">
+                    <h2 class="result-title">DNS Lookup Results</h2>
+                    <div class="result-info">
+                        <span id="resultDomain">example.com</span>
+                        <span id="resultType">A Record</span>
+                    </div>
+                </div>
                 <table id="resultsTable">
                     <thead>
                         <tr>
-                            <th>Record Type</th>
-                            <th>Host</th>
+                            <th>Type</th>
+                            <th>Name</th>
                             <th>Value</th>
                             <th>TTL</th>
                         </tr>
@@ -330,6 +568,40 @@
                 </table>
             </div>
         </section>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="feature-title">Fast & Accurate</h3>
+                <p class="feature-desc">Get DNS results instantly with our optimized API integration</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 class="feature-title">Fully Responsive</h3>
+                <p class="feature-desc">Works perfectly on all devices - desktop, tablet, and mobile</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3 class="feature-title">Secure & Private</h3>
+                <p class="feature-desc">We don't store your queries. All lookups are private</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                <h3 class="feature-title">Multiple Records</h3>
+                <p class="feature-desc">Supports all common DNS record types</p>
+            </div>
+        </div>
         
         <div class="info-sections">
             <div class="info-card">
@@ -407,7 +679,7 @@
         
         <footer>
             <p>© 2023 DNS Lookup Tool | Free Online DNS Record Checker</p>
-            <p>This tool uses open-source DNS APIs to provide accurate DNS information</p>
+            <p>This tool uses Google's DNS-over-HTTPS API to provide accurate DNS information</p>
         </footer>
     </div>
     
@@ -455,96 +727,63 @@
                 // Show loader
                 loader.classList.add('active');
                 
-                // Simulate API call with mock data for this example
-                // In a real implementation, you would call an open-source DNS API here
-                setTimeout(() => {
-                    loader.classList.remove('active');
-                    if (Math.random() > 0.2) { // 80% success rate simulation
-                        displayResults(domain, type);
-                    } else {
-                        showError('Failed to retrieve DNS records. The domain may not exist or the DNS query timed out.');
-                    }
-                }, 1500);
+                // Use Google's DNS-over-HTTPS API
+                const apiUrl = `https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`;
+                
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        loader.classList.remove('active');
+                        if (data.Status === 0 && data.Answer) {
+                            displayResults(domain, type, data.Answer);
+                        } else if (data.Status === 3) {
+                            showError('No DNS records found for this domain and record type');
+                        } else {
+                            showError('Failed to retrieve DNS records. The domain may not exist or there was a server error.');
+                        }
+                    })
+                    .catch(err => {
+                        loader.classList.remove('active');
+                        showError('Failed to connect to DNS server. Please try again later.');
+                        console.error('Error fetching DNS data:', err);
+                    });
             }
             
-            function displayResults(domain, type) {
+            function displayResults(domain, type, records) {
                 resultDomain.textContent = domain;
-                resultType.textContent = type;
+                resultType.textContent = type + ' Record';
                 
                 // Clear previous results
                 resultsTable.innerHTML = '';
                 
-                // Generate mock results based on record type
-                const mockData = generateMockRecords(domain, type);
-                
                 // Populate table with results
-                mockData.forEach(record => {
+                records.forEach(record => {
                     const row = resultsTable.insertRow();
-                    row.insertCell(0).textContent = record.type;
-                    row.insertCell(1).textContent = record.name;
-                    row.insertCell(2).textContent = record.value;
-                    row.insertCell(3).textContent = record.ttl;
+                    
+                    // Type cell
+                    const typeCell = row.insertCell(0);
+                    typeCell.innerHTML = `<span class="record-type">${record.type}</span>`;
+                    
+                    // Name cell
+                    const nameCell = row.insertCell(1);
+                    nameCell.textContent = record.name;
+                    
+                    // Value cell
+                    const valueCell = row.insertCell(2);
+                    valueCell.textContent = record.data;
+                    
+                    // TTL cell
+                    const ttlCell = row.insertCell(3);
+                    ttlCell.textContent = record.TTL;
                 });
                 
                 // Show results section
                 results.classList.add('active');
-            }
-            
-            function generateMockRecords(domain, type) {
-                const records = [];
-                
-                switch(type) {
-                    case 'A':
-                        records.push(
-                            { type: 'A', name: domain, value: '192.0.2.1', ttl: '3600' },
-                            { type: 'A', name: domain, value: '192.0.2.2', ttl: '3600' }
-                        );
-                        break;
-                    case 'AAAA':
-                        records.push(
-                            { type: 'AAAA', name: domain, value: '2001:0db8:85a3:0000:0000:8a2e:0370:7334', ttl: '3600' }
-                        );
-                        break;
-                    case 'CNAME':
-                        records.push(
-                            { type: 'CNAME', name: 'www.' + domain, value: domain, ttl: '3600' }
-                        );
-                        break;
-                    case 'MX':
-                        records.push(
-                            { type: 'MX', name: domain, value: '10 mail.' + domain, ttl: '3600' },
-                            { type: 'MX', name: domain, value: '20 mail2.' + domain, ttl: '3600' }
-                        );
-                        break;
-                    case 'TXT':
-                        records.push(
-                            { type: 'TXT', name: domain, value: '"v=spf1 include:_spf.example.com ~all"', ttl: '3600' },
-                            { type: 'TXT', name: domain, value: '"google-site-verification=abcdef1234567890"', ttl: '3600' }
-                        );
-                        break;
-                    case 'NS':
-                        records.push(
-                            { type: 'NS', name: domain, value: 'ns1.example-dns.com', ttl: '86400' },
-                            { type: 'NS', name: domain, value: 'ns2.example-dns.com', ttl: '86400' }
-                        );
-                        break;
-                    case 'SOA':
-                        records.push(
-                            { type: 'SOA', name: domain, value: `ns1.example-dns.com hostmaster.${domain} 2023060101 7200 3600 1209600 3600`, ttl: '3600' }
-                        );
-                        break;
-                    case 'PTR':
-                        records.push(
-                            { type: 'PTR', name: '1.2.0.192.in-addr.arpa', value: domain, ttl: '3600' }
-                        );
-                        break;
-                    default:
-                        records.push(
-                            { type: type, name: domain, value: 'No records found', ttl: 'N/A' }
-                        );
-                }
-                
-                return records;
             }
             
             function showError(message) {
@@ -560,6 +799,12 @@
                 results.classList.remove('active');
                 resultsTable.innerHTML = '';
             }
+            
+            // Perform a lookup for example.com on page load
+            setTimeout(() => {
+                domainInput.value = 'example.com';
+                performLookup();
+            }, 500);
         });
     </script>
 </body>
