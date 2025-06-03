@@ -397,14 +397,7 @@ Features:
         </main>
         
         <footer>
-            <div class="footer-links">
-                <a href="#">Home</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Contact Us</a>
-                <a href="#">FAQs</a>
-            </div>
-            <p>© 2023 Text to PDF Converter | Free Online Tool | Built with Open Source Technologies</p>
+            <p>© 2023 Text to PDF Converter</p>
             <p>This tool uses jsPDF, an open-source JavaScript library for PDF generation.</p>
         </footer>
     </div>
