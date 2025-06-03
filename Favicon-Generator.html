@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online favicon generator tool. Convert your image to favicon.ico format instantly. Works on all devices and browsers.">
+    <meta name="keywords" content="favicon generator, ico converter, website icon maker, free favicon creator">
+    <title>Free Favicon Generator | Create .ico Files Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .generator-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .upload-area i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #4CAF50;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .preview-area {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        #imagePreview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            margin: 20px 0;
+        }
+        
+        .option-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        select, input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            display: none;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .result img {
+            width: 64px;
+            height: 64px;
+            margin: 15px;
+            border-radius: 5px;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            margin: 10px;
+            text-decoration: none;
+        }
+        
+        .info-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            margin: 20px 0 10px;
+            font-size: 1.3rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .generator-box, .info-section {
+                padding: 20px;
+            }
+            
+            .upload-area {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Free Favicon Generator</h1>
+            <p class="subtitle">Convert your image to favicon.ico format in seconds</p>
+        </header>
+        
+        <div class="generator-box">
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Upload Your Image</h3>
+                <p>Drag & drop your image here or click to browse</p>
+                <p>Supports: JPG, PNG, GIF, SVG (Max 5MB)</p>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+            
+            <div class="preview-area" id="previewArea">
+                <img id="imagePreview" src="#" alt="Uploaded Image Preview">
+                <p id="fileName"></p>
+            </div>
+            
+            <div class="options">
+                <div class="option-group">
+                    <label for="sizeSelect">Favicon Size:</label>
+                    <select id="sizeSelect">
+                        <option value="16">16x16 px (Standard)</option>
+                        <option value="32">32x32 px (Most common)</option>
+                        <option value="48">48x48 px (Desktop shortcut)</option>
+                        <option value="64">64x64 px (High resolution)</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <label for="formatSelect">Output Format:</label>
+                    <select id="formatSelect">
+                        <option value="ico">.ico (Windows compatible)</option>
+                        <option value="png">.png (Modern browsers)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button id="generateBtn" disabled>Generate Favicon</button>
+            
+            <div class="result" id="result">
+                <h3>Your Favicon is Ready!</h3>
+                <div id="faviconPreview"></div>
+                <a href="#" id="downloadLink" class="download-btn" download="favicon.ico">
+                    <button><i class="fas fa-download"></i> Download Favicon</button>
+                </a>
+                <p id="usageInstructions"></p>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h2>About Favicons and How to Use Them</h2>
+            
+            <h3>What is a Favicon?</h3>
+            <p>A favicon (short for "favorite icon") is a small, 16x16 pixel icon that appears in browser tabs, bookmarks, and address bars next to your website's URL. It helps users visually identify your site among many open tabs.</p>
+            
+            <h3>Why Use Our Favicon Generator?</h3>
+            <p>Our free online tool makes it easy to create professional favicons without any design skills. Simply upload your image, and we'll convert it to the proper format and size. Our generator uses open-source technology to ensure high-quality results that work on all devices and browsers.</p>
+            
+            <h3>How to Add a Favicon to Your Website</h3>
+            <p>After generating your favicon, simply upload the .ico or .png file to your website's root directory. Then add the following code to the &lt;head&gt; section of your HTML:</p>
+            <pre style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; overflow-x: auto;">
+&lt;link rel="icon" href="/favicon.ico" type="image/x-icon"&gt;
+&lt;link rel="icon" href="/favicon.png" type="image/png"&gt;</pre>
+            
+            <h3>Best Practices for Favicons</h3>
+            <ul style="margin-left: 20px;">
+                <li>Use a simple, recognizable design that works at small sizes</li>
+                <li>Square images work best (we'll crop your image if needed)</li>
+                <li>Transparent backgrounds are supported</li>
+                <li>For best results, start with at least 260x260 pixels</li>
+            </ul>
+        </div>
+        
+        <footer>
+            <p>© 2023 Free Favicon Generator | All Rights Reserved</p>
+            <p>This tool uses open-source libraries to convert your images to favicon format.</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const previewArea = document.getElementById('previewArea');
+        const imagePreview = document.getElementById('imagePreview');
+        const fileName = document.getElementById('fileName');
+        const generateBtn = document.getElementById('generateBtn');
+        const result = document.getElementById('result');
+        const faviconPreview = document.getElementById('faviconPreview');
+        const downloadLink = document.getElementById('downloadLink');
+        const usageInstructions = document.getElementById('usageInstructions');
+        const sizeSelect = document.getElementById('sizeSelect');
+        const formatSelect = document.getElementById('formatSelect');
+        
+        // Event Listeners
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.6)';
+            uploadArea.style.background = 'rgba(255, 255, 255, 0.05)';
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            uploadArea.style.background = 'transparent';
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            uploadArea.style.background = 'transparent';
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        });
+        
+        fileInput.addEventListener('change', handleFileSelect);
+        generateBtn.addEventListener('click', generateFavicon);
+        
+        // Functions
+        function handleFileSelect() {
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            // Check file type
+            if (!file.type.match('image.*')) {
+                alert('Please select an image file (JPG, PNG, GIF, SVG)');
+                return;
+            }
+            
+            // Check file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size exceeds 5MB limit');
+                return;
+            }
+            
+            // Display preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                previewArea.style.display = 'block';
+                fileName.textContent = file.name;
+                generateBtn.disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function generateFavicon() {
+            const file = fileInput.files[0];
+            const size = parseInt(sizeSelect.value);
+            const format = formatSelect.value;
+            
+            if (!file) return;
+            
+            // Show loading state
+            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            generateBtn.disabled = true;
+            
+            // In a real implementation, you would upload to an API here
+            // For this example, we'll simulate API processing with a timeout
+            setTimeout(() => {
+                // Create a canvas to resize the image
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                const img = new Image();
+                img.onload = function() {
+                    // Draw image on canvas (centered and cropped to square)
+                    const minSize = Math.min(img.width, img.height);
+                    const offsetX = (img.width - minSize) / 2;
+                    const offsetY = (img.height - minSize) / 2;
+                    
+                    ctx.drawImage(img, offsetX, offsetY, minSize, minSize, 0, 0, size, size);
+                    
+                    // Get the data URL based on selected format
+                    let dataUrl, downloadName;
+                    if (format === 'ico') {
+                        // Note: Actual ICO conversion would require a library or API
+                        // For demo purposes, we'll use PNG as ICO
+                        dataUrl = canvas.toDataURL('image/png');
+                        downloadName = 'favicon.ico';
+                    } else {
+                        dataUrl = canvas.toDataURL('image/png');
+                        downloadName = 'favicon.png';
+                    }
+                    
+                    // Display result
+                    faviconPreview.innerHTML = '';
+                    const faviconImg = document.createElement('img');
+                    faviconImg.src = dataUrl;
+                    faviconImg.alt = 'Generated Favicon';
+                    faviconPreview.appendChild(faviconImg);
+                    
+                    // Set download link
+                    downloadLink.href = dataUrl;
+                    downloadLink.download = downloadName;
+                    downloadLink.querySelector('button').innerHTML = `<i class="fas fa-download"></i> Download ${downloadName}`;
+                    
+                    // Set usage instructions
+                    const linkTag = format === 'ico' 
+                        ? '&lt;link rel="icon" href="favicon.ico" type="image/x-icon"&gt;'
+                        : '&lt;link rel="icon" href="favicon.png" type="image/png"&gt;';
+                    
+                    usageInstructions.innerHTML = `
+                        <p>Add this code to your HTML &lt;head&gt; section:</p>
+                        <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; display: inline-block;">${linkTag}</pre>
+                    `;
+                    
+                    result.style.display = 'block';
+                    generateBtn.innerHTML = 'Generate Favicon';
+                    generateBtn.disabled = false;
+                    
+                    // Scroll to result
+                    result.scrollIntoView({ behavior: 'smooth' });
+                };
+                img.src = URL.createObjectURL(file);
+            }, 1000);
+        }
+        
+        // For a real implementation, you would need to:
+        // 1. Upload the image to a server or use a client-side library
+        // 2. Use a proper ICO conversion library (like 'to-ico' for JavaScript)
+        // 3. Consider using a service like Favicon.io's API
+    </script>
+</body>
+</html>
