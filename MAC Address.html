@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAC Address Finder - Comprehensive Tool</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        #detectionResult {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: var(--light);
+            display: none;
+        }
+        .instructions {
+            display: none;
+            margin-top: 20px;
+        }
+        .platform-tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid var(--primary);
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 15px 0;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .note {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .platform-tabs {
+                flex-direction: column;
+            }
+            .tab-btn {
+                text-align: left;
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+            .tab-btn.active {
+                border-bottom: none;
+                border-left: 3px solid var(--primary);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MAC Address Finder</h1>
+            <p>Discover your device's network hardware address</p>
+        </header>
+
+        <div class="card">
+            <h2>Automatic Detection</h2>
+            <p>We'll attempt to detect your MAC address automatically. Due to browser restrictions, this may not work on all devices.</p>
+            
+            <button id="detectBtn" class="btn btn-primary">Detect My MAC Address</button>
+            <button id="manualBtn" class="btn btn-secondary">Show Manual Instructions</button>
+            
+            <div id="detectionResult"></div>
+        </div>
+
+        <div id="manualInstructions" class="card instructions">
+            <h2>Manual MAC Address Lookup</h2>
+            <p>Since browsers can't directly access MAC addresses, here's how to find it on your device:</p>
+            
+            <div class="platform-tabs">
+                <button class="tab-btn active" data-tab="windows">Windows</button>
+                <button class="tab-btn" data-tab="mac">Mac</button>
+                <button class="tab-btn" data-tab="linux">Linux</button>
+                <button class="tab-btn" data-tab="android">Android</button>
+                <button class="tab-btn" data-tab="ios">iOS</button>
+            </div>
+            
+            <div id="windows" class="tab-content active">
+                <h3>Windows Instructions</h3>
+                <ol>
+                    <li>Press <strong>Windows Key + R</strong> to open the Run dialog</li>
+                    <li>Type <code>cmd</code> and press Enter to open Command Prompt</li>
+                    <li>In the Command Prompt, type: <code>ipconfig /all</code></li>
+                    <li>Look for your active network adapter (WiFi or Ethernet)</li>
+                    <li>Find the <strong>Physical Address</strong> line - this is your MAC address</li>
+                </ol>
+                <div class="note">
+                    <strong>Alternative Method:</strong> In PowerShell, run: <code>Get-NetAdapter | Select-Object Name, MacAddress</code>
+                </div>
+            </div>
+            
+            <div id="mac" class="tab-content">
+                <h3>MacOS Instructions</h3>
+                <ol>
+                    <li>Click the Apple menu and select <strong>System Preferences</strong></li>
+                    <li>Go to <strong>Network</strong></li>
+                    <li>Select your active network connection (WiFi or Ethernet)</li>
+                    <li>Click <strong>Advanced</strong> in the bottom right</li>
+                    <li>Go to the <strong>Hardware</strong> tab</li>
+                    <li>The MAC address is displayed at the top</li>
+                </ol>
+                <div class="note">
+                    <strong>Terminal Method:</strong> Open Terminal and run: <code>ifconfig en0 | grep ether</code> (use en1 for WiFi if en0 doesn't work)
+                </div>
+            </div>
+            
+            <div id="linux" class="tab-content">
+                <h3>Linux Instructions</h3>
+                <ol>
+                    <li>Open a terminal window</li>
+                    <li>Run the command: <code>ip link show</code></li>
+                    <li>Look for your network interface (usually eth0 for wired, wlan0 for wireless)</li>
+                    <li>The MAC address is listed after "link/ether"</li>
+                </ol>
+                <div class="note">
+                    <strong>Alternative Commands:</strong> You can also use <code>ifconfig -a</code> or <code>nmcli device show</code>
+                </div>
+            </div>
+            
+            <div id="android" class="tab-content">
+                <h3>Android Instructions</h3>
+                <ol>
+                    <li>Open <strong>Settings</strong></li>
+                    <li>Go to <strong>About phone</strong> or <strong>About device</strong></li>
+                    <li>Tap on <strong>Status</strong> or <strong>Hardware information</strong></li>
+                    <li>Look for <strong>WiFi MAC address</strong></li>
+                </ol>
+                <div class="note">
+                    <strong>Alternative Path:</strong> On newer Android versions: Settings > Network & Internet > WiFi > Network preferences > Advanced
+                </div>
+            </div>
+            
+            <div id="ios" class="tab-content">
+                <h3>iOS Instructions</h3>
+                <ol>
+                    <li>Open <strong>Settings</strong></li>
+                    <li>Go to <strong>General</strong></li>
+                    <li>Tap <strong>About</strong></li>
+                    <li>Scroll down to <strong>WiFi Address</strong> (this is your MAC address)</li>
+                </ol>
+                <div class="note">
+                    <strong>Alternative Path:</strong> For iOS 14+: Settings > WiFi > tap the (i) icon next to your network > scroll to find the MAC address
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Why Can't Browsers Detect MAC Addresses?</h2>
+            <p>Modern web browsers intentionally restrict access to hardware-level information like MAC addresses due to:</p>
+            <ul>
+                <li><strong>Privacy concerns:</strong> MAC addresses can be used to track devices across networks</li>
+                <li><strong>Security policies:</strong> Preventing websites from gathering sensitive device information</li>
+                <li><strong>Sandboxing:</strong> Web pages run in a restricted environment for safety</li>
+            </ul>
+            <p>For reliable MAC address detection, you would need to use native applications with appropriate permissions.</p>
+        </div>
+
+        <div class="card">
+            <h2>MAC Address Formats</h2>
+            <p>MAC addresses can appear in different formats. All of these represent the same address:</p>
+            <ul>
+                <li><code>00:1A:2B:3C:4D:5E</code> (colon-separated, most common)</li>
+                <li><code>00-1A-2B-3C-4D-5E</code> (hyphen-separated)</li>
+                <li><code>001A.2B3C.4D5E</code> (dot-separated, Cisco style)</li>
+                <li><code>001A2B3C4D5E</code> (no separators)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const detectBtn = document.getElementById('detectBtn');
+            const manualBtn = document.getElementById('manualBtn');
+            const detectionResult = document.getElementById('detectionResult');
+            const manualInstructions = document.getElementById('manualInstructions');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            
+            // Automatic detection button
+            detectBtn.addEventListener('click', function() {
+                detectionResult.style.display = 'block';
+                detectionResult.innerHTML = `
+                    <p><strong>Attempting to detect your MAC address...</strong></p>
+                    <p>Due to browser security restrictions, direct MAC address detection is not possible from web pages.</p>
+                    <p>We can detect some network information that might be helpful:</p>
+                `;
+                
+                // Try to get network information
+                getNetworkInfo().then(info => {
+                    detectionResult.innerHTML += `
+                        <ul>
+                            <li><strong>User Agent:</strong> ${info.userAgent}</li>
+                            <li><strong>Platform:</strong> ${info.platform}</li>
+                            ${info.ips ? `<li><strong>Local IPs:</strong> ${info.ips.join(', ')}</li>` : ''}
+                        </ul>
+                        <p>For your actual MAC address, please use the manual instructions below.</p>
+                    `;
+                }).catch(error => {
+                    detectionResult.innerHTML += `
+                        <p class="error">Unable to gather network information: ${error.message}</p>
+                        <p>Please use the manual instructions to find your MAC address.</p>
+                    `;
+                });
+            });
+            
+            // Manual instructions button
+            manualBtn.addEventListener('click', function() {
+                manualInstructions.style.display = 'block';
+                detectionResult.style.display = 'none';
+                window.scrollTo({
+                    top: manualInstructions.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Tab switching
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update active tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Try to detect the user's platform and show relevant tab
+            detectPlatform();
+        });
+        
+        function getNetworkInfo() {
+            return new Promise((resolve, reject) => {
+                const info = {
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform,
+                    ips: []
+                };
+                
+                // Try WebRTC to get local IPs
+                if (window.RTCPeerConnection) {
+                    const pc = new RTCPeerConnection({iceServers: []});
+                    pc.createDataChannel('');
+                    pc.createOffer()
+                        .then(offer => pc.setLocalDescription(offer))
+                        .catch(err => reject(err));
+                    
+                    pc.onicecandidate = event => {
+                        if (!event.candidate) {
+                            if (info.ips.length === 0) {
+                                resolve(info); // Resolve even if no IPs found
+                            } else {
+                                resolve(info);
+                            }
+                            return;
+                        }
+                        
+                        const candidate = event.candidate.candidate;
+                        const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/;
+                        const match = candidate.match(ipRegex);
+                        
+                        if (match) {
+                            const ip = match[1];
+                            if (info.ips.indexOf(ip) === -1) {
+                                info.ips.push(ip);
+                            }
+                        }
+                    };
+                } else {
+                    resolve(info);
+                }
+            });
+        }
+        
+        function detectPlatform() {
+            const userAgent = navigator.userAgent;
+            let platform = 'windows'; // default
+            
+            if (userAgent.includes('Macintosh')) {
+                platform = 'mac';
+            } else if (userAgent.includes('Linux')) {
+                platform = 'linux';
+            } else if (userAgent.includes('Android')) {
+                platform = 'android';
+            } else if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+                platform = 'ios';
+            }
+            
+            // Show the relevant tab
+            document.querySelector(`.tab-btn[data-tab="${platform}"]`).click();
+        }
+    </script>
+</body>
+</html>
