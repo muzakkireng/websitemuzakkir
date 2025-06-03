@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Color Picker Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+        
+        .upload-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .preview-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: #4b6cb7;
+        }
+        
+        .drop-area {
+            border: 3px dashed #3498db;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9ff;
+        }
+        
+        .drop-area:hover, .drop-area.dragover {
+            background: #e3f2fd;
+            border-color: #2980b9;
+        }
+        
+        .drop-area i {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .drop-text {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .image-preview {
+            width: 100%;
+            height: 300px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        #previewCanvas {
+            max-width: 100%;
+            max-height: 100%;
+            cursor: crosshair;
+        }
+        
+        .preview-placeholder {
+            text-align: center;
+            color: #7f8c8d;
+        }
+        
+        .preview-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .color-info {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .color-display {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .color-display:hover {
+            transform: scale(1.05);
+        }
+        
+        .color-values {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .color-value {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .color-value:last-child {
+            margin-bottom: 0;
+        }
+        
+        .value-label {
+            color: #7f8c8d;
+        }
+        
+        .value-content {
+            font-weight: 600;
+            color: #2c3e50;
+            letter-spacing: 1px;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 25px;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2c3e50;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: #ecf0f1;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-palette"></i> Image Color Picker</h1>
+            <p class="subtitle">Upload an image and pick colors directly from it. Get RGB, HEX, and HSL values instantly.</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="upload-section">
+                <div class="panel">
+                    <h2><i class="fas fa-cloud-upload-alt"></i> Upload Image</h2>
+                    <div class="drop-area" id="dropArea">
+                        <i class="fas fa-file-image"></i>
+                        <p class="drop-text">Drag & Drop your image here</p>
+                        <p>OR</p>
+                        <button class="btn" id="browseBtn">Browse Files</button>
+                        <input type="file" id="fileInput" class="file-input" accept="image/*">
+                    </div>
+                </div>
+                
+                <div class="panel instructions">
+                    <h3><i class="fas fa-info-circle"></i> How to use this tool:</h3>
+                    <ol>
+                        <li>Upload an image using the button above or by dragging and dropping</li>
+                        <li>Click anywhere on the image preview to select a color</li>
+                        <li>The selected color will be displayed along with its values</li>
+                        <li>You can copy the color values to use in your projects</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <div class="panel">
+                    <h2><i class="fas fa-eye"></i> Image Preview</h2>
+                    <div class="image-preview">
+                        <canvas id="previewCanvas"></canvas>
+                        <div class="preview-placeholder" id="previewPlaceholder">
+                            <i class="fas fa-image"></i>
+                            <p>Upload an image to preview</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2><i class="fas fa-fill-drip"></i> Selected Color</h2>
+                    <div class="color-info">
+                        <div class="color-display" id="colorDisplay"></div>
+                        
+                        <div class="color-values">
+                            <div class="color-value">
+                                <span class="value-label">HEX:</span>
+                                <span class="value-content" id="hexValue">#------</span>
+                            </div>
+                            <div class="color-value">
+                                <span class="value-label">RGB:</span>
+                                <span class="value-content" id="rgbValue">rgb(---, ---, ---)</span>
+                            </div>
+                            <div class="color-value">
+                                <span class="value-label">HSL:</span>
+                                <span class="value-content" id="hslValue">hsl(---, ---%, ---%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Image Color Picker Tool Developed By toolbyte1.blogspot.com</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            const browseBtn = document.getElementById('browseBtn');
+            const previewCanvas = document.getElementById('previewCanvas');
+            const previewPlaceholder = document.getElementById('previewPlaceholder');
+            const colorDisplay = document.getElementById('colorDisplay');
+            const hexValue = document.getElementById('hexValue');
+            const rgbValue = document.getElementById('rgbValue');
+            const hslValue = document.getElementById('hslValue');
+            const ctx = previewCanvas.getContext('2d');
+            
+            // Event listeners for file upload
+            browseBtn.addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    handleImage(this.files[0]);
+                }
+            });
+            
+            // Drag and drop events
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.classList.add('dragover');
+            }
+            
+            function unhighlight() {
+                dropArea.classList.remove('dragover');
+            }
+            
+            dropArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const file = dt.files[0];
+                handleImage(file);
+            }
+            
+            // Handle the uploaded image
+            function handleImage(file) {
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Set canvas dimensions
+                        const maxWidth = 500;
+                        const maxHeight = 300;
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                        
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                        
+                        previewCanvas.width = width;
+                        previewCanvas.height = height;
+                        
+                        // Draw image on canvas
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Show canvas and hide placeholder
+                        previewCanvas.style.display = 'block';
+                        previewPlaceholder.style.display = 'none';
+                    };
+                    img.src = e.target.result;
+                };
+                
+                reader.readAsDataURL(file);
+            }
+            
+            // Color picker functionality
+            previewCanvas.addEventListener('click', function(e) {
+                if (previewCanvas.style.display !== 'block') return;
+                
+                const rect = previewCanvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Get pixel data
+                const pixel = ctx.getImageData(x, y, 1, 1).data;
+                const r = pixel[0];
+                const g = pixel[1];
+                const b = pixel[2];
+                
+                // Convert to HEX
+                const hex = rgbToHex(r, g, b);
+                
+                // Convert to HSL
+                const hsl = rgbToHsl(r, g, b);
+                
+                // Update UI
+                colorDisplay.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+                hexValue.textContent = hex;
+                rgbValue.textContent = `rgb(${r}, ${g}, ${b})`;
+                hslValue.textContent = `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`;
+                
+                // Add animation effect
+                colorDisplay.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    colorDisplay.style.transform = 'scale(1)';
+                }, 300);
+            });
+            
+            // Helper functions
+            function rgbToHex(r, g, b) {
+                return '#' + [r, g, b].map(x => {
+                    const hex = x.toString(16);
+                    return hex.length === 1 ? '0' + hex : hex;
+                }).join('');
+            }
+            
+            function rgbToHsl(r, g, b) {
+                r /= 255;
+                g /= 255;
+                b /= 255;
+                
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+                
+                if (max === min) {
+                    h = s = 0; // achromatic
+                } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    
+                    h /= 6;
+                }
+                
+                return {
+                    h: h * 360,
+                    s: s * 100,
+                    l: l * 100
+                };
+            }
+        });
+    </script>
+</body>
+</html>
