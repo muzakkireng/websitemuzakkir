@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Address Lookup Tool | Free IP Geolocation Service</title>
+    <meta name="description" content="Free IP address lookup tool. Find geolocation, ISP, timezone, and more details about any IP address instantly.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: #f0f0f0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #4e9af1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .lookup-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(25, 35, 60, 0.85);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        .info-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(35, 45, 70, 0.85);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        h2 {
+            color: #4e9af1;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 25px;
+        }
+        
+        input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #4e9af1;
+            border-radius: 8px 0 0 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        input::placeholder {
+            color: #aaa;
+        }
+        
+        button {
+            padding: 15px 25px;
+            background: #4e9af1;
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #3a7bc8;
+        }
+        
+        .result-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 200px;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: #4e9af1;
+        }
+        
+        .info-content {
+            font-size: 1.1rem;
+        }
+        
+        .info-content p {
+            margin-bottom: 15px;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .feature {
+            flex: 1;
+            min-width: 250px;
+            background: rgba(25, 35, 60, 0.8);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #4e9af1;
+        }
+        
+        .feature h3 {
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 0 20px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        /* Loading animation */
+        .loader {
+            display: none;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid #4e9af1;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 40px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            input, button {
+                width: 100%;
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+            
+            .lookup-section, .info-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">IP Lookup Pro</div>
+            <p class="tagline">Discover detailed information about any IP address instantly with our free lookup tool</p>
+        </header>
+        
+        <main>
+            <section class="lookup-section">
+                <h2>IP Address Lookup</h2>
+                <div class="input-group">
+                    <input type="text" id="ipInput" placeholder="Enter IP address or leave blank for your own IP">
+                    <button id="lookupBtn">Lookup IP</button>
+                </div>
+                
+                <div class="loader" id="loader"></div>
+                
+                <div class="result-container" id="resultContainer">
+                    <p>Enter an IP address above to see detailed information about it. If you leave the field blank, we'll show information about your current IP address.</p>
+                </div>
+            </section>
+            
+            <section class="info-section">
+                <h2>About IP Addresses</h2>
+                <div class="info-content">
+                    <p>An IP (Internet Protocol) address is a unique identifier assigned to every device connected to a network. It enables devices to communicate with each other over the internet.</p>
+                    
+                    <p>There are two types of IP addresses:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>IPv4</strong> - 32-bit address (e.g., 192.168.1.1)</li>
+                        <li><strong>IPv6</strong> - 128-bit address (e.g., 2001:0db8:85a3:0000:0000:8a2e:0370:7334)</li>
+                    </ul>
+                    
+                    <p style="margin-top: 15px;">Our IP lookup tool provides detailed information including geolocation, ISP, timezone, and more using reliable open-source APIs.</p>
+                </div>
+            </section>
+        </main>
+        
+        <section class="features">
+            <div class="feature">
+                <div class="feature-icon">🌍</div>
+                <h3>Geolocation</h3>
+                <p>Find the geographic location of any IP address with city-level accuracy.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h3>Privacy Protection</h3>
+                <p>We don't store any lookup data. Your privacy is our priority.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>Fully Responsive</h3>
+                <p>Works perfectly on all devices - desktop, tablet, and mobile.</p>
+            </div>
+        </section>
+        
+        <footer>
+            <p>© 2023 IP Lookup Pro | Free IP Geolocation Service | Using open-source IP APIs</p>
+            <p style="margin-top: 10px;">This tool is for informational purposes only. Accuracy may vary based on IP database sources.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ipInput = document.getElementById('ipInput');
+            const lookupBtn = document.getElementById('lookupBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const loader = document.getElementById('loader');
+            
+            // Fetch IP information from API
+            async function fetchIPInfo(ip = '') {
+                loader.style.display = 'block';
+                resultContainer.innerHTML = '';
+                
+                try {
+                    const apiUrl = ip 
+                        ? `https://ipapi.co/${ip}/json/` 
+                        : 'https://ipapi.co/json/';
+                    
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        resultContainer.innerHTML = `<p class="error">Error: ${data.reason || 'Invalid IP address'}</p>`;
+                    } else {
+                        displayResults(data);
+                    }
+                } catch (error) {
+                    resultContainer.innerHTML = `<p class="error">Error: ${error.message || 'Failed to fetch IP information'}</p>`;
+                } finally {
+                    loader.style.display = 'none';
+                }
+            }
+            
+            // Display results in the container
+            function displayResults(data) {
+                resultContainer.innerHTML = `
+                    <div class="result-item">
+                        <span class="result-label">IP Address:</span>
+                        <span>${data.ip}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Version:</span>
+                        <span>IPv${data.version}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">City:</span>
+                        <span>${data.city}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Region:</span>
+                        <span>${data.region}, ${data.region_code}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Country:</span>
+                        <span>${data.country_name} (${data.country_code})</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Postal Code:</span>
+                        <span>${data.postal || 'N/A'}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Timezone:</span>
+                        <span>${data.timezone}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">ISP:</span>
+                        <span>${data.org || data.asn || 'N/A'}</span>
+                    </div>
+                `;
+            }
+            
+            // Event listeners
+            lookupBtn.addEventListener('click', function() {
+                fetchIPInfo(ipInput.value);
+            });
+            
+            // Load user's own IP information on page load
+            fetchIPInfo();
+        });
+    </script>
+</body>
+</html>
