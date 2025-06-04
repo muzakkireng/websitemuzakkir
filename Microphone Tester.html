@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Microphone Tester</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #4CAF50;
+            font-size: 2.5rem;
+        }
+
+        .mic-icon {
+            font-size: 5rem;
+            margin: 20px 0;
+            color: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-stop {
+            background-color: #f44336;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+        }
+
+        .btn-stop:hover {
+            background-color: #d32f2f;
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.6);
+        }
+
+        .btn-playback {
+            background-color: #2196F3;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-playback:hover {
+            background-color: #0b7dda;
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.6);
+        }
+
+        .visualizer {
+            height: 100px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar {
+            position: absolute;
+            bottom: 0;
+            width: 8px;
+            background-color: #4CAF50;
+            border-radius: 5px 5px 0 0;
+            transition: height 0.1s;
+        }
+
+        .status {
+            margin: 20px 0;
+            font-size: 1.2rem;
+            min-height: 30px;
+        }
+
+        .volume-meter {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .volume-level {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            border-radius: 5px;
+            transition: width 0.1s;
+        }
+
+        .instructions {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .timer {
+            font-size: 1.1rem;
+            margin: 10px 0;
+            color: #2196F3;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Advanced Microphone Tester</h1>
+        <div class="mic-icon">🎤</div>
+        
+        <div class="timer" id="timer">Recording: 0s</div>
+        
+        <div class="visualizer" id="visualizer">
+            <!-- Bars will be added dynamically -->
+        </div>
+        
+        <div class="volume-meter">
+            <div class="volume-level" id="volume-level"></div>
+        </div>
+        
+        <div class="status" id="status">Click "Start Recording" to begin</div>
+        
+        <div class="button-group">
+            <button class="btn" id="start-btn">Start Recording</button>
+            <button class="btn btn-stop" id="stop-btn" disabled>Stop Recording</button>
+            <button class="btn btn-playback" id="playback-btn" disabled>Play Back</button>
+        </div>
+        
+        <div class="instructions">
+            <p>1. Click "Start Recording" and allow microphone access</p>
+            <p>2. Speak into your microphone (5 second minimum recommended)</p>
+            <p>3. Click "Stop Recording" when finished</p>
+            <p>4. Click "Play Back" to hear your recording</p>
+        </div>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const playbackBtn = document.getElementById('playback-btn');
+        const statusEl = document.getElementById('status');
+        const timerEl = document.getElementById('timer');
+        const visualizer = document.getElementById('visualizer');
+        const volumeLevel = document.getElementById('volume-level');
+        
+        let audioContext;
+        let analyser;
+        let microphone;
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let recordingStartTime;
+        let timerInterval;
+        let recordedBlob;
+        
+        // Create visualizer bars
+        for (let i = 0; i < 50; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.left = `${i * 12}px`;
+            visualizer.appendChild(bar);
+        }
+        const bars = document.querySelectorAll('.bar');
+        
+        // Update timer display
+        function updateTimer() {
+            const seconds = Math.floor((Date.now() - recordingStartTime) / 1000);
+            timerEl.textContent = `Recording: ${seconds}s`;
+        }
+        
+        // Start microphone recording
+        startBtn.addEventListener('click', async () => {
+            try {
+                statusEl.textContent = "Requesting microphone access...";
+                audioChunks = [];
+                
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                statusEl.textContent = "Recording... Speak into your microphone";
+                
+                // Set up audio context and analyzer
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+                
+                analyser.fftSize = 256;
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                
+                // Set up media recorder
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = () => {
+                    recordedBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    playbackBtn.disabled = false;
+                    clearInterval(timerInterval);
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                recordingStartTime = Date.now();
+                timerInterval = setInterval(updateTimer, 1000);
+                
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                playbackBtn.disabled = true;
+                
+                function updateVisualizer() {
+                    if (!isRecording) return;
+                    
+                    requestAnimationFrame(updateVisualizer);
+                    
+                    analyser.getByteFrequencyData(dataArray);
+                    
+                    // Update bars
+                    for (let i = 0; i < bars.length; i++) {
+                        const index = Math.floor(i * bufferLength / bars.length);
+                        const height = dataArray[index] / 2;
+                        bars[i].style.height = `${height}px`;
+                    }
+                    
+                    // Update volume meter
+                    let sum = 0;
+                    for (let i = 0; i < dataArray.length; i++) {
+                        sum += dataArray[i];
+                    }
+                    const average = sum / dataArray.length;
+                    volumeLevel.style.width = `${average}%`;
+                }
+                
+                updateVisualizer();
+                
+            } catch (error) {
+                statusEl.textContent = `Error: ${error.message}`;
+                console.error(error);
+            }
+        });
+        
+        // Stop recording
+        stopBtn.addEventListener('click', () => {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                
+                if (microphone) {
+                    microphone.disconnect();
+                }
+                if (audioContext && audioContext.state !== 'closed') {
+                    audioContext.close();
+                }
+                
+                statusEl.textContent = "Recording stopped. Ready to play back.";
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                
+                // Reset visualizer
+                bars.forEach(bar => {
+                    bar.style.height = '0px';
+                });
+                volumeLevel.style.width = '0%';
+            }
+        });
+        
+        // Play back recording
+        playbackBtn.addEventListener('click', () => {
+            if (recordedBlob) {
+                statusEl.textContent = "Playing back your recording...";
+                const audioUrl = URL.createObjectURL(recordedBlob);
+                const audio = new Audio(audioUrl);
+                
+                audio.onended = () => {
+                    statusEl.textContent = "Playback complete. Ready to record again.";
+                };
+                
+                audio.play().catch(error => {
+                    statusEl.textContent = `Playback error: ${error.message}`;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
