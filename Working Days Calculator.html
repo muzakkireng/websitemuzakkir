@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working Days Calculator</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--secondary);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        input[type="date"] {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="date"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .options {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+        }
+        
+        .options h3 {
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-row input {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .calculate-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .calculate-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .reset-btn {
+            background-color: var(--light);
+            color: var(--secondary);
+        }
+        
+        .reset-btn:hover {
+            background-color: #dfe6e9;
+        }
+        
+        .result {
+            margin-top: 30px;
+            text-align: center;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            background-color: #e8f4fc;
+            display: none;
+        }
+        
+        .result.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result h2 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .days-count {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        
+        .days-label {
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+        
+        .breakdown {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .breakdown-item {
+            text-align: center;
+        }
+        
+        .breakdown-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .breakdown-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .holidays-note {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .date-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Working Days Calculator</h1>
+            <p class="subtitle">Calculate business days between two dates, excluding weekends and holidays</p>
+        </header>
+        
+        <div class="calculator">
+            <div class="date-inputs">
+                <div class="input-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate">
+                </div>
+                
+                <div class="input-group">
+                    <label for="endDate">End Date:</label>
+                    <input type="date" id="endDate">
+                </div>
+            </div>
+            
+            <div class="options">
+                <h3>Exclude Weekends:</h3>
+                <div class="checkbox-group">
+                    <div class="checkbox-row">
+                        <input type="checkbox" id="excludeSaturday" checked>
+                        <label for="excludeSaturday">Exclude Saturdays</label>
+                    </div>
+                    <div class="checkbox-row">
+                        <input type="checkbox" id="excludeSunday" checked>
+                        <label for="excludeSunday">Exclude Sundays</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="calculate-btn" id="calculateBtn">Calculate Working Days</button>
+                <button class="reset-btn" id="resetBtn">Reset</button>
+            </div>
+            
+            <div class="result" id="result">
+                <h2>Working Days Calculation</h2>
+                <div class="days-count" id="daysCount">0</div>
+                <div class="days-label">working days between dates</div>
+                
+                <div class="breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-value" id="totalDays">0</div>
+                        <div class="breakdown-label">Total Days</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-value" id="weekendDays">0</div>
+                        <div class="breakdown-label">Weekend Days</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-value" id="holidayDays">0</div>
+                        <div class="breakdown-label">Holidays</div>
+                    </div>
+                </div>
+                
+                <div class="holidays-note">
+                    * Based on common US holidays. Custom holidays are not included.
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Note: This calculator excludes weekends and common US holidays. Results may vary based on regional holidays.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default dates (today and 30 days from today)
+            const today = new Date();
+            const defaultEndDate = new Date();
+            defaultEndDate.setDate(today.getDate() + 30);
+            
+            // Format dates to YYYY-MM-DD
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            document.getElementById('startDate').value = formatDate(today);
+            document.getElementById('endDate').value = formatDate(defaultEndDate);
+            
+            // Get DOM elements
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultDiv = document.getElementById('result');
+            const daysCount = document.getElementById('daysCount');
+            const totalDays = document.getElementById('totalDays');
+            const weekendDays = document.getElementById('weekendDays');
+            const holidayDays = document.getElementById('holidayDays');
+            
+            // Common US holidays for calculation (month is 0-indexed)
+            const commonHolidays = [
+                { name: "New Year's Day", date: new Date(today.getFullYear(), 0, 1) },
+                { name: "Martin Luther King Jr. Day", date: new Date(today.getFullYear(), 0, 15) },
+                { name: "Presidents' Day", date: new Date(today.getFullYear(), 1, 19) },
+                { name: "Memorial Day", date: new Date(today.getFullYear(), 4, 27) },
+                { name: "Independence Day", date: new Date(today.getFullYear(), 6, 4) },
+                { name: "Labor Day", date: new Date(today.getFullYear(), 8, 2) },
+                { name: "Columbus Day", date: new Date(today.getFullYear(), 9, 14) },
+                { name: "Veterans Day", date: new Date(today.getFullYear(), 10, 11) },
+                { name: "Thanksgiving", date: new Date(today.getFullYear(), 10, 28) },
+                { name: "Christmas Day", date: new Date(today.getFullYear(), 11, 25) }
+            ];
+            
+            // Calculate working days
+            function calculateWorkingDays() {
+                const startDate = new Date(document.getElementById('startDate').value);
+                const endDate = new Date(document.getElementById('endDate').value);
+                const excludeSaturday = document.getElementById('excludeSaturday').checked;
+                const excludeSunday = document.getElementById('excludeSunday').checked;
+                
+                // Validate dates
+                if (!startDate || !endDate || isNaN(startDate) || isNaN(endDate)) {
+                    alert("Please select valid start and end dates.");
+                    return;
+                }
+                
+                if (startDate > endDate) {
+                    alert("End date must be after start date.");
+                    return;
+                }
+                
+                // Initialize counters
+                let total = 0;
+                let weekends = 0;
+                let holidays = 0;
+                let workingDays = 0;
+                
+                // Create a new date object to iterate through
+                const currentDate = new Date(startDate);
+                
+                // Loop through each day
+                while (currentDate <= endDate) {
+                    total++;
+                    
+                    // Get day of week (0 = Sunday, 6 = Saturday)
+                    const dayOfWeek = currentDate.getDay();
+                    
+                    // Check if it's a weekend
+                    const isSaturday = dayOfWeek === 6;
+                    const isSunday = dayOfWeek === 0;
+                    
+                    // Check if it's a holiday
+                    const isHoliday = commonHolidays.some(holiday => {
+                        return holiday.date.getDate() === currentDate.getDate() &&
+                               holiday.date.getMonth() === currentDate.getMonth();
+                    });
+                    
+                    if ((isSaturday && excludeSaturday) || (isSunday && excludeSunday)) {
+                        weekends++;
+                    } else if (isHoliday) {
+                        holidays++;
+                    } else {
+                        workingDays++;
+                    }
+                    
+                    // Move to next day
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                
+                // Update UI
+                daysCount.textContent = workingDays;
+                totalDays.textContent = total;
+                weekendDays.textContent = weekends;
+                holidayDays.textContent = holidays;
+                
+                // Show result
+                resultDiv.classList.add('visible');
+            }
+            
+            // Reset form
+            function resetForm() {
+                document.getElementById('startDate').value = formatDate(today);
+                document.getElementById('endDate').value = formatDate(defaultEndDate);
+                document.getElementById('excludeSaturday').checked = true;
+                document.getElementById('excludeSunday').checked = true;
+                resultDiv.classList.remove('visible');
+            }
+            
+            // Event listeners
+            calculateBtn.addEventListener('click', calculateWorkingDays);
+            resetBtn.addEventListener('click', resetForm);
+            
+            // Also calculate when dates change
+            document.getElementById('startDate').addEventListener('change', calculateWorkingDays);
+            document.getElementById('endDate').addEventListener('change', calculateWorkingDays);
+            
+            // Initial calculation
+            calculateWorkingDays();
+        });
+    </script>
+</body>
+</html>
