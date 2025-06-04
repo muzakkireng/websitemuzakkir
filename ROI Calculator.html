@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROI Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .result-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .input-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1a2a6c;
+            font-size: 1.2rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            border-color: #1a2a6c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.2);
+        }
+        
+        .range-container {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .range-container input[type="range"] {
+            flex: 1;
+            padding: 0;
+        }
+        
+        .range-value {
+            background: #1a2a6c;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 5px;
+            margin-left: 15px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        button {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .roi-value {
+            font-size: 4rem;
+            font-weight: 700;
+            margin: 20px 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .roi-value.positive {
+            color: #4ade80;
+        }
+        
+        .roi-value.negative {
+            color: #f87171;
+        }
+        
+        .explanation {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            text-align: left;
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .summary-item h3 {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .summary-item p {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .info-section {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .info-section h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1a2a6c;
+            font-size: 1.5rem;
+        }
+        
+        .info-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .info-box {
+            flex: 1;
+            min-width: 250px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-box h4 {
+            color: #b21f1f;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-box ul {
+            padding-left: 20px;
+        }
+        
+        .info-box li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        footer {
+            background-color: #1a2a6c;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .input-section, .result-section {
+                width: 100%;
+            }
+            
+            .result-section {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> ROI Calculator</h1>
+            <p>Calculate your Return on Investment with precision</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="investment">Initial Investment ($)</label>
+                    <div class="input-container">
+                        <i class="fas fa-dollar-sign"></i>
+                        <input type="number" id="investment" value="10000" min="0" step="100">
+                    </div>
+                    <div class="range-container">
+                        <input type="range" id="investment-range" min="0" max="100000" step="1000" value="10000">
+                        <div class="range-value" id="investment-value">$10,000</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="return">Total Return ($)</label>
+                    <div class="input-container">
+                        <i class="fas fa-dollar-sign"></i>
+                        <input type="number" id="return" value="15000" min="0" step="100">
+                    </div>
+                    <div class="range-container">
+                        <input type="range" id="return-range" min="0" max="200000" step="1000" value="15000">
+                        <div class="range-value" id="return-value">$15,000</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="period">Investment Period (Years)</label>
+                    <div class="input-container">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="number" id="period" value="3" min="0.1" step="0.5">
+                    </div>
+                    <div class="range-container">
+                        <input type="range" id="period-range" min="0.5" max="10" step="0.5" value="3">
+                        <div class="range-value" id="period-value">3 Years</div>
+                    </div>
+                </div>
+                
+                <button id="calculate-btn">
+                    <i class="fas fa-calculator"></i> Calculate ROI
+                </button>
+            </div>
+            
+            <div class="result-section">
+                <div class="result-card">
+                    <h2>Your ROI Result</h2>
+                    <div class="roi-value positive">50%</div>
+                    <div class="explanation">
+                        <p>For an investment of <strong>$10,000</strong> that grew to <strong>$15,000</strong> over <strong>3 years</strong>, you achieved a 50% return on investment.</p>
+                    </div>
+                    <div class="summary">
+                        <div class="summary-item">
+                            <h3>Net Profit</h3>
+                            <p>$5,000</p>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Annualized ROI</h3>
+                            <p>14.47%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h3><i class="fas fa-info-circle"></i> About ROI Calculation</h3>
+            <div class="info-content">
+                <div class="info-box">
+                    <h4><i class="fas fa-lightbulb"></i> What is ROI?</h4>
+                    <p>ROI (Return on Investment) is a performance measure used to evaluate the efficiency of an investment or compare the efficiency of several different investments.</p>
+                    <p><strong>Formula:</strong> ROI = (Net Profit / Cost of Investment) × 100%</p>
+                </div>
+                
+                <div class="info-box">
+                    <h4><i class="fas fa-chart-line"></i> Interpreting Results</h4>
+                    <ul>
+                        <li><strong>Positive ROI:</strong> Investment gains exceed costs</li>
+                        <li><strong>Negative ROI:</strong> Investment costs exceed gains</li>
+                        <li><strong>Higher ROI:</strong> Better investment efficiency</li>
+                        <li><strong>Compare ROI:</strong> Evaluate different investment options</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>ROI Calculator &copy; 2023 | Designed for Financial Analysis</p>
+        </footer>
+    </div>
+
+    <script>
+        // Format number as currency
+        function formatCurrency(value) {
+            return '$' + Number(value).toLocaleString('en-US', {
+                maximumFractionDigits: 0
+            });
+        }
+        
+        // Update range value displays
+        function updateRangeValues() {
+            document.getElementById('investment-value').textContent = 
+                formatCurrency(document.getElementById('investment').value);
+            
+            document.getElementById('return-value').textContent = 
+                formatCurrency(document.getElementById('return').value);
+            
+            document.getElementById('period-value').textContent = 
+                document.getElementById('period').value + ' Years';
+        }
+        
+        // Initialize range sliders and input fields
+        document.addEventListener('DOMContentLoaded', function() {
+            // Investment range
+            const investmentRange = document.getElementById('investment-range');
+            const investmentInput = document.getElementById('investment');
+            
+            investmentRange.addEventListener('input', function() {
+                investmentInput.value = investmentRange.value;
+                updateRangeValues();
+            });
+            
+            investmentInput.addEventListener('input', function() {
+                investmentRange.value = investmentInput.value;
+                updateRangeValues();
+            });
+            
+            // Return range
+            const returnRange = document.getElementById('return-range');
+            const returnInput = document.getElementById('return');
+            
+            returnRange.addEventListener('input', function() {
+                returnInput.value = returnRange.value;
+                updateRangeValues();
+            });
+            
+            returnInput.addEventListener('input', function() {
+                returnRange.value = returnInput.value;
+                updateRangeValues();
+            });
+            
+            // Period range
+            const periodRange = document.getElementById('period-range');
+            const periodInput = document.getElementById('period');
+            
+            periodRange.addEventListener('input', function() {
+                periodInput.value = periodRange.value;
+                updateRangeValues();
+            });
+            
+            periodInput.addEventListener('input', function() {
+                periodRange.value = periodInput.value;
+                updateRangeValues();
+            });
+            
+            // Calculate button
+            document.getElementById('calculate-btn').addEventListener('click', calculateROI);
+            
+            // Initial calculation
+            calculateROI();
+        });
+        
+        // Calculate ROI function
+        function calculateROI() {
+            const investment = parseFloat(document.getElementById('investment').value);
+            const returnAmount = parseFloat(document.getElementById('return').value);
+            const period = parseFloat(document.getElementById('period').value);
+            
+            // Calculate net profit
+            const netProfit = returnAmount - investment;
+            
+            // Calculate ROI percentage
+            const roi = (netProfit / investment) * 100;
+            
+            // Calculate annualized ROI
+            const annualizedROI = (Math.pow(1 + (roi/100), 1/period) - 1) * 100;
+            
+            // Update result display
+            const roiValueElement = document.querySelector('.roi-value');
+            roiValueElement.textContent = roi.toFixed(2) + '%';
+            
+            // Add class based on positive or negative ROI
+            roiValueElement.className = 'roi-value';
+            if(roi > 0) {
+                roiValueElement.classList.add('positive');
+            } else if(roi < 0) {
+                roiValueElement.classList.add('negative');
+            }
+            
+            // Update explanation
+            const explanationElement = document.querySelector('.explanation p');
+            explanationElement.innerHTML = `
+                For an investment of <strong>${formatCurrency(investment)}</strong> 
+                that grew to <strong>${formatCurrency(returnAmount)}</strong> 
+                over <strong>${period} years</strong>, 
+                you achieved a ${roi.toFixed(2)}% return on investment.
+            `;
+            
+            // Update summary
+            document.querySelector('.summary-item:nth-child(1) p').textContent = 
+                formatCurrency(netProfit);
+                
+            document.querySelector('.summary-item:nth-child(2) p').textContent = 
+                annualizedROI.toFixed(2) + '%';
+        }
+    </script>
+</body>
+</html>
