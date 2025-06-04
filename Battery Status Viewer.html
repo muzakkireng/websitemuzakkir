@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Check your device's battery status online with our free Battery Status Viewer. Get real-time information about charging status, battery level, and estimated time remaining.">
+    <meta name="keywords" content="battery status, battery checker, device battery, battery level, charging status, battery API, online battery tool">
+    <title>Battery Status Viewer | Check Your Device's Battery Level Online</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .battery-container {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .battery-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .battery-level {
+            width: 150px;
+            height: 60px;
+            border: 3px solid #333;
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .battery-level::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -10px;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 20px;
+            background-color: #333;
+            border-radius: 0 3px 3px 0;
+        }
+        .battery-fill {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.5s ease, background-color 0.5s ease;
+        }
+        .battery-info {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .info-label {
+            font-weight: bold;
+        }
+        .charging {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .not-charging {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .unsupported {
+            color: #f44336;
+            text-align: center;
+            padding: 20px;
+            font-weight: bold;
+        }
+        .seo-content {
+            margin-top: 40px;
+            text-align: justify;
+        }
+        .seo-content h2 {
+            color: #2c3e50;
+            margin-top: 30px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Battery Status Viewer</h1>
+    
+    <div class="battery-container">
+        <div class="battery-display">
+            <h2>Your Device's Battery Status</h2>
+            <div class="battery-level">
+                <div class="battery-fill" id="batteryFill"></div>
+            </div>
+            <div id="batteryPercentage">0%</div>
+            
+            <div class="battery-info" id="batteryInfo">
+                <div class="info-item">
+                    <span class="info-label">Charging Status:</span>
+                    <span id="chargingStatus">Checking...</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Time Remaining:</span>
+                    <span id="timeRemaining">Calculating...</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Battery Health:</span>
+                    <span id="batteryHealth">Good</span>
+                </div>
+            </div>
+        </div>
+        
+        <div id="unsupported" class="unsupported" style="display: none;">
+            Sorry, your browser doesn't support the Battery Status API. Try using Chrome, Edge, or Firefox.
+        </div>
+    </div>
+    
+    <div class="seo-content">
+        <h2>Check Your Device's Battery Status Online</h2>
+        <p>Our free Battery Status Viewer tool allows you to monitor your device's battery information in real-time. Using the modern web Battery Status API, we provide accurate details about your battery level, charging status, and estimated time remaining.</p>
+        
+        <h2>How Our Battery Status Checker Works</h2>
+        <p>When you visit this page, your browser requests permission to access your device's battery information. The tool then displays:</p>
+        <ul>
+            <li><strong>Battery Percentage</strong> - The current charge level of your device</li>
+            <li><strong>Charging Status</strong> - Whether your device is currently charging or discharging</li>
+            <li><strong>Time Remaining</strong> - Estimated time until fully charged or discharged</li>
+            <li><strong>Battery Health</strong> - General indication of your battery's condition</li>
+        </ul>
+        
+        <h2>Why Monitor Your Battery Status?</h2>
+        <p>Regularly checking your battery status can help you:</p>
+        <ul>
+            <li>Plan your work sessions around charging needs</li>
+            <li>Identify potential battery health issues early</li>
+            <li>Optimize your device's power settings</li>
+            <li>Extend your battery's overall lifespan</li>
+        </ul>
+        
+        <h2>Browser Compatibility</h2>
+        <p>Our Battery Status Viewer works with most modern browsers including Chrome, Edge, Firefox, and Opera. Note that some browsers may restrict this API for security reasons, and Safari currently doesn't support it.</p>
+        
+        <h2>Privacy Information</h2>
+        <p>Your battery information is processed locally in your browser and never sent to our servers. We respect your privacy and don't store any personal data through this tool.</p>
+    </div>
+    
+    <footer>
+        <p>Battery Status Viewer &copy; <span id="currentYear"></span> - A free web tool for checking your device's battery information.</p>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Check if Battery Status API is supported
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then(function(battery) {
+                updateBatteryInfo(battery);
+                
+                // Add event listeners for battery changes
+                battery.addEventListener('levelchange', function() {
+                    updateBatteryLevel(battery);
+                });
+                
+                battery.addEventListener('chargingchange', function() {
+                    updateChargingInfo(battery);
+                });
+                
+                battery.addEventListener('chargingtimechange', function() {
+                    updateTimeInfo(battery);
+                });
+                
+                battery.addEventListener('dischargingtimechange', function() {
+                    updateTimeInfo(battery);
+                });
+            });
+        } else {
+            document.getElementById('unsupported').style.display = 'block';
+            document.getElementById('batteryInfo').style.display = 'none';
+        }
+        
+        function updateBatteryInfo(battery) {
+            updateBatteryLevel(battery);
+            updateChargingInfo(battery);
+            updateTimeInfo(battery);
+        }
+        
+        function updateBatteryLevel(battery) {
+            const percentage = Math.round(battery.level * 100);
+            document.getElementById('batteryPercentage').textContent = percentage + '%';
+            document.getElementById('batteryFill').style.width = percentage + '%';
+            
+            // Change color based on level
+            if (percentage <= 20) {
+                document.getElementById('batteryFill').style.backgroundColor = '#f44336';
+                document.getElementById('batteryHealth').textContent = 'Low';
+            } else if (percentage <= 50) {
+                document.getElementById('batteryFill').style.backgroundColor = '#ff9800';
+                document.getElementById('batteryHealth').textContent = 'Moderate';
+            } else {
+                document.getElementById('batteryFill').style.backgroundColor = '#4CAF50';
+                document.getElementById('batteryHealth').textContent = 'Good';
+            }
+        }
+        
+        function updateChargingInfo(battery) {
+            const chargingStatus = document.getElementById('chargingStatus');
+            if (battery.charging) {
+                chargingStatus.textContent = 'Charging';
+                chargingStatus.className = 'charging';
+            } else {
+                chargingStatus.textContent = 'Not Charging';
+                chargingStatus.className = 'not-charging';
+            }
+        }
+        
+        function updateTimeInfo(battery) {
+            const timeRemaining = document.getElementById('timeRemaining');
+            
+            if (battery.charging) {
+                if (battery.chargingTime === Infinity) {
+                    timeRemaining.textContent = 'Calculating...';
+                } else {
+                    const hours = Math.floor(battery.chargingTime / 3600);
+                    const minutes = Math.floor((battery.chargingTime % 3600) / 60);
+                    timeRemaining.textContent = `${hours}h ${minutes}m until full`;
+                }
+            } else {
+                if (battery.dischargingTime === Infinity) {
+                    timeRemaining.textContent = 'Calculating...';
+                } else {
+                    const hours = Math.floor(battery.dischargingTime / 3600);
+                    const minutes = Math.floor((battery.dischargingTime % 3600) / 60);
+                    timeRemaining.textContent = `${hours}h ${minutes}m remaining`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
