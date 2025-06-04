@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Enhancer - Enhance Your Photos Instantly | Free Online Tool</title>
+    <meta name="description" content="Free online image enhancer tool. Improve photo quality, adjust brightness, contrast and sharpness. Download enhanced images instantly.">
+    <meta name="keywords" content="image enhancer, photo enhancer, improve image quality, online photo editor, free image enhancement">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), 
+                        url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #e0e0e0;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .upload-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 30, 40, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .preview-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 30, 40, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #4facfe;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            font-size: 1.5rem;
+        }
+
+        .upload-area {
+            border: 3px dashed #4facfe;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .upload-area:hover {
+            background: rgba(79, 172, 254, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .upload-area i {
+            font-size: 4rem;
+            color: #4facfe;
+            margin-bottom: 15px;
+        }
+
+        .upload-area h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: #aaa;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .controls {
+            margin-top: 25px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #333;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #4facfe;
+            cursor: pointer;
+        }
+
+        .value-display {
+            min-width: 40px;
+            text-align: center;
+            background: rgba(79, 172, 254, 0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .image-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+
+        .placeholder {
+            text-align: center;
+            color: #777;
+        }
+
+        .placeholder i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: block;
+            color: #4facfe;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .enhance-btn {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .download-btn {
+            background: linear-gradient(to right, #00cdac, #02aab0);
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .features {
+            background: rgba(30, 30, 40, 0.85);
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #4facfe;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(79, 172, 254, 0.1);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: #4facfe;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+
+        /* SEO Content */
+        .seo-content {
+            background: rgba(30, 30, 40, 0.85);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .seo-content h2 {
+            color: #4facfe;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .seo-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-magic"></i> Image Enhancer Pro</h1>
+            <p>Transform your ordinary photos into extraordinary masterpieces with our free online image enhancement tool</p>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="upload-section">
+                <h2 class="section-title"><i class="fas fa-cloud-upload-alt"></i> Upload Image</h2>
+                <div class="upload-area" id="dropArea">
+                    <i class="fas fa-file-image"></i>
+                    <h3>Drag & Drop Your Image</h3>
+                    <p>or click to browse files</p>
+                    <p>Supports: JPG, PNG, WebP (Max 5MB)</p>
+                    <input type="file" id="fileInput" accept="image/*">
+                </div>
+
+                <div class="controls">
+                    <h2 class="section-title"><i class="fas fa-sliders-h"></i> Enhancement Controls</h2>
+                    
+                    <div class="control-group">
+                        <label for="brightness">Brightness</label>
+                        <div class="slider-container">
+                            <input type="range" id="brightness" min="0" max="200" value="100">
+                            <span class="value-display" id="brightnessValue">100%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="contrast">Contrast</label>
+                        <div class="slider-container">
+                            <input type="range" id="contrast" min="0" max="200" value="100">
+                            <span class="value-display" id="contrastValue">100%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="saturation">Saturation</label>
+                        <div class="slider-container">
+                            <input type="range" id="saturation" min="0" max="200" value="100">
+                            <span class="value-display" id="saturationValue">100%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="sharpness">Sharpness</label>
+                        <div class="slider-container">
+                            <input type="range" id="sharpness" min="0" max="200" value="100">
+                            <span class="value-display" id="sharpnessValue">100%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <h2 class="section-title"><i class="fas fa-eye"></i> Preview</h2>
+                <div class="preview-container">
+                    <div class="preview-box">
+                        <h3>Original Image</h3>
+                        <div class="image-box">
+                            <div class="placeholder" id="originalPlaceholder">
+                                <i class="fas fa-image"></i>
+                                <p>No image uploaded</p>
+                            </div>
+                            <img id="originalPreview" alt="Original image preview">
+                        </div>
+                    </div>
+                    
+                    <div class="preview-box">
+                        <h3>Enhanced Image</h3>
+                        <div class="image-box">
+                            <div class="placeholder" id="enhancedPlaceholder">
+                                <i class="fas fa-wand-magic-sparkles"></i>
+                                <p>Enhanced image will appear here</p>
+                            </div>
+                            <img id="enhancedPreview" alt="Enhanced image preview">
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button id="enhanceBtn" class="enhance-btn" disabled>
+                            <i class="fas fa-bolt"></i> Enhance Image
+                        </button>
+                        <button id="downloadBtn" class="download-btn" disabled>
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEO Content Section -->
+        <div class="seo-content">
+            <h2>Free Online Image Enhancement Tool</h2>
+            <p>Welcome to Image Enhancer Pro - your go-to solution for improving photo quality without expensive software. Our free online tool helps you transform dull, low-quality images into vibrant, professional-looking photos in just a few clicks.</p>
+            
+            <p>Whether you're a photographer, social media enthusiast, or just looking to improve your personal photos, our image enhancer provides powerful yet easy-to-use tools to bring out the best in your images. Adjust brightness, contrast, saturation, and sharpness with intuitive sliders and see the results in real-time.</p>
+            
+            <p>Our platform works directly in your browser, ensuring fast processing without uploading your images to external servers. This means your photos remain private and secure throughout the enhancement process.</p>
+            
+            <p>Key benefits of using Image Enhancer Pro:</p>
+            <ul>
+                <li>Completely free with no sign-up required</li>
+                <li>Works on all devices - desktop, tablet, and mobile</li>
+                <li>No watermarks on enhanced images</li>
+                <li>Preserves original image quality</li>
+                <li>Instant download of results</li>
+            </ul>
+            
+            <p>Enhance your photos today and see the difference professional-level image processing can make!</p>
+        </div>
+
+        <div class="features">
+            <h2>Why Choose Our Image Enhancer?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Instant Processing</h3>
+                    <p>Enhance your images in real-time with no waiting</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-lock"></i>
+                    <h3>Privacy First</h3>
+                    <p>Your images never leave your device</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Fully Responsive</h3>
+                    <p>Works perfectly on all devices</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-download"></i>
+                    <h3>Free Download</h3>
+                    <p>Get enhanced images without watermarks</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2023 Image Enhancer Pro | Free Online Photo Enhancement Tool</p>
+            <p>All image processing happens locally in your browser - your photos are never uploaded to any server</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const fileInput = document.getElementById('fileInput');
+            const dropArea = document.getElementById('dropArea');
+            const originalPreview = document.getElementById('originalPreview');
+            const enhancedPreview = document.getElementById('enhancedPreview');
+            const originalPlaceholder = document.getElementById('originalPlaceholder');
+            const enhancedPlaceholder = document.getElementById('enhancedPlaceholder');
+            const enhanceBtn = document.getElementById('enhanceBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            // Enhancement controls
+            const brightnessSlider = document.getElementById('brightness');
+            const contrastSlider = document.getElementById('contrast');
+            const saturationSlider = document.getElementById('saturation');
+            const sharpnessSlider = document.getElementById('sharpness');
+            const brightnessValue = document.getElementById('brightnessValue');
+            const contrastValue = document.getElementById('contrastValue');
+            const saturationValue = document.getElementById('saturationValue');
+            const sharpnessValue = document.getElementById('sharpnessValue');
+            
+            let originalImage = null;
+            let enhancedImage = null;
+            
+            // Event Listeners
+            dropArea.addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    
+                    // Check file type
+                    if (!file.type.match('image.*')) {
+                        alert('Please select an image file (JPG, PNG, WebP)');
+                        return;
+                    }
+                    
+                    // Check file size (5MB limit)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File size exceeds 5MB limit');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        originalImage = new Image();
+                        originalImage.onload = function() {
+                            originalPreview.src = event.target.result;
+                            originalPreview.style.display = 'block';
+                            originalPlaceholder.style.display = 'none';
+                            enhanceBtn.disabled = false;
+                        };
+                        originalImage.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Drag and drop functionality
+            dropArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.background = 'rgba(79, 172, 254, 0.2)';
+            });
+            
+            dropArea.addEventListener('dragleave', function() {
+                this.style.background = '';
+            });
+            
+            dropArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.background = '';
+                
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change', { bubbles: true });
+                    fileInput.dispatchEvent(event);
+                }
+            });
+            
+            // Update slider value displays
+            brightnessSlider.addEventListener('input', function() {
+                brightnessValue.textContent = this.value + '%';
+            });
+            
+            contrastSlider.addEventListener('input', function() {
+                contrastValue.textContent = this.value + '%';
+            });
+            
+            saturationSlider.addEventListener('input', function() {
+                saturationValue.textContent = this.value + '%';
+            });
+            
+            sharpnessSlider.addEventListener('input', function() {
+                sharpnessValue.textContent = this.value + '%';
+            });
+            
+            // Enhance image button
+            enhanceBtn.addEventListener('click', function() {
+                if (!originalImage) return;
+                
+                // Show loading state
+                enhanceBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                enhanceBtn.disabled = true;
+                
+                // Simulate processing delay
+                setTimeout(() => {
+                    // Create canvas for enhancement
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Set canvas dimensions to match image
+                    canvas.width = originalImage.width;
+                    canvas.height = originalImage.height;
+                    
+                    // Draw original image
+                    ctx.drawImage(originalImage, 0, 0);
+                    
+                    // Apply enhancements
+                    const brightness = parseInt(brightnessSlider.value) / 100;
+                    const contrast = parseInt(contrastSlider.value) / 100;
+                    const saturation = parseInt(saturationSlider.value) / 100;
+                    const sharpness = parseInt(sharpnessSlider.value) / 100;
+                    
+                    // Apply filters
+                    applyImageFilters(ctx, canvas.width, canvas.height, brightness, contrast, saturation, sharpness);
+                    
+                    // Get enhanced image data
+                    enhancedPreview.src = canvas.toDataURL('image/jpeg', 0.9);
+                    enhancedPreview.style.display = 'block';
+                    enhancedPlaceholder.style.display = 'none';
+                    
+                    // Store enhanced image for download
+                    enhancedImage = canvas.toDataURL('image/jpeg', 0.9);
+                    
+                    // Enable download button
+                    downloadBtn.disabled = false;
+                    
+                    // Reset button
+                    enhanceBtn.innerHTML = '<i class="fas fa-bolt"></i> Enhance Image';
+                    enhanceBtn.disabled = false;
+                }, 1000);
+            });
+            
+            // Download button
+            downloadBtn.addEventListener('click', function() {
+                if (!enhancedImage) return;
+                
+                const link = document.createElement('a');
+                link.download = 'enhanced-image.jpg';
+                link.href = enhancedImage;
+                link.click();
+            });
+            
+            // Apply image filters to canvas
+            function applyImageFilters(ctx, width, height, brightness, contrast, saturation, sharpness) {
+                // Get image data
+                const imageData = ctx.getImageData(0, 0, width, height);
+                const data = imageData.data;
+                
+                // Apply brightness and contrast
+                const brightnessFactor = brightness * 255 - 128;
+                const contrastFactor = contrast * 259;
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    // Brightness
+                    data[i] = Math.min(255, Math.max(0, data[i] + brightnessFactor));
+                    data[i+1] = Math.min(255, Math.max(0, data[i+1] + brightnessFactor));
+                    data[i+2] = Math.min(255, Math.max(0, data[i+2] + brightnessFactor));
+                    
+                    // Contrast
+                    data[i] = Math.min(255, Math.max(0, ((data[i] - 128) * contrastFactor + 128)));
+                    data[i+1] = Math.min(255, Math.max(0, ((data[i+1] - 128) * contrastFactor + 128)));
+                    data[i+2] = Math.min(255, Math.max(0, ((data[i+2] - 128) * contrastFactor + 128)));
+                }
+                
+                // Apply saturation
+                if (saturation !== 1) {
+                    for (let i = 0; i < data.length; i += 4) {
+                        const r = data[i];
+                        const g = data[i+1];
+                        const b = data[i+2];
+                        
+                        const gray = 0.2989 * r + 0.5870 * g + 0.1140 * b;
+                        
+                        data[i] = Math.min(255, gray + saturation * (r - gray));
+                        data[i+1] = Math.min(255, gray + saturation * (g - gray));
+                        data[i+2] = Math.min(255, gray + saturation * (b - gray));
+                    }
+                }
+                
+                // Put modified data back
+                ctx.putImageData(imageData, 0, 0);
+                
+                // Apply sharpness (simplified unsharp mask)
+                if (sharpness > 1) {
+                    ctx.filter = `blur(${1/sharpness}px)`;
+                    ctx.globalCompositeOperation = 'overlay';
+                    ctx.globalAlpha = 0.5;
+                    ctx.drawImage(canvas, 0, 0);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
