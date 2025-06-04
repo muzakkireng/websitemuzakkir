@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Storage Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.5s ease;
+        }
+        
+        body.drab-theme {
+            background: linear-gradient(135deg, #3e5151, #6a5d5d, #3e5151);
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        body.drab-theme .container {
+            background: rgba(60, 60, 60, 0.6);
+            border: 1px solid rgba(150, 150, 150, 0.2);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        h1 {
+            color: #fff;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        body.drab-theme h1 {
+            color: #e0e0e0;
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        body.drab-theme .subtitle {
+            color: rgba(220, 220, 220, 0.8);
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        body.drab-theme .theme-toggle {
+            background: rgba(100, 100, 100, 0.3);
+            border: 1px solid rgba(150, 150, 150, 0.3);
+        }
+        
+        .converter-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        body.drab-theme .input-group {
+            background: rgba(80, 80, 80, 0.2);
+            border: 1px solid rgba(150, 150, 150, 0.1);
+        }
+        
+        .input-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        body.drab-theme .input-group label {
+            color: rgba(220, 220, 220, 0.8);
+        }
+        
+        .input-field {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .input-field input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 10px 0 0 10px;
+            color: white;
+            font-size: 1.2rem;
+            outline: none;
+        }
+        
+        .input-field input:focus {
+            background: rgba(255, 255, 255, 0.18);
+        }
+        
+        body.drab-theme .input-field input {
+            background: rgba(100, 100, 100, 0.2);
+            color: #e0e0e0;
+        }
+        
+        body.drab-theme .input-field input:focus {
+            background: rgba(120, 120, 120, 0.3);
+        }
+        
+        .unit-select {
+            width: 120px;
+            padding: 0 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 0 10px 10px 0;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        body.drab-theme .unit-select {
+            background: rgba(100, 100, 100, 0.2);
+            color: #e0e0e0;
+        }
+        
+        .swap-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: center;
+        }
+        
+        .swap-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(180deg);
+        }
+        
+        body.drab-theme .swap-btn {
+            background: rgba(100, 100, 100, 0.2);
+        }
+        
+        body.drab-theme .swap-btn:hover {
+            background: rgba(120, 120, 120, 0.3);
+        }
+        
+        .swap-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        .info-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        body.drab-theme .info-section {
+            background: rgba(80, 80, 80, 0.15);
+        }
+        
+        .info-section h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        body.drab-theme .info-section h3 {
+            color: #e0e0e0;
+        }
+        
+        .unit-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .unit-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        body.drab-theme .unit-card {
+            background: rgba(80, 80, 80, 0.2);
+        }
+        
+        .unit-card h4 {
+            color: #fff;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        
+        body.drab-theme .unit-card h4 {
+            color: #e0e0e0;
+        }
+        
+        .unit-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        body.drab-theme .unit-card p {
+            color: rgba(200, 200, 200, 0.7);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        body.drab-theme .btn {
+            background: linear-gradient(to right, #6b8e23, #8fbc8f);
+        }
+        
+        .btn-clear {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+        }
+        
+        body.drab-theme .btn-clear {
+            background: linear-gradient(to right, #a0522d, #cd853f);
+        }
+        
+        .drab-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(110, 110, 110, 0.7);
+            color: #dcdcdc;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .converter-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
+            
+            .swap-btn {
+                margin: 10px 0;
+                transform: rotate(90deg);
+            }
+            
+            .swap-btn:hover {
+                transform: rotate(270deg);
+            }
+            
+            .unit-info {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+                padding-top: 20px;
+            }
+            
+            .theme-toggle {
+                position: relative;
+                margin: 15px auto;
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="drab-indicator">
+        <i class="fas fa-palette"></i>
+        <span>Drab Theme: OFF</span>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>Data Storage Converter</h1>
+            <p class="subtitle">Convert between different data storage units with precision and ease</p>
+            <div class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+                <span>Drab Theme</span>
+            </div>
+        </header>
+        
+        <div class="converter-container">
+            <div class="input-group">
+                <label>FROM</label>
+                <div class="input-field">
+                    <input type="number" id="fromValue" value="1" min="0" step="any">
+                    <select id="fromUnit" class="unit-select">
+                        <option value="bit">Bit (b)</option>
+                        <option value="byte" selected>Byte (B)</option>
+                        <option value="kilobyte">Kilobyte (KB)</option>
+                        <option value="megabyte">Megabyte (MB)</option>
+                        <option value="gigabyte">Gigabyte (GB)</option>
+                        <option value="terabyte">Terabyte (TB)</option>
+                        <option value="petabyte">Petabyte (PB)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="swap-btn" id="swapBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20,12H4L9,7v3h6v2H9v3L4,12h16Z"/>
+                </svg>
+            </button>
+            
+            <div class="input-group">
+                <label>TO</label>
+                <div class="input-field">
+                    <input type="number" id="toValue" readonly>
+                    <select id="toUnit" class="unit-select">
+                        <option value="bit">Bit (b)</option>
+                        <option value="byte">Byte (B)</option>
+                        <option value="kilobyte">Kilobyte (KB)</option>
+                        <option value="megabyte" selected>Megabyte (MB)</option>
+                        <option value="gigabyte">Gigabyte (GB)</option>
+                        <option value="terabyte">Terabyte (TB)</option>
+                        <option value="petabyte">Petabyte (PB)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-clear" id="clearBtn">
+                <i class="fas fa-eraser"></i>
+                Clear
+            </button>
+            <button class="btn" id="copyBtn">
+                <i class="fas fa-copy"></i>
+                Copy Result
+            </button>
+        </div>
+        
+        <div class="info-section">
+            <h3>Data Storage Units</h3>
+            <div class="unit-info">
+                <div class="unit-card">
+                    <h4>Bit (b)</h4>
+                    <p>1 bit</p>
+                </div>
+                <div class="unit-card">
+                    <h4>Byte (B)</h4>
+                    <p>8 bits</p>
+                </div>
+                <div class="unit-card">
+                    <h4>Kilobyte (KB)</h4>
+                    <p>1,000 bytes</p>
+                </div>
+                <div class="unit-card">
+                    <h4>Megabyte (MB)</h4>
+                    <p>1,000 KB</p>
+                </div>
+                <div class="unit-card">
+                    <h4>Gigabyte (GB)</h4>
+                    <p>1,000 MB</p>
+                </div>
+                <div class="unit-card">
+                    <h4>Terabyte (TB)</h4>
+                    <p>1,000 GB</p>
+                </div>
+                <div class="unit-card">
+                    <h4>Petabyte (PB)</h4>
+                    <p>1,000 TB</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fromValueInput = document.getElementById('fromValue');
+            const fromUnitSelect = document.getElementById('fromUnit');
+            const toValueInput = document.getElementById('toValue');
+            const toUnitSelect = document.getElementById('toUnit');
+            const swapBtn = document.getElementById('swapBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const drabIndicator = document.querySelector('.drab-indicator span');
+            
+            // Conversion factors relative to bits
+            const units = {
+                bit: 1,
+                byte: 8,
+                kilobyte: 8 * 1000,
+                megabyte: 8 * 1000 * 1000,
+                gigabyte: 8 * 1000 * 1000 * 1000,
+                terabyte: 8 * 1000 * 1000 * 1000 * 1000,
+                petabyte: 8 * 1000 * 1000 * 1000 * 1000 * 1000
+            };
+            
+            // Perform conversion
+            function convert() {
+                const fromValue = parseFloat(fromValueInput.value);
+                if (isNaN(fromValue)) {
+                    toValueInput.value = '';
+                    return;
+                }
+                
+                const fromUnit = fromUnitSelect.value;
+                const toUnit = toUnitSelect.value;
+                
+                // Convert to bits first
+                const valueInBits = fromValue * units[fromUnit];
+                
+                // Convert from bits to target unit
+                const result = valueInBits / units[toUnit];
+                
+                // Format the result to avoid long decimal numbers
+                toValueInput.value = formatResult(result);
+            }
+            
+            // Format result for better readability
+            function formatResult(value) {
+                if (value === 0) return '0';
+                
+                // For very large numbers, use exponential notation
+                if (Math.abs(value) >= 1e15 || Math.abs(value) <= 1e-15) {
+                    return value.toExponential(6);
+                }
+                
+                // Format with appropriate decimal places
+                const decimalPlaces = Math.abs(value) < 1 ? 8 : 
+                                      Math.abs(value) < 10 ? 6 : 
+                                      Math.abs(value) < 100 ? 4 : 2;
+                
+                return parseFloat(value.toFixed(decimalPlaces)).toString();
+            }
+            
+            // Swap units
+            function swapUnits() {
+                const tempUnit = fromUnitSelect.value;
+                fromUnitSelect.value = toUnitSelect.value;
+                toUnitSelect.value = tempUnit;
+                convert();
+            }
+            
+            // Clear inputs
+            function clearInputs() {
+                fromValueInput.value = '1';
+                toValueInput.value = '';
+                fromUnitSelect.value = 'byte';
+                toUnitSelect.value = 'megabyte';
+                convert();
+            }
+            
+            // Copy result to clipboard
+            function copyResult() {
+                if (!toValueInput.value) return;
+                
+                toValueInput.select();
+                document.execCommand('copy');
+                
+                // Visual feedback
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            }
+            
+            // Toggle theme
+            function toggleTheme() {
+                body.classList.toggle('drab-theme');
+                const themeIcon = themeToggle.querySelector('i');
+                
+                if (body.classList.contains('drab-theme')) {
+                    themeIcon.className = 'fas fa-sun';
+                    themeToggle.querySelector('span').textContent = 'Standard Theme';
+                    drabIndicator.textContent = 'Drab Theme: ON';
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    themeToggle.querySelector('span').textContent = 'Drab Theme';
+                    drabIndicator.textContent = 'Drab Theme: OFF';
+                }
+            }
+            
+            // Event listeners
+            fromValueInput.addEventListener('input', convert);
+            fromUnitSelect.addEventListener('change', convert);
+            toUnitSelect.addEventListener('change', convert);
+            swapBtn.addEventListener('click', swapUnits);
+            clearBtn.addEventListener('click', clearInputs);
+            copyBtn.addEventListener('click', copyResult);
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Initial conversion
+            convert();
+            
+            // Animation for initial load
+            setTimeout(() => {
+                document.querySelector('.container').style.transform = 'translateY(0)';
+                document.querySelector('.container').style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
