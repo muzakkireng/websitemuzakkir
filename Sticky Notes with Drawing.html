@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Online Sticky Notes with Drawing Pad. Write, draw accurately, clear, and download your notes easily."/>
+  <meta name="keywords" content="Sticky Notes, Drawing Pad, Online Notepad, Clear Canvas, Download Notes"/>
+  <meta name="author" content="StickyAppDev"/>
+  <title>Sticky Notes with Drawing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #fffde7);
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      font-weight: 600;
+      color: #2b2b2b;
+      margin-bottom: 1.5rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    .btns {
+      text-align: center;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    button {
+      background-color: #00796b;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    button:hover {
+      background-color: #004d40;
+      transform: translateY(-2px);
+    }
+    .note-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.8rem;
+      padding: 0 1rem;
+    }
+    .note {
+      background: #fff9c4;
+      border-radius: 15px;
+      padding: 1.2rem;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      animation: floatUp 0.4s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    .note:hover {
+      transform: translateY(-5px);
+    }
+    .note-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed rgba(0,0,0,0.1);
+    }
+    .note-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #333;
+      flex-grow: 1;
+      padding: 5px;
+      border: none;
+      background: transparent;
+      outline: none;
+    }
+    .delete-note {
+      background: #ff5252;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .delete-note:hover {
+      background: #d32f2f;
+      transform: scale(1.1);
+    }
+    @keyframes floatUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      border: none;
+      font-size: 1rem;
+      padding: 0.8rem;
+      background: rgba(255,255,255,0.7);
+      resize: none;
+      outline: none;
+      font-family: 'Quicksand', sans-serif;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+    textarea:focus {
+      background: white;
+    }
+    .drawing-area {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    canvas {
+      width: 100%;
+      height: 180px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      cursor: crosshair;
+      display: block;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .drawing-tools {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .tool-btn {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tool-btn.active {
+      background: #00796b;
+      color: white;
+      border-color: #00796b;
+    }
+    .tool-btn:hover {
+      background: #e0e0e0;
+    }
+    .note-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .save-text {
+      background: #4caf50;
+    }
+    .save-drawing {
+      background: #2196f3;
+    }
+    .clear-drawing {
+      background: #ff9800;
+    }
+    .settings-btn {
+      background: #9c27b0;
+    }
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #555;
+      padding: 1rem;
+      background: rgba(255,255,255,0.7);
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 3rem auto 0;
+    }
+    .color-picker {
+      display: flex;
+      gap: 5px;
+      margin-top: 8px;
+    }
+    .color-option {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.2s;
+    }
+    .color-option:hover, .color-option.active {
+      transform: scale(1.2);
+      border-color: white;
+    }
+    .instructions {
+      background: #e3f2fd;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 20px auto;
+      max-width: 800px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    .instructions h3 {
+      margin-top: 0;
+      color: #1565c0;
+    }
+    .instructions ul {
+      padding-left: 20px;
+      text-align: left;
+      display: inline-block;
+    }
+    .instructions li {
+      margin-bottom: 8px;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+      .btns {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1><i class="fas fa-sticky-note"></i> Sticky Notes with Drawing Pad</h1>
+  
+  <div class="instructions">
+    <h3>How to use:</h3>
+    <ul>
+      <li><strong>Add notes:</strong> Click "Add New Note" to create a sticky note</li>
+      <li><strong>Write:</strong> Type your note in the text area</li>
+      <li><strong>Draw:</strong> Click and drag on the canvas to draw</li>
+      <li><strong>Colors:</strong> Select a color from the palette to change drawing color</li>
+      <li><strong>Save:</strong> Use the buttons to save your note or drawing</li>
+      <li><strong>Delete:</strong> Click the <i class="fas fa-times"></i> icon to remove a note</li>
+    </ul>
+  </div>
+  
+  <div class="btns">
+    <button onclick="createNote()">
+      <i class="fas fa-plus"></i> Add New Note
+    </button>
+    <button onclick="clearAllNotes()">
+      <i class="fas fa-trash"></i> Clear All Notes
+    </button>
+  </div>
+  
+  <div class="note-container" id="notes"></div>
+
+  <footer>
+    <p>&copy; 2025 Sticky Notes Online – Write, draw, clear, and download your personal notes online.</p>
+  </footer>
+
+  <script>
+    // Colors for drawing
+    const colors = [
+      '#000000', '#ff0000', '#0000ff', '#00cc00', 
+      '#ffff00', '#ff00ff', '#00ffff', '#ff6600'
+    ];
+    
+    // Create a new note
+    function createNote() {
+      const note = document.createElement("div");
+      note.className = "note";
+      
+      // Note header with title and delete button
+      const noteHeader = document.createElement("div");
+      noteHeader.className = "note-header";
+      
+      const titleInput = document.createElement("input");
+      titleInput.className = "note-title";
+      titleInput.placeholder = "Note title...";
+      titleInput.type = "text";
+      
+      const deleteBtn = document.createElement("div");
+      deleteBtn.className = "delete-note";
+      deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+      deleteBtn.onclick = () => {
+        note.style.transform = "scale(0.9)";
+        note.style.opacity = "0";
+        setTimeout(() => note.remove(), 300);
+      };
+      
+      noteHeader.appendChild(titleInput);
+      noteHeader.appendChild(deleteBtn);
+      note.appendChild(noteHeader);
+      
+      // Text area for note content
+      const textarea = document.createElement("textarea");
+      textarea.placeholder = "Write your note here...";
+      note.appendChild(textarea);
+      
+      // Drawing area
+      const drawingArea = document.createElement("div");
+      drawingArea.className = "drawing-area";
+      
+      const canvas = document.createElement("canvas");
+      drawingArea.appendChild(canvas);
+      note.appendChild(drawingArea);
+      
+      // Set up canvas
+      setupCanvas(canvas);
+      
+      // Get context
+      const ctx = canvas.getContext("2d");
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#000000";
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      
+      // Drawing state
+      let drawing = false;
+      let lastX = 0;
+      let lastY = 0;
+      
+      // Drawing tools
+      const toolsDiv = document.createElement("div");
+      toolsDiv.className = "drawing-tools";
+      
+      // Color picker
+      const colorPicker = document.createElement("div");
+      colorPicker.className = "color-picker";
+      
+      colors.forEach(color => {
+        const colorOption = document.createElement("div");
+        colorOption.className = "color-option";
+        colorOption.style.backgroundColor = color;
+        if (color === '#000000') colorOption.classList.add("active");
+        
+        colorOption.onclick = () => {
+          // Remove active class from all
+          document.querySelectorAll('.color-option').forEach(opt => {
+            opt.classList.remove("active");
+          });
+          // Add active class to clicked
+          colorOption.classList.add("active");
+          ctx.strokeStyle = color;
+        };
+        
+        colorPicker.appendChild(colorOption);
+      });
+      
+      toolsDiv.appendChild(colorPicker);
+      drawingArea.appendChild(toolsDiv);
+      
+      // Drawing functions
+      function startDrawing(e) {
+        drawing = true;
+        const pos = getCanvasCoords(e, canvas);
+        [lastX, lastY] = [pos.x, pos.y];
+      }
+      
+      function draw(e) {
+        if (!drawing) return;
+        const pos = getCanvasCoords(e, canvas);
+        
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        
+        [lastX, lastY] = [pos.x, pos.y];
+      }
+      
+      function stopDrawing() {
+        drawing = false;
+      }
+      
+      // Event listeners for drawing
+      canvas.addEventListener("mousedown", startDrawing);
+      canvas.addEventListener("mousemove", draw);
+      canvas.addEventListener("mouseup", stopDrawing);
+      canvas.addEventListener("mouseout", stopDrawing);
+      
+      // Buttons container
+      const buttonsDiv = document.createElement("div");
+      buttonsDiv.className = "note-buttons";
+      
+      // Save text button
+      const saveTextBtn = document.createElement("button");
+      saveTextBtn.className = "save-text";
+      saveTextBtn.innerHTML = '<i class="fas fa-save"></i> Save Note';
+      saveTextBtn.onclick = () => {
+        const content = textarea.value;
+        if (!content.trim()) {
+          alert("Please write something in your note first!");
+          return;
+        }
+        
+        const title = titleInput.value.trim() || "Untitled Note";
+        const blob = new Blob([`${title}\n\n${content}`], { type: "text/plain" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `${title.replace(/\s+/g, '_')}.txt`;
+        a.click();
+      };
+      
+      // Save drawing button
+      const saveDrawingBtn = document.createElement("button");
+      saveDrawingBtn.className = "save-drawing";
+      saveDrawingBtn.innerHTML = '<i class="fas fa-image"></i> Save Drawing';
+      saveDrawingBtn.onclick = () => {
+        const a = document.createElement("a");
+        a.href = canvas.toDataURL("image/png");
+        a.download = "sticky_drawing.png";
+        a.click();
+      };
+      
+      // Clear drawing button
+      const clearDrawingBtn = document.createElement("button");
+      clearDrawingBtn.className = "clear-drawing";
+      clearDrawingBtn.innerHTML = '<i class="fas fa-broom"></i> Clear Drawing';
+      clearDrawingBtn.onclick = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      };
+      
+      // Settings button
+      const settingsBtn = document.createElement("button");
+      settingsBtn.className = "settings-btn";
+      settingsBtn.innerHTML = '<i class="fas fa-palette"></i> Change Color';
+      settingsBtn.onclick = () => {
+        const currentColorIndex = colors.indexOf(ctx.strokeStyle);
+        const nextColorIndex = (currentColorIndex + 1) % colors.length;
+        const nextColor = colors[nextColorIndex];
+        ctx.strokeStyle = nextColor;
+        
+        // Update active color
+        document.querySelectorAll('.color-option').forEach(opt => {
+          opt.classList.remove("active");
+          if (opt.style.backgroundColor === nextColor) {
+            opt.classList.add("active");
+          }
+        });
+      };
+      
+      buttonsDiv.appendChild(saveTextBtn);
+      buttonsDiv.appendChild(saveDrawingBtn);
+      buttonsDiv.appendChild(clearDrawingBtn);
+      buttonsDiv.appendChild(settingsBtn);
+      
+      note.appendChild(buttonsDiv);
+      document.getElementById("notes").appendChild(note);
+    }
+    
+    // Clear all notes
+    function clearAllNotes() {
+      if (!confirm("Are you sure you want to delete all notes?")) return;
+      
+      const notes = document.querySelectorAll('.note');
+      notes.forEach(note => {
+        note.style.transform = "scale(0.8)";
+        note.style.opacity = "0";
+        setTimeout(() => note.remove(), 300);
+      });
+    }
+    
+    // Canvas resolution matches its display size
+    function setupCanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * 2; // For high DPI displays
+      canvas.height = rect.height * 2;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+    }
+    
+    // Adjust mouse position to canvas scale
+    function getCanvasCoords(event, canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      return {
+        x: (event.clientX - rect.left) * scaleX,
+        y: (event.clientY - rect.top) * scaleY
+      };
+    }
+    
+    // Start with one note
+    createNote();
+  </script>
+</body>
+</html>
