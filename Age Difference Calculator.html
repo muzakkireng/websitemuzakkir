@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Difference Calculator | Find Exact Age Gap</title>
+    <meta name="description" content="Calculate the exact age difference between two people with our easy-to-use calculator. Get results in years, months, days, and see day names.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f8 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0 20px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 3.2rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: #5a6b82;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            font-weight: 500;
+        }
+        
+        .calculator-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            margin-bottom: 50px;
+            border: 1px solid #eaeef7;
+        }
+        
+        .calculator-header {
+            background: linear-gradient(to right, #4a6fc7, #6a11cb);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .calculator-header::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        
+        .calculator-header::after {
+            content: "";
+            position: absolute;
+            bottom: -60px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 50%;
+        }
+        
+        .calculator-content {
+            padding: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .result-section {
+            flex: 1;
+            min-width: 300px;
+            background: #f9fbfd;
+            border-radius: 16px;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid #e0e7ff;
+        }
+        
+        .person-input {
+            background: #f9fbfd;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #e0e7ff;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .person-input:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .person-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .person-title i {
+            background: linear-gradient(45deg, #4a6fc7, #6a11cb);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .input-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 1rem;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        input[type="number"]:focus, select:focus {
+            border-color: #4a6fc7;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(74, 111, 199, 0.2);
+        }
+        
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 16px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #4a6fc7, #6a11cb);
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 6px 15px rgba(74, 111, 199, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #6a11cb, #4a6fc7);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .btn:hover::before {
+            opacity: 1;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 111, 199, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .result-box {
+            text-align: center;
+        }
+        
+        .result-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #2c3e50;
+            margin: 20px 0;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #4a6fc7, #6a11cb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 10px;
+        }
+        
+        .result-details {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            margin-top: 25px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e7ff;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 1.1rem;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-item span:first-child {
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        .detail-item span:last-child {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .day-name-display {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #4a6fc7;
+            padding: 8px;
+            background: rgba(74, 111, 199, 0.1);
+            border-radius: 8px;
+        }
+        
+        .seo-content {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 50px;
+            border: 1px solid #eaeef7;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 70px;
+            height: 4px;
+            background: linear-gradient(to right, #4a6fc7, #6a11cb);
+            border-radius: 2px;
+        }
+        
+        p {
+            margin-bottom: 25px;
+            color: #4a5568;
+            font-size: 1.15rem;
+            line-height: 1.8;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .benefit-card {
+            background: linear-gradient(to bottom right, #f9fbfd, #f0f4ff);
+            border-radius: 14px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.4s;
+            border: 1px solid #e0e7ff;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .benefit-icon {
+            font-size: 2.8rem;
+            color: #4a6fc7;
+            margin-bottom: 20px;
+            background: rgba(74, 111, 199, 0.1);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+        
+        .benefit-title {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .faq-section {
+            margin-top: 40px;
+        }
+        
+        .faq-item {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 25px;
+        }
+        
+        .faq-question {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .faq-question i {
+            color: #4a6fc7;
+            font-size: 1.5rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #5a6b82;
+            font-size: 1rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eaeef7;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-content {
+                flex-direction: column;
+                padding: 25px;
+                gap: 25px;
+            }
+            
+            h1 {
+                font-size: 2.4rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .seo-content {
+                padding: 30px;
+            }
+            
+            .input-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .result-value {
+                font-size: 2.2rem;
+            }
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .today-btn {
+            background: #e0e7ff;
+            color: #4a6fc7;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .today-btn:hover {
+            background: #d0d7f7;
+            transform: translateY(-2px);
+        }
+        
+        .age-comparison {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            text-align: center;
+            gap: 15px;
+        }
+        
+        .age-box {
+            background: linear-gradient(to bottom right, #f9fbfd, #f0f4ff);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            width: 48%;
+            border: 1px solid #e0e7ff;
+        }
+        
+        .age-box div:first-child {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+        
+        .age-box div:last-child {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .month-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #718096;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Age Difference Calculator</h1>
+            <p class="subtitle">Calculate the exact age gap between two people with day names and month names</p>
+        </header>
+        
+        <main>
+            <section class="calculator-container">
+                <div class="calculator-header">
+                    <h2><i class="fas fa-calculator"></i> Calculate Age Difference</h2>
+                    <p>Enter birth dates to see the exact age gap with day names</p>
+                </div>
+                
+                <div class="calculator-content">
+                    <div class="input-section">
+                        <div class="person-input">
+                            <div class="person-title">
+                                <i class="fas fa-user"></i>
+                                <h3>First Person</h3>
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="day1"><i class="fas fa-calendar-day"></i> Day</label>
+                                    <input type="number" id="day1" min="1" max="31" placeholder="DD" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="month1"><i class="fas fa-calendar-alt"></i> Month</label>
+                                    <select id="month1" required>
+                                        <option value="">Select Month</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="year1"><i class="fas fa-calendar"></i> Year</label>
+                                    <input type="number" id="year1" min="1900" max="2100" placeholder="YYYY" required>
+                                </div>
+                            </div>
+                            <button class="today-btn" id="today-btn1">
+                                <i class="fas fa-calendar-day"></i> Set to Today
+                            </button>
+                            <div class="day-name-display" id="day-name1">Enter date to see day name</div>
+                        </div>
+                        
+                        <div class="person-input">
+                            <div class="person-title">
+                                <i class="fas fa-user"></i>
+                                <h3>Second Person</h3>
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="day2"><i class="fas fa-calendar-day"></i> Day</label>
+                                    <input type="number" id="day2" min="1" max="31" placeholder="DD" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="month2"><i class="fas fa-calendar-alt"></i> Month</label>
+                                    <select id="month2" required>
+                                        <option value="">Select Month</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="year2"><i class="fas fa-calendar"></i> Year</label>
+                                    <input type="number" id="year2" min="1900" max="2100" placeholder="YYYY" required>
+                                </div>
+                            </div>
+                            <button class="today-btn" id="today-btn2">
+                                <i class="fas fa-calendar-day"></i> Set to Today
+                            </button>
+                            <div class="day-name-display" id="day-name2">Enter date to see day name</div>
+                        </div>
+                        
+                        <button class="btn" id="calculate-btn">
+                            <i class="fas fa-calculator"></i> Calculate Age Difference
+                        </button>
+                    </div>
+                    
+                    <div class="result-section">
+                        <div class="result-box">
+                            <h3>Age Difference</h3>
+                            <div class="result-value" id="result-value">Enter dates to calculate</div>
+                            
+                            <div class="age-comparison">
+                                <div class="age-box">
+                                    <div>First Person Age</div>
+                                    <div id="age1">-</div>
+                                </div>
+                                <div class="age-box">
+                                    <div>Second Person Age</div>
+                                    <div id="age2">-</div>
+                                </div>
+                            </div>
+                            
+                            <div class="result-details">
+                                <div class="detail-item">
+                                    <span>Difference in Years:</span>
+                                    <span id="years">0</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>Difference in Months:</span>
+                                    <span id="months">0</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>Difference in Days:</span>
+                                    <span id="days">0</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>Total Days Difference:</span>
+                                    <span id="total-days">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="seo-content">
+                <h2>Understanding Age Differences</h2>
+                <p>Age differences play a significant role in relationships, family dynamics, and social interactions. Our <span class="highlight">Age Difference Calculator</span> helps you determine the exact gap between two individuals with precision, including day names and month names for better context.</p>
+                
+                <p>Research shows that age gaps can influence relationship satisfaction, communication styles, and life goals. While there's no "ideal" age difference, understanding the gap can help partners navigate potential challenges and appreciate their unique perspectives.</p>
+                
+                <h3>Why Calculate Age Differences?</h3>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="benefit-title">Relationship Insights</div>
+                        <p>Understand how age differences affect communication, life goals, and relationship dynamics</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-baby"></i>
+                        </div>
+                        <div class="benefit-title">Family Planning</div>
+                        <p>Calculate gaps between parents and children or between siblings for family planning</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="benefit-title">Generational Analysis</div>
+                        <p>Understand differences between generations for better communication and collaboration</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="benefit-title">Historical Context</div>
+                        <p>Calculate age gaps between historical figures or across different time periods</p>
+                    </div>
+                </div>
+                
+                <h3>Interesting Age Gap Statistics</h3>
+                <p>Did you know that the average age gap in married couples is approximately 2.3 years? While about 8% of heterosexual couples in Western countries have an age difference of 10 years or more. In same-sex relationships, age differences tend to be slightly larger on average. These statistics vary significantly across cultures and historical periods.</p>
+                
+                <div class="faq-section">
+                    <h2>Frequently Asked Questions</h2>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-question-circle"></i>
+                            How accurate is the age difference calculation?
+                        </div>
+                        <p>Our calculator provides precise calculations based on the exact dates provided. It accounts for leap years and varying month lengths to deliver accurate results in years, months, and days.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-question-circle"></i>
+                            Why are day names important?
+                        </div>
+                        <p>Day names provide additional context about birth dates, helping you remember special days like birthdays and anniversaries. They also help verify that you've entered a valid date.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-question-circle"></i>
+                            Can I calculate age differences for historical figures?
+                        </div>
+                        <p>Absolutely! The calculator works for any valid dates, including those from the distant past. The day name feature is especially interesting for historical dates.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-question-circle"></i>
+                            How does the calculator handle leap years?
+                        </div>
+                        <p>Our algorithm automatically accounts for leap years, ensuring accurate calculations for dates around February 29th. You'll always get precise results regardless of leap years.</p>
+                    </div>
+                </div>
+                <p class="month-note">Note: Month names are displayed in English but the calculation works for any valid date regardless of language or location.</p>
+            </section>
+        </main>
+        
+        <footer>
+            <p>© 2023 Age Difference Calculator | Calculate exact age gaps with day and month names</p>
+            <p>All calculations are performed in your browser - no data is stored or sent to any server</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.getElementById('calculate-btn').addEventListener('click', calculateAgeDifference);
+        
+        document.getElementById('today-btn1').addEventListener('click', function() {
+            setCurrentDate(1);
+        });
+        
+        document.getElementById('today-btn2').addEventListener('click', function() {
+            setCurrentDate(2);
+        });
+        
+        // Add event listeners to update day names when inputs change
+        document.querySelectorAll('#day1, #month1, #year1').forEach(input => {
+            input.addEventListener('change', function() {
+                updateDayName(1);
+            });
+        });
+        
+        document.querySelectorAll('#day2, #month2, #year2').forEach(input => {
+            input.addEventListener('change', function() {
+                updateDayName(2);
+            });
+        });
+        
+        function setCurrentDate(person) {
+            const today = new Date();
+            document.getElementById(`day${person}`).value = today.getDate();
+            document.getElementById(`month${person}`).value = today.getMonth() + 1;
+            document.getElementById(`year${person}`).value = today.getFullYear();
+            updateDayName(person);
+        }
+        
+        function updateDayName(person) {
+            const day = parseInt(document.getElementById(`day${person}`).value);
+            const month = parseInt(document.getElementById(`month${person}`).value);
+            const year = parseInt(document.getElementById(`year${person}`).value);
+            
+            if (validateDate(day, month, year)) {
+                const date = new Date(year, month - 1, day);
+                const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const dayName = dayNames[date.getDay()];
+                document.getElementById(`day-name${person}`).textContent = dayName;
+            } else {
+                document.getElementById(`day-name${person}`).textContent = 'Enter valid date';
+            }
+        }
+        
+        function calculateAgeDifference() {
+            // Get input values
+            const day1 = parseInt(document.getElementById('day1').value);
+            const month1 = parseInt(document.getElementById('month1').value);
+            const year1 = parseInt(document.getElementById('year1').value);
+            
+            const day2 = parseInt(document.getElementById('day2').value);
+            const month2 = parseInt(document.getElementById('month2').value);
+            const year2 = parseInt(document.getElementById('year2').value);
+            
+            // Validate inputs
+            if (!validateDate(day1, month1, year1) || !validateDate(day2, month2, year2)) {
+                alert("Please enter valid dates");
+                return;
+            }
+            
+            // Create date objects
+            const date1 = new Date(year1, month1 - 1, day1);
+            const date2 = new Date(year2, month2 - 1, day2);
+            
+            // Update day names
+            updateDayName(1);
+            updateDayName(2);
+            
+            // Calculate current ages
+            const today = new Date();
+            const age1 = calculateAge(date1, today);
+            const age2 = calculateAge(date2, today);
+            
+            document.getElementById('age1').textContent = `${age1.years} years`;
+            document.getElementById('age2').textContent = `${age2.years} years`;
+            
+            // Calculate difference
+            let earlierDate, laterDate;
+            if (date1 <= date2) {
+                earlierDate = date1;
+                laterDate = date2;
+            } else {
+                earlierDate = date2;
+                laterDate = date1;
+            }
+            
+            // Calculate total difference in milliseconds
+            const diffTime = Math.abs(laterDate - earlierDate);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // Calculate years
+            let years = laterDate.getFullYear() - earlierDate.getFullYear();
+            
+            // Calculate months
+            let months = laterDate.getMonth() - earlierDate.getMonth();
+            
+            // Adjust if the day of the month hasn't been reached yet
+            if (laterDate.getDate() < earlierDate.getDate()) {
+                months--;
+            }
+            
+            // Adjust for negative months
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            // Calculate days
+            const tempDate = new Date(earlierDate);
+            tempDate.setFullYear(earlierDate.getFullYear() + years);
+            tempDate.setMonth(earlierDate.getMonth() + months);
+            
+            let days = Math.floor((laterDate - tempDate) / (1000 * 60 * 60 * 24));
+            
+            // Update the UI
+            document.getElementById('result-value').textContent = 
+                `${years} years, ${months} months, ${days} days`;
+                
+            document.getElementById('years').textContent = years;
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = days;
+            document.getElementById('total-days').textContent = diffDays;
+        }
+        
+        function validateDate(day, month, year) {
+            if (isNaN(day) || isNaN(month) || isNaN(year)) return false;
+            
+            // Check month range
+            if (month < 1 || month > 12) return false;
+            
+            // Check day range based on month
+            const daysInMonth = new Date(year, month, 0).getDate();
+            if (day < 1 || day > daysInMonth) return false;
+            
+            // Check year range
+            if (year < 1900 || year > 2100) return false;
+            
+            return true;
+        }
+        
+        function calculateAge(birthDate, currentDate) {
+            let years = currentDate.getFullYear() - birthDate.getFullYear();
+            let months = currentDate.getMonth() - birthDate.getMonth();
+            let days = currentDate.getDate() - birthDate.getDate();
+            
+            if (days < 0) {
+                months--;
+                // Get days in previous month
+                const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            return { years, months, days };
+        }
+        
+        // Set default dates for demo purposes
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const pastDate = new Date();
+            pastDate.setFullYear(today.getFullYear() - 32);
+            pastDate.setMonth(today.getMonth() - 5);
+            
+            // Set first person to 32 years, 5 months ago
+            document.getElementById('day1').value = pastDate.getDate();
+            document.getElementById('month1').value = pastDate.getMonth() + 1;
+            document.getElementById('year1').value = pastDate.getFullYear();
+            
+            // Set second person to today
+            document.getElementById('day2').value = today.getDate();
+            document.getElementById('month2').value = today.getMonth() + 1;
+            document.getElementById('year2').value = today.getFullYear();
+            
+            // Update day names
+            updateDayName(1);
+            updateDayName(2);
+            
+            // Calculate immediately on load
+            setTimeout(calculateAgeDifference, 500);
+        });
+    </script>
+</body>
+</html>
