@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saudi Overtime Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1543429776-2782fc586c3f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            animation: fadeInDown 1s ease;
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: #d4af37;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .calculator {
+            background: rgba(20, 33, 61, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .calculator h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #d4af37;
+            font-size: 1.8rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #d4af37;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid #555;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            border-color: #d4af37;
+            background: rgba(255, 255, 255, 0.15);
+            outline: none;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #d4af37, #f0e68c);
+            color: #1a1a2e;
+            border: none;
+            padding: 14px 25px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(45deg, #f0e68c, #d4af37);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .result {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border-left: 4px solid #d4af37;
+            display: none;
+        }
+        
+        .result h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #d4af37;
+        }
+        
+        .overtime-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #d4af37;
+            margin: 10px 0;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        
+        .info {
+            background: rgba(26, 42, 77, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .info h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #d4af37;
+            font-size: 1.8rem;
+        }
+        
+        .info-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .info-box h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-box p {
+            line-height: 1.7;
+            color: #e0e0e0;
+        }
+        
+        .rate-card {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .rate-item {
+            flex: 1;
+            min-width: 150px;
+            background: rgba(212, 175, 55, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .rate-item:hover {
+            transform: translateY(-5px);
+            background: rgba(212, 175, 55, 0.25);
+        }
+        
+        .rate-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #d4af37;
+            margin: 10px 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .calculator, .info {
+                max-width: 100%;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> Saudi Overtime Calculator</h1>
+            <p>Calculate your overtime pay according to Saudi Arabian labor laws. This calculator helps you determine your overtime earnings based on the official regulations set by the Ministry of Human Resources and Social Development.</p>
+        </header>
+        
+        <div class="content">
+            <div class="calculator">
+                <h2>Calculate Your Overtime</h2>
+                <form id="overtimeForm">
+                    <div class="form-group">
+                        <label for="salary"><i class="fas fa-money-bill-wave"></i> Monthly Salary (SAR)</label>
+                        <input type="number" id="salary" placeholder="Enter your basic salary" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hours"><i class="fas fa-clock"></i> Overtime Hours</label>
+                        <input type="number" id="hours" placeholder="Enter overtime hours" min="0" step="0.5" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dayType"><i class="fas fa-calendar-day"></i> Day Type</label>
+                        <select id="dayType" required>
+                            <option value="normal">Normal Working Day</option>
+                            <option value="friday">Friday or Weekend</option>
+                            <option value="holiday">Public Holiday</option>
+                        </select>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="nightShift">
+                        <label for="nightShift">Night Shift (10 PM - 6 AM)</label>
+                    </div>
+                    
+                    <button type="button" class="btn pulse" id="calculateBtn">
+                        <i class="fas fa-calculator"></i> Calculate Overtime
+                    </button>
+                </form>
+                
+                <div class="result" id="result">
+                    <h3>Your Overtime Pay</h3>
+                    <div class="overtime-amount" id="overtimeAmount">0.00 SAR</div>
+                    <p>Based on Saudi Labor Law calculations</p>
+                </div>
+            </div>
+            
+            <div class="info">
+                <h2><i class="fas fa-info-circle"></i> Saudi Overtime Regulations</h2>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-gavel"></i> Legal Framework</h3>
+                    <p>Saudi Labor Law (Royal Decree No. M/51) regulates overtime compensation. According to Article 107, employers must compensate overtime work at specific premium rates based on the type of day and time of work.</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-percentage"></i> Overtime Rates</h3>
+                    <div class="rate-card">
+                        <div class="rate-item">
+                            <h4>Normal Day</h4>
+                            <div class="rate-value">1.5x</div>
+                            <p>Regular working days</p>
+                        </div>
+                        <div class="rate-item">
+                            <h4>Weekends</h4>
+                            <div class="rate-value">2.0x</div>
+                            <p>Friday & Saturday</p>
+                        </div>
+                        <div class="rate-item">
+                            <h4>Public Holidays</h4>
+                            <div class="rate-value">2.5x</div>
+                            <p>Official holidays</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-moon"></i> Night Shift Premium</h3>
+                    <p>Work performed between 10 PM and 6 AM is considered night shift and entitles employees to an additional 30% of their basic hourly wage on top of the regular overtime rate.</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Important Notes</h3>
+                    <p>• Daily working hours should not exceed 12 hours including overtime<br>
+                       • Friday is the official weekly rest day in Saudi Arabia<br>
+                       • Overtime must be voluntary and compensated accordingly<br>
+                       • These rates apply to private sector employees</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>This calculator is based on Saudi Labor Law. For official purposes, please refer to the Ministry of Human Resources and Social Development.</p>
+            <p>© 2023 Saudi Overtime Calculator | Designed according to Saudi Labor Regulations</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            // Get input values
+            const salary = parseFloat(document.getElementById('salary').value);
+            const hours = parseFloat(document.getElementById('hours').value);
+            const dayType = document.getElementById('dayType').value;
+            const nightShift = document.getElementById('nightShift').checked;
+            
+            // Validate inputs
+            if (isNaN(salary) || salary <= 0) {
+                alert('Please enter a valid salary amount');
+                return;
+            }
+            
+            if (isNaN(hours) || hours <= 0) {
+                alert('Please enter valid overtime hours');
+                return;
+            }
+            
+            // Calculate hourly rate (assuming 26 working days per month)
+            const hourlyRate = salary / (26 * 8);
+            
+            // Determine multiplier based on day type
+            let multiplier;
+            switch(dayType) {
+                case 'normal':
+                    multiplier = 1.5;
+                    break;
+                case 'friday':
+                    multiplier = 2.0;
+                    break;
+                case 'holiday':
+                    multiplier = 2.5;
+                    break;
+                default:
+                    multiplier = 1.5;
+            }
+            
+            // Apply night shift premium if applicable
+            if (nightShift) {
+                multiplier += 0.3;
+            }
+            
+            // Calculate overtime pay
+            const overtimePay = hourlyRate * hours * multiplier;
+            
+            // Display result with animation
+            const resultDiv = document.getElementById('result');
+            const amountDiv = document.getElementById('overtimeAmount');
+            
+            amountDiv.textContent = overtimePay.toFixed(2) + ' SAR';
+            resultDiv.style.display = 'block';
+            resultDiv.style.animation = 'fadeIn 0.8s';
+            
+            // Add pulse animation to the result
+            amountDiv.classList.add('pulse');
+            setTimeout(() => {
+                amountDiv.classList.remove('pulse');
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
