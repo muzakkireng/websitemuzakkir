@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online tool to check and simulate screen resolutions. Test how your website looks at different resolutions with our adjustable resolution checker.">
+    <meta name="keywords" content="screen resolution checker, resolution simulator, display resolution test, viewport tester, responsive design tester">
+    <title>Screen Resolution Checker & Simulator | Test Display Dimensions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .tool-container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .result-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .result-item {
+            flex: 1;
+            min-width: 200px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        .result-item h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .result-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .content-section {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .adjustment-panel {
+            background-color: #e8f4fc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .preset-buttons {
+            margin-top: 15px;
+        }
+        .preset-btn {
+            background-color: #95a5a6;
+            margin: 5px;
+        }
+        .preset-btn:hover {
+            background-color: #7f8c8d;
+        }
+        @media (max-width: 600px) {
+            .result-box {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Screen Resolution Checker & Simulator</h1>
+        <p>Detect your current screen resolution or simulate different resolutions for testing</p>
+    </header>
+
+    <div class="tool-container">
+        <h2>Your Screen Information</h2>
+        <p>This tool automatically detects your current display settings:</p>
+        
+        <div class="result-box">
+            <div class="result-item">
+                <h3>Screen Resolution</h3>
+                <p class="result-value" id="screenResolution">Detecting...</p>
+                <p>Total pixels available on your screen</p>
+            </div>
+            
+            <div class="result-item">
+                <h3>Viewport Size</h3>
+                <p class="result-value" id="viewportSize">Detecting...</p>
+                <p>Browser window size including scrollbars</p>
+            </div>
+            
+            <div class="result-item">
+                <h3>Device Pixel Ratio</h3>
+                <p class="result-value" id="pixelRatio">Detecting...</p>
+                <p>Ratio of physical to CSS pixels (for retina displays)</p>
+            </div>
+            
+            <div class="result-item">
+                <h3>Color Depth</h3>
+                <p class="result-value" id="colorDepth">Detecting...</p>
+                <p>Number of bits used to display colors</p>
+            </div>
+        </div>
+
+        <div class="adjustment-panel">
+            <h3>Simulate Different Resolution</h3>
+            <p>Adjust these values to simulate how your content would look on different screen sizes:</p>
+            
+            <div class="form-group">
+                <label for="simWidth">Width (pixels):</label>
+                <input type="number" id="simWidth" min="100" max="9999">
+            </div>
+            
+            <div class="form-group">
+                <label for="simHeight">Height (pixels):</label>
+                <input type="number" id="simHeight" min="100" max="9999">
+            </div>
+            
+            <button id="applySimulation">Apply Simulation</button>
+            <button id="resetSimulation">Reset to Actual Size</button>
+            
+            <div class="preset-buttons">
+                <p>Common presets:</p>
+                <button class="preset-btn" data-width="1920" data-height="1080">Desktop HD (1920×1080)</button>
+                <button class="preset-btn" data-width="1366" data-height="768">Laptop (1366×768)</button>
+                <button class="preset-btn" data-width="768" data-height="1024">Tablet (768×1024)</button>
+                <button class="preset-btn" data-width="375" data-height="667">Mobile (375×667)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2>Why Simulate Different Screen Resolutions?</h2>
+        <p>Testing your website or application at different screen resolutions is crucial for:</p>
+        <ul>
+            <li><strong>Responsive Design:</strong> Ensure your layout adapts properly to all screen sizes</li>
+            <li><strong>User Experience:</strong> Verify content remains readable and accessible on smaller screens</li>
+            <li><strong>Development:</strong> Catch rendering issues before they affect real users</li>
+            <li><strong>Quality Assurance:</strong> Test across the range of devices your audience uses</li>
+        </ul>
+        
+        <h3>How the Simulation Works</h3>
+        <p>Our simulator creates a viewport at your specified dimensions while maintaining the actual device characteristics (like pixel ratio and color depth). This gives you a more accurate representation than simply resizing your browser window.</p>
+    </div>
+
+    <div class="content-section">
+        <h2>Common Screen Resolutions for Testing</h2>
+        <p>When testing responsive designs, consider these common breakpoints:</p>
+        
+        <h3>Desktop/Laptop</h3>
+        <ul>
+            <li>2560×1440 (QHD/WQHD)</li>
+            <li>1920×1080 (Full HD)</li>
+            <li>1600×900 (HD+)</li>
+            <li>1440×900 (WXGA+)</li>
+            <li>1366×768 (common laptop)</li>
+        </ul>
+        
+        <h3>Tablets</h3>
+        <ul>
+            <li>1024×1366 (iPad Pro portrait)</li>
+            <li>768×1024 (iPad portrait)</li>
+            <li>800×1280 (common Android tablet)</li>
+        </ul>
+        
+        <h3>Smartphones</h3>
+        <ul>
+            <li>414×896 (iPhone 11/Xr)</li>
+            <li>375×812 (iPhone X/XS/11 Pro)</li>
+            <li>360×800 (common Android)</li>
+            <li>320×568 (iPhone SE/5s)</li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>© <span id="currentYear"></span> Screen Resolution Checker & Simulator. All rights reserved.</p>
+        <p>A free online utility for testing responsive designs across different screen sizes.</p>
+    </footer>
+
+    <script>
+        // Store original dimensions
+        let originalWidth = window.innerWidth;
+        let originalHeight = window.innerHeight;
+        let isSimulated = false;
+        
+        // Display current screen information
+        function updateScreenInfo() {
+            // Screen resolution
+            document.getElementById('screenResolution').textContent = 
+                window.screen.width + ' × ' + window.screen.height + ' pixels';
+            
+            // Viewport size (shows simulated or actual)
+            const displayWidth = isSimulated ? document.getElementById('simWidth').value : window.innerWidth;
+            const displayHeight = isSimulated ? document.getElementById('simHeight').value : window.innerHeight;
+            
+            document.getElementById('viewportSize').textContent = 
+                displayWidth + ' × ' + displayHeight + ' pixels';
+            
+            // Device pixel ratio
+            document.getElementById('pixelRatio').textContent = 
+                window.devicePixelRatio || '1 (standard)';
+            
+            // Color depth
+            document.getElementById('colorDepth').textContent = 
+                window.screen.colorDepth + '-bit color';
+        }
+        
+        // Apply simulation
+        function applySimulation() {
+            const width = document.getElementById('simWidth').value;
+            const height = document.getElementById('simHeight').value;
+            
+            if (width && height) {
+                isSimulated = true;
+                
+                // Adjust the viewport display
+                document.getElementById('viewportSize').textContent = 
+                    width + ' × ' + height + ' pixels (simulated)';
+                
+                // Create a visual indicator
+                document.body.style.border = "5px solid #3498db";
+                document.body.style.borderRadius = "10px";
+                document.body.style.boxShadow = "0 0 0 5px rgba(52, 152, 219, 0.3)";
+                
+                updateScreenInfo();
+            }
+        }
+        
+        // Reset to actual size
+        function resetSimulation() {
+            isSimulated = false;
+            document.body.style.border = "none";
+            document.body.style.boxShadow = "none";
+            updateScreenInfo();
+        }
+        
+        // Set preset values
+        function setPreset(width, height) {
+            document.getElementById('simWidth').value = width;
+            document.getElementById('simHeight').value = height;
+        }
+        
+        // Update year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Initialize with current dimensions
+        document.getElementById('simWidth').value = window.innerWidth;
+        document.getElementById('simHeight').value = window.innerHeight;
+        
+        // Event listeners
+        document.getElementById('applySimulation').addEventListener('click', applySimulation);
+        document.getElementById('resetSimulation').addEventListener('click', resetSimulation);
+        
+        // Preset buttons
+        document.querySelectorAll('.preset-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                setPreset(this.dataset.width, this.dataset.height);
+            });
+        });
+        
+        // Run on page load
+        window.addEventListener('load', updateScreenInfo);
+        
+        // Update when window is resized (only if not in simulated mode)
+        window.addEventListener('resize', function() {
+            if (!isSimulated) {
+                originalWidth = window.innerWidth;
+                originalHeight = window.innerHeight;
+                document.getElementById('simWidth').value = originalWidth;
+                document.getElementById('simHeight').value = originalHeight;
+                updateScreenInfo();
+            }
+        });
+    </script>
+</body>
+</html>
