@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online Epoch Time Converter tool. Convert Unix timestamps to human-readable dates and vice versa. Supports multiple formats and time zones.">
+    <meta name="keywords" content="epoch converter, unix timestamp, time conversion, epoch time, timestamp converter">
+    <title>Epoch Time Converter | Convert Unix Timestamps to Dates</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1501139083538-0139583c060f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 3.2rem;
+            margin-bottom: 15px;
+            color: #4FC3F7;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        
+        .tagline {
+            font-size: 1.4rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #B3E5FC;
+        }
+        
+        .converter-container {
+            background: rgba(25, 25, 35, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+        }
+        
+        .converter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .converter-title {
+            font-size: 1.8rem;
+            color: #4FC3F7;
+        }
+        
+        .converter-tabs {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: rgba(60, 60, 80, 0.7);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: #0288D1;
+            color: white;
+        }
+        
+        .converter-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .converter-body {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-section, .output-section {
+            background: rgba(40, 40, 50, 0.7);
+            padding: 25px;
+            border-radius: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #81D4FA;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px;
+            background: rgba(30, 30, 40, 0.9);
+            border: 1px solid #3949AB;
+            border-radius: 8px;
+            color: #E3F2FD;
+            font-size: 1.1rem;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4FC3F7;
+            box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.3);
+        }
+        
+        button {
+            background: #0288D1;
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #039BE5;
+        }
+        
+        .result-box {
+            background: rgba(30, 30, 40, 0.9);
+            border: 1px solid #3949AB;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 150px;
+            margin-top: 20px;
+            overflow-wrap: break-word;
+        }
+        
+        .result-title {
+            color: #81D4FA;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .result-content {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #4FC3F7;
+        }
+        
+        .current-time {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(40, 40, 50, 0.7);
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .seo-section {
+            background: rgba(25, 25, 35, 0.85);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+        }
+        
+        .seo-section h2 {
+            font-size: 2.2rem;
+            color: #4FC3F7;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .seo-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .seo-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .seo-column h3 {
+            color: #81D4FA;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .seo-column p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #B3E5FC;
+            font-size: 1.1rem;
+        }
+        
+        .example {
+            background: rgba(60, 60, 80, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .example-title {
+            color: #FFD54F;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .current-time-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #4FC3F7;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Epoch Time Converter</h1>
+            <p class="tagline">Convert between Unix timestamps and human-readable dates in seconds, milliseconds, or microseconds</p>
+        </header>
+        
+        <main>
+            <section class="converter-container">
+                <div class="converter-header">
+                    <h2 class="converter-title">Timestamp Converter</h2>
+                    <div class="converter-tabs">
+                        <div class="tab active" id="toDateTab">Timestamp to Date</div>
+                        <div class="tab" id="toTimestampTab">Date to Timestamp</div>
+                    </div>
+                </div>
+                
+                <div class="converter-body">
+                    <div class="input-section">
+                        <div class="input-group">
+                            <label for="timestampInput">Epoch Timestamp</label>
+                            <input type="text" id="timestampInput" placeholder="Enter epoch timestamp...">
+                            <div class="example">
+                                <div class="example-title">Examples:</div>
+                                <div>Seconds: 1717520400</div>
+                                <div>Milliseconds: 1717520400000</div>
+                                <div>Microseconds: 1717520400000000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="timezoneSelect">Time Zone</label>
+                            <select id="timezoneSelect">
+                                <option value="local">Local Time</option>
+                                <option value="utc">UTC</option>
+                                <option value="-12">UTC-12:00</option>
+                                <option value="-11">UTC-11:00</option>
+                                <option value="-10">UTC-10:00</option>
+                                <option value="-9">UTC-09:00</option>
+                                <option value="-8">UTC-08:00</option>
+                                <option value="-7">UTC-07:00</option>
+                                <option value="-6">UTC-06:00</option>
+                                <option value="-5">UTC-05:00</option>
+                                <option value="-4">UTC-04:00</option>
+                                <option value="-3">UTC-03:00</option>
+                                <option value="-2">UTC-02:00</option>
+                                <option value="-1">UTC-01:00</option>
+                                <option value="0">UTC±00:00</option>
+                                <option value="1">UTC+01:00</option>
+                                <option value="2">UTC+02:00</option>
+                                <option value="3">UTC+03:00</option>
+                                <option value="4">UTC+04:00</option>
+                                <option value="5">UTC+05:00</option>
+                                <option value="6">UTC+06:00</option>
+                                <option value="7">UTC+07:00</option>
+                                <option value="8">UTC+08:00</option>
+                                <option value="9">UTC+09:00</option>
+                                <option value="10">UTC+10:00</option>
+                                <option value="11">UTC+11:00</option>
+                                <option value="12">UTC+12:00</option>
+                            </select>
+                        </div>
+                        
+                        <button id="convertToDateBtn">Convert to Date</button>
+                    </div>
+                    
+                    <div class="output-section">
+                        <div class="result-title">Converted Date & Time</div>
+                        <div class="result-box">
+                            <div class="result-content" id="dateResult">Enter a timestamp to convert</div>
+                        </div>
+                        
+                        <div class="result-title">Additional Information</div>
+                        <div class="result-box">
+                            <div id="additionalInfo">No conversion data yet</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="current-time">
+                    <div>Current Epoch Time:</div>
+                    <div class="current-time-value" id="currentTimestamp"></div>
+                </div>
+            </section>
+            
+            <section class="seo-section">
+                <h2>Understanding Epoch Time Conversion</h2>
+                
+                <div class="seo-content">
+                    <div class="seo-column">
+                        <h3>What is Epoch Time?</h3>
+                        <p>Epoch time, also known as Unix time or POSIX time, is a system for describing points in time. It is the number of seconds that have elapsed since the Unix epoch, which is 00:00:00 UTC on January 1, 1970 (not counting leap seconds).</p>
+                        
+                        <h3>Why Use Epoch Time?</h3>
+                        <p>Epoch time is widely used in computing systems because:</p>
+                        <p>• It's a simple integer value that's easy to store and transmit</p>
+                        <p>• It's timezone-independent, making it universal</p>
+                        <p>• Calculations with time become straightforward arithmetic operations</p>
+                        <p>• It avoids the complexities of time zones, daylight saving time, and calendar systems</p>
+                    </div>
+                    
+                    <div class="seo-column">
+                        <h3>Common Applications</h3>
+                        <p>Epoch timestamps are essential in many computing scenarios:</p>
+                        <p>• Database systems for storing timestamps efficiently</p>
+                        <p>• Log files to record event times precisely</p>
+                        <p>• Programming languages for date/time manipulation</p>
+                        <p>• APIs and data transmission formats like JSON</p>
+                        <p>• Version control systems to track changes</p>
+                        
+                        <h3>Precision Levels</h3>
+                        <p>Epoch time can be represented in different precisions:</p>
+                        <p>• Seconds: Most common format (10-digit number)</p>
+                        <p>• Milliseconds: 13-digit number (common in JavaScript)</p>
+                        <p>• Microseconds: 16-digit number (used in some systems)</p>
+                        <p>• Nanoseconds: 19-digit number (high-precision requirements)</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>© 2023 Epoch Time Converter | Free Online Tool for Developers</p>
+            <p>Convert Unix timestamps to human-readable dates and vice versa</p>
+        </footer>
+    </div>
+
+    <script>
+        // Update current epoch time
+        function updateCurrentTime() {
+            const now = Date.now();
+            document.getElementById('currentTimestamp').textContent = 
+                `Seconds: ${Math.floor(now/1000)} | Milliseconds: ${now}`;
+        }
+        
+        // Initial update
+        updateCurrentTime();
+        
+        // Update every second
+        setInterval(updateCurrentTime, 1000);
+        
+        // Convert timestamp to date
+        document.getElementById('convertToDateBtn').addEventListener('click', function() {
+            const timestampInput = document.getElementById('timestampInput').value.trim();
+            const timezone = document.getElementById('timezoneSelect').value;
+            
+            if (!timestampInput) {
+                alert('Please enter a timestamp');
+                return;
+            }
+            
+            let timestamp = parseInt(timestampInput);
+            
+            // Detect precision
+            let precision = 'seconds';
+            if (timestampInput.length >= 13 && timestampInput.length < 16) {
+                timestamp = parseInt(timestampInput);
+                precision = 'milliseconds';
+            } else if (timestampInput.length >= 16) {
+                timestamp = parseInt(timestampInput) / 1000;
+                precision = 'microseconds';
+            }
+            
+            // Convert to milliseconds for Date object
+            let date;
+            if (precision === 'seconds') {
+                date = new Date(timestamp * 1000);
+            } else if (precision === 'milliseconds') {
+                date = new Date(timestamp);
+            } else {
+                date = new Date(timestamp);
+            }
+            
+            // Format date based on timezone selection
+            let formattedDate;
+            if (timezone === 'utc') {
+                formattedDate = date.toUTCString();
+            } else {
+                formattedDate = date.toLocaleString();
+            }
+            
+            // Display results
+            document.getElementById('dateResult').textContent = formattedDate;
+            
+            // Additional info
+            const info = `
+                <div><strong>Input precision:</strong> ${precision}</div>
+                <div><strong>Local time:</strong> ${date.toLocaleString()}</div>
+                <div><strong>UTC time:</strong> ${date.toUTCString()}</div>
+                <div><strong>ISO format:</strong> ${date.toISOString()}</div>
+            `;
+            document.getElementById('additionalInfo').innerHTML = info;
+        });
+        
+        // Tab switching functionality
+        const toDateTab = document.getElementById('toDateTab');
+        const toTimestampTab = document.getElementById('toTimestampTab');
+        
+        toDateTab.addEventListener('click', function() {
+            toDateTab.classList.add('active');
+            toTimestampTab.classList.remove('active');
+            // Implement view switching here
+        });
+        
+        toTimestampTab.addEventListener('click', function() {
+            toTimestampTab.classList.add('active');
+            toDateTab.classList.remove('active');
+            // Implement view switching here
+        });
+    </script>
+</body>
+</html>
