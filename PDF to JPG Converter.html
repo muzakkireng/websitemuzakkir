@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transparent PDF to JPG Converter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+    <style>
+        /* Transparent body with visible background */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent dark overlay */
+            color: #fff;
+            background-image: url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+
+        /* Main content container with glass effect */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        /* Header styles */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        /* Upload area */
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #pdf-input {
+            display: none;
+        }
+
+        .upload-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .upload-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Preview area */
+        #pdf-preview {
+            margin: 30px 0;
+        }
+
+        /* Page containers */
+        .page-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .page-info {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* Buttons */
+        .download-btn {
+            padding: 8px 20px;
+            background: rgba(74, 144, 226, 0.7);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: rgba(74, 144, 226, 0.9);
+            transform: translateY(-2px);
+        }
+
+        #download-all {
+            display: none;
+            width: 100%;
+            padding: 15px;
+            background: rgba(46, 204, 113, 0.7);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        #download-all:hover {
+            background: rgba(46, 204, 113, 0.9);
+            transform: translateY(-2px);
+        }
+
+        /* Status message */
+        #status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PDF to JPG Converter</h1>
+            <p class="tagline">Convert your PDF pages to high-quality JPG images</p>
+        </header>
+
+        <div class="upload-area">
+            <input type="file" id="pdf-input" accept=".pdf">
+            <button class="upload-btn" onclick="document.getElementById('pdf-input').click()">Choose PDF File</button>
+            <p>or drag and drop file here</p>
+        </div>
+
+        <div id="status"></div>
+
+        <div id="pdf-preview"></div>
+
+        <button id="download-all" onclick="downloadAllPages()">Download All Pages</button>
+
+        <footer>
+            <p>Free online tool - No files are uploaded to our servers</p>
+        </footer>
+    </div>
+
+    <script>
+        // Set PDF.js worker path
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+        
+        let pdfFile = null;
+        let pdfPages = [];
+        let currentPDFName = '';
+        
+        // Handle file selection
+        document.getElementById('pdf-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                currentPDFName = file.name.replace('.pdf', '');
+                loadPDF(file);
+            } else {
+                alert('Please select a valid PDF file.');
+            }
+        });
+        
+        // Handle drag and drop
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.8)';
+            uploadArea.style.background = 'rgba(255, 255, 255, 0.15)';
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+            uploadArea.style.background = 'transparent';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+            uploadArea.style.background = 'transparent';
+            
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') {
+                currentPDFName = file.name.replace('.pdf', '');
+                document.getElementById('pdf-input').files = e.dataTransfer.files;
+                loadPDF(file);
+            } else {
+                alert('Please drop a valid PDF file.');
+            }
+        });
+        
+        // Load and render PDF
+        function loadPDF(file) {
+            const status = document.getElementById('status');
+            status.textContent = 'Loading PDF...';
+            status.style.color = '#4ab9e6';
+            
+            const fileReader = new FileReader();
+            
+            fileReader.onload = function() {
+                const typedArray = new Uint8Array(this.result);
+                
+                // Load the PDF document
+                pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
+                    pdfFile = pdf;
+                    status.textContent = `PDF loaded with ${pdf.numPages} pages. Converting to JPG...`;
+                    
+                    // Clear previous preview
+                    document.getElementById('pdf-preview').innerHTML = '';
+                    pdfPages = [];
+                    
+                    // Process each page
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        renderPage(pdf, i);
+                    }
+                }).catch(function(error) {
+                    status.textContent = 'Error loading PDF: ' + error.message;
+                    status.style.color = '#e74c3c';
+                });
+            };
+            
+            fileReader.readAsArrayBuffer(file);
+        }
+        
+        // Render a single page
+        function renderPage(pdf, pageNumber) {
+            pdf.getPage(pageNumber).then(function(page) {
+                const viewport = page.getViewport({ scale: 1.5 });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                // Add white background to canvas (since we want the PDF content to be visible)
+                context.fillStyle = 'white';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Render PDF page into canvas context
+                page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise.then(function() {
+                    // Create container for this page
+                    const pageContainer = document.createElement('div');
+                    pageContainer.className = 'page-container';
+                    
+                    // Add page info
+                    const pageInfo = document.createElement('div');
+                    pageInfo.className = 'page-info';
+                    pageInfo.textContent = `Page ${pageNumber} (${viewport.width}×${viewport.height}px)`;
+                    pageContainer.appendChild(pageInfo);
+                    
+                    // Add canvas preview
+                    pageContainer.appendChild(canvas);
+                    
+                    // Add download button
+                    const downloadBtn = document.createElement('button');
+                    downloadBtn.className = 'download-btn';
+                    downloadBtn.textContent = 'Download as JPG';
+                    downloadBtn.onclick = function() {
+                        downloadPageAsJPG(canvas, pageNumber);
+                    };
+                    pageContainer.appendChild(downloadBtn);
+                    
+                    // Add to preview
+                    document.getElementById('pdf-preview').appendChild(pageContainer);
+                    
+                    // Store canvas for later use
+                    pdfPages.push({
+                        pageNumber: pageNumber,
+                        canvas: canvas
+                    });
+                    
+                    // Show download all button if all pages are rendered
+                    if (pdfPages.length === pdf.numPages) {
+                        document.getElementById('download-all').style.display = 'block';
+                        document.getElementById('status').textContent = 
+                            `Conversion complete! ${pdf.numPages} pages converted.`;
+                        document.getElementById('status').style.color = '#2ecc71';
+                    }
+                });
+            });
+        }
+        
+        // Download a single page as JPG
+        function downloadPageAsJPG(canvas, pageNumber) {
+            const link = document.createElement('a');
+            link.download = `${currentPDFName}_page_${pageNumber}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 0.9);
+            link.click();
+        }
+        
+        // Download all pages as individual JPGs
+        function downloadAllPages() {
+            if (pdfPages.length === 0) return;
+            
+            alert('Starting download of all pages...');
+            
+            // Add slight delay between downloads to avoid browser blocking
+            let delay = 0;
+            pdfPages.forEach(page => {
+                setTimeout(() => {
+                    downloadPageAsJPG(page.canvas, page.pageNumber);
+                }, delay);
+                delay += 300; // 300ms delay between downloads
+            });
+        }
+    </script>
+</body>
+</html>
