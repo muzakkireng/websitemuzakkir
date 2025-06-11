@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SMTP Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background: #f2dede;
+            color: #a94442;
+        }
+    </style>
+</head>
+<body>
+    <h2>Simple Email Tester</h2>
+    
+    <label>SMTP Host:</label>
+    <input type="text" id="host" placeholder="smtp.gmail.com">
+    
+    <label>SMTP Username:</label>
+    <input type="text" id="username" placeholder="your@email.com">
+    
+    <label>SMTP Password:</label>
+    <input type="password" id="password">
+    
+    <label>From Email:</label>
+    <input type="text" id="from" placeholder="sender@example.com">
+    
+    <label>To Email:</label>
+    <input type="text" id="to" placeholder="recipient@example.com">
+    
+    <label>Subject:</label>
+    <input type="text" id="subject" placeholder="Test Email">
+    
+    <label>Message:</label>
+    <textarea id="body">This is a test email</textarea>
+    
+    <button onclick="sendEmail()">Send Test Email</button>
+    
+    <div id="result"></div>
+
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script>
+        function sendEmail() {
+            const result = document.getElementById('result');
+            result.style.display = 'none';
+            
+            Email.send({
+                Host: document.getElementById('host').value,
+                Username: document.getElementById('username').value,
+                Password: document.getElementById('password').value,
+                To: document.getElementById('to').value,
+                From: document.getElementById('from').value,
+                Subject: document.getElementById('subject').value,
+                Body: document.getElementById('body').value
+            }).then(
+                message => {
+                    result.style.display = 'block';
+                    if(message === "OK") {
+                        result.className = 'success';
+                        result.innerHTML = "Email sent successfully!";
+                    } else {
+                        result.className = 'error';
+                        result.innerHTML = "Error: " + message;
+                    }
+                }
+            ).catch(
+                error => {
+                    result.style.display = 'block';
+                    result.className = 'error';
+                    result.innerHTML = "Error: " + error.message;
+                }
+            );
+        }
+    </script>
+</body>
+</html>
