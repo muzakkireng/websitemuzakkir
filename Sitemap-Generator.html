@@ -3,60 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sitemap Generator</title>
+    <meta name="description" content="Free online sitemap generator tool. Create XML sitemaps for your website to improve SEO and help search engines index your pages.">
+    <meta name="keywords" content="sitemap generator, XML sitemap, SEO tool, website crawler, search engine optimization">
+    <title>Free Sitemap Generator Tool | Create XML Sitemaps for SEO</title>
     <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 0;
+            background-color: #f5f7fa;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            color: #333;
+            min-height: 100vh;
         }
+        
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            margin-bottom: 30px;
         }
-        h1 {
+        
+        header {
             text-align: center;
-            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
         }
+        
+        h1 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .seo-benefits {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .seo-benefits h3 {
+            margin-top: 0;
+            color: var(--secondary-color);
+        }
+        
+        .seo-benefits ul {
+            padding-left: 20px;
+        }
+        
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
+        
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
         }
+        
         input[type="url"] {
             width: 100%;
-            padding: 8px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            box-sizing: border-box;
+            font-size: 16px;
+            transition: border 0.3s;
         }
+        
+        input[type="url"]:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.2);
+        }
+        
         button {
-            background: #4CAF50;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 12px 20px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
             margin-right: 10px;
+            font-weight: 600;
         }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
         button:disabled {
-            background: #cccccc;
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
+        
         #results {
-            margin-top: 20px;
+            margin-top: 30px;
             border-top: 1px solid #eee;
             padding-top: 20px;
         }
+        
         #urlList {
             list-style-type: none;
             padding: 0;
@@ -64,53 +135,131 @@
             overflow-y: auto;
             border: 1px solid #ddd;
             border-radius: 4px;
-            padding: 10px;
+            padding: 15px;
+            background-color: #f8f9fa;
         }
+        
         #urlList li {
-            padding: 5px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #eee;
             word-break: break-all;
         }
+        
         #urlList li:last-child {
             border-bottom: none;
         }
+        
         .loading {
             text-align: center;
-            margin: 10px 0;
+            margin: 20px 0;
             display: none;
         }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         .error {
             color: #d9534f;
             margin-top: 10px;
+            padding: 10px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+            border-left: 4px solid #d9534f;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Sitemap Generator</h1>
+        <header>
+            <h1>Free XML Sitemap Generator</h1>
+            <p class="subtitle">Create search engine friendly sitemaps to improve your website's visibility and SEO performance</p>
+        </header>
+        
+        <div class="seo-benefits">
+            <h3>Why Use a Sitemap?</h3>
+            <ul>
+                <li>Helps search engines discover all your important pages</li>
+                <li>Improves indexing of new or updated content</li>
+                <li>Provides metadata about your pages to search engines</li>
+                <li>Essential for large websites with complex structures</li>
+                <li>Can help with SEO rankings when properly implemented</li>
+            </ul>
+        </div>
         
         <div class="input-group">
-            <label for="siteUrl">Enter Website URL:</label>
-            <input type="url" id="siteUrl" placeholder="https://example.com" required>
+            <label for="siteUrl">Enter Your Website URL:</label>
+            <input type="url" id="siteUrl" placeholder="https://yourwebsite.com" required>
         </div>
         
         <button id="generateBtn">Generate Sitemap</button>
-        <button id="downloadBtn" disabled>Download XML</button>
+        <button id="downloadBtn" disabled>Download XML Sitemap</button>
         
         <div class="loading" id="loading">
-            <p>Loading...</p>
+            <div class="spinner"></div>
+            <p>Crawling your website...</p>
         </div>
         
         <div id="error" class="error"></div>
         
         <div id="results">
-            <h3>Found URLs:</h3>
+            <h3>Discovered Pages:</h3>
             <ul id="urlList"></ul>
         </div>
+        
+        <div class="seo-tips" style="margin-top: 30px;">
+            <h3>Sitemap SEO Best Practices</h3>
+            <p>For best SEO results with your sitemap:</p>
+            <ol>
+                <li>Submit your sitemap to Google Search Console and Bing Webmaster Tools</li>
+                <li>Include only canonical versions of your pages</li>
+                <li>Keep your sitemap updated with new content</li>
+                <li>Limit your sitemap to 50,000 URLs or 50MB (create multiple sitemaps if needed)</li>
+                <li>Place your sitemap in the root directory of your website</li>
+            </ol>
+        </div>
     </div>
+    
+    <footer>
+        <p>Free XML Sitemap Generator Tool | &copy; <span id="year"></span> All Rights Reserved</p>
+        <p>This tool helps website owners and SEO professionals create search engine friendly sitemaps.</p>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
             const siteUrlInput = document.getElementById('siteUrl');
             const generateBtn = document.getElementById('generateBtn');
             const downloadBtn = document.getElementById('downloadBtn');
@@ -162,7 +311,7 @@
                     if (foundUrls.length > 0) {
                         downloadBtn.disabled = false;
                     } else {
-                        showError('No URLs found - check if the website is accessible');
+                        showError('No URLs found. Please check: 1) The website is publicly accessible 2) The URL is correct 3) The website has internal links');
                     }
                 } catch (error) {
                     showError('Error: ' + error.message);
@@ -182,6 +331,9 @@
                 let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
                 xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
                 
+                // Sort URLs alphabetically
+                foundUrls.sort();
+                
                 foundUrls.forEach(url => {
                     const escapedUrl = escapeXml(url);
                     const today = new Date().toISOString().split('T')[0];
@@ -189,7 +341,7 @@
                     xml += `    <loc>${escapedUrl}</loc>\n`;
                     xml += `    <lastmod>${today}</lastmod>\n`;
                     xml += `    <changefreq>weekly</changefreq>\n`;
-                    xml += `    <priority>0.8</priority>\n`;
+                    xml += `    <priority>${url.endsWith('/') ? '1.0' : '0.8'}</priority>\n`;
                     xml += `  </url>\n`;
                 });
                 
@@ -236,10 +388,7 @@
                     const doc = parser.parseFromString(html, 'text/html');
                     
                     // Add current URL to list if not already present
-                    if (!foundUrls.includes(url)) {
-                        foundUrls.push(url);
-                        addUrlToList(url);
-                    }
+                    addUniqueUrl(url);
                     
                     // Find all links
                     const links = doc.querySelectorAll('a[href]');
@@ -250,7 +399,7 @@
                         // Skip invalid links
                         if (!href || href.startsWith('javascript:') || 
                             href.startsWith('mailto:') || href.startsWith('tel:') ||
-                            href.startsWith('#')) {
+                            href.startsWith('#') || href.startsWith('data:')) {
                             continue;
                         }
                         
@@ -260,10 +409,7 @@
                             
                             // Only include links from same domain
                             if (new URL(absoluteUrl).hostname === new URL(url).hostname) {
-                                if (!foundUrls.includes(absoluteUrl)) {
-                                    foundUrls.push(absoluteUrl);
-                                    addUrlToList(absoluteUrl);
-                                }
+                                addUniqueUrl(absoluteUrl);
                             }
                         } catch (e) {
                             console.error('Invalid URL:', href);
@@ -273,6 +419,34 @@
                 } catch (error) {
                     console.error('Crawling error:', error);
                     throw error;
+                }
+            }
+            
+            function addUniqueUrl(url) {
+                // Normalize URL by removing hash fragments and query parameters
+                let normalizedUrl;
+                try {
+                    const urlObj = new URL(url);
+                    urlObj.hash = '';
+                    urlObj.search = '';
+                    normalizedUrl = urlObj.href;
+                } catch {
+                    normalizedUrl = url;
+                }
+                
+                // Add trailing slash to homepage
+                if (normalizedUrl.endsWith('/') === false) {
+                    try {
+                        const urlObj = new URL(normalizedUrl);
+                        if (urlObj.pathname === '') {
+                            normalizedUrl = normalizedUrl + '/';
+                        }
+                    } catch {}
+                }
+                
+                if (!foundUrls.includes(normalizedUrl)) {
+                    foundUrls.push(normalizedUrl);
+                    addUrlToList(normalizedUrl);
                 }
             }
             
