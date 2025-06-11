@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Sitemap Generator</title>
+    <title>Fixed Sitemap Generator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,6 +47,7 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            margin-right: 10px;
         }
         button:disabled {
             background: #cccccc;
@@ -86,7 +87,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Simple Sitemap Generator</h1>
+        <h1>Fixed Sitemap Generator</h1>
         
         <div class="input-group">
             <label for="siteUrl">Enter Website URL:</label>
@@ -119,6 +120,20 @@
             
             let foundUrls = [];
             
+            // Function to escape XML special characters
+            function escapeXml(unsafe) {
+                return unsafe.replace(/[<>&'"]/g, function(c) {
+                    switch (c) {
+                        case '<': return '&lt;';
+                        case '>': return '&gt;';
+                        case '&': return '&amp;';
+                        case '\'': return '&apos;';
+                        case '"': return '&quot;';
+                        default: return c;
+                    }
+                });
+            }
+            
             generateBtn.addEventListener('click', async function() {
                 const siteUrl = siteUrlInput.value.trim();
                 
@@ -138,6 +153,7 @@
                     urlList.innerHTML = '';
                     errorElement.textContent = '';
                     generateBtn.disabled = true;
+                    downloadBtn.disabled = true;
                     loadingElement.style.display = 'block';
                     
                     // Start crawling
@@ -162,31 +178,40 @@
                     return;
                 }
                 
-                // Create XML sitemap
-                let xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+                // Create XML sitemap with proper escaping
+                let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+                xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
                 
                 foundUrls.forEach(url => {
-                    xml += `    <url>
-        <loc>${url}</loc>
-        <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>\n`;
+                    const escapedUrl = escapeXml(url);
+                    const today = new Date().toISOString().split('T')[0];
+                    xml += `  <url>\n`;
+                    xml += `    <loc>${escapedUrl}</loc>\n`;
+                    xml += `    <lastmod>${today}</lastmod>\n`;
+                    xml += `    <changefreq>weekly</changefreq>\n`;
+                    xml += `    <priority>0.8</priority>\n`;
+                    xml += `  </url>\n`;
                 });
                 
-                xml += '</urlset>';
+                xml += `</urlset>`;
                 
-                // Download file
-                const blob = new Blob([xml], { type: 'application/xml' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'sitemap.xml';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                // Validate XML before download
+                try {
+                    new DOMParser().parseFromString(xml, "application/xml");
+                    
+                    // Download file
+                    const blob = new Blob([xml], { type: 'application/xml; charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'sitemap.xml';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                } catch (e) {
+                    showError('Failed to generate valid XML: ' + e.message);
+                }
             });
             
             async function crawlSite(url) {
@@ -201,7 +226,7 @@
                     });
                     
                     if (!response.ok) {
-                        throw new Error(`Failed to fetch: ${response.status}`);
+                        throw new Error(`HTTP error ${response.status}`);
                     }
                     
                     const html = await response.text();
@@ -224,7 +249,8 @@
                         
                         // Skip invalid links
                         if (!href || href.startsWith('javascript:') || 
-                            href.startsWith('mailto:') || href.startsWith('tel:')) {
+                            href.startsWith('mailto:') || href.startsWith('tel:') ||
+                            href.startsWith('#')) {
                             continue;
                         }
                         
