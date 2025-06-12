@@ -9,36 +9,65 @@
   <style>
     body { 
       font-family: Arial, sans-serif; 
-      margin: 20px;
+      margin: 0;
+      padding: 0;
       line-height: 1.6;
       color: #333;
+      background-image: url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      min-height: 100vh;
+      position: relative;
     }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.9);
+      z-index: -1;
+    }
+    
     .container {
       max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
+      margin: 30px auto;
+      padding: 30px;
       background: white;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-    h1, h2 {
+    
+    h1, h2, h3 {
       color: #2c3e50;
     }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    
     .preview-container {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin: 15px 0;
     }
+    
     .preview-item {
       position: relative;
     }
+    
     .preview-item img {
       height: 100px;
       width: auto;
       border: 1px solid #ddd;
       border-radius: 4px;
     }
+    
     .remove-btn {
       position: absolute;
       top: -5px;
@@ -52,6 +81,7 @@
       font-size: 12px;
       cursor: pointer;
     }
+    
     .upload-area {
       border: 2px dashed #3498db;
       border-radius: 8px;
@@ -59,9 +89,15 @@
       text-align: center;
       margin: 15px 0;
       cursor: pointer;
+      transition: all 0.3s;
     }
+    
+    .upload-area:hover {
+      background: #f0f8ff;
+    }
+    
     button {
-      padding: 10px 20px;
+      padding: 12px 25px;
       background-color: #3498db;
       color: white;
       border: none;
@@ -69,31 +105,67 @@
       cursor: pointer;
       font-size: 16px;
       margin-top: 10px;
+      transition: background-color 0.3s;
     }
+    
+    button:hover {
+      background-color: #2980b9;
+    }
+    
     button:disabled {
       background-color: #95a5a6;
       cursor: not-allowed;
     }
+    
     .quality-options {
       margin: 15px 0;
     }
+    
     .file-info {
       margin: 10px 0;
       font-size: 14px;
     }
+    
     .optimization-tips {
       background: #f8f9fa;
       padding: 15px;
       border-radius: 8px;
       margin-top: 20px;
     }
+    
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 30px;
+      background-color: #2c3e50;
+      color: white;
+      border-radius: 0 0 8px 8px;
+    }
+    
+    footer p {
+      margin: 5px 0;
+    }
+    
+    .footer-links {
+      margin-top: 10px;
+    }
+    
+    .footer-links a {
+      color: #3498db;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>Optimized JPG to PDF Converter</h1>
-  <p>Convert multiple JPG images to PDF with smaller file size while maintaining visual quality</p>
+  <h1>Add Multiple JPG to PDF Converter</h1>
+  <p style="text-align: center;">Convert multiple JPG images to PDF with smaller file size while maintaining visual quality</p>
   
   <div class="upload-area" id="uploadArea">
     <p>Drag & drop JPG images here or click to select files</p>
@@ -114,7 +186,9 @@
   
   <div class="preview-container" id="preview"></div>
   
-  <button id="convertBtn" onclick="convertToPDF()" disabled>Convert to Optimized PDF</button>
+  <div style="text-align: center;">
+    <button id="convertBtn" onclick="convertToPDF()" disabled>Convert to Optimized PDF</button>
+  </div>
   
   <div class="optimization-tips">
     <h3>File Size Optimization Tips:</h3>
@@ -125,6 +199,13 @@
       <li>Each image will be automatically optimized</li>
     </ul>
   </div>
+  
+  <footer>
+    <p>Optimized JPG to PDF Converter</p>
+    <p>Free online tool - No registration required  </p>
+	<p>All Process are happening in you local browser.We are not collecting or Stored Data any ever.</p>
+    <p>&copy; 2023 All Rights Reserved</p>
+  </footer>
 </div>
 
 <script>
@@ -299,12 +380,8 @@
         pdf.addImage(optimizedDataUrl, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'FAST');
       }
 
-      // Additional PDF compression options
-      const blob = pdf.output('blob');
-      const optimizedBlob = await furtherCompressPDF(blob);
-      
       // Create download link
-      const url = URL.createObjectURL(optimizedBlob);
+      const url = URL.createObjectURL(pdf.output('blob'));
       const a = document.createElement('a');
       a.href = url;
       a.download = `optimized-${new Date().toISOString().slice(0,10)}.pdf`;
@@ -320,32 +397,6 @@
       convertBtn.disabled = false;
       convertBtn.textContent = 'Convert to Optimized PDF';
     }
-  }
-
-  async function furtherCompressPDF(blob) {
-    // This is a placeholder for additional compression techniques
-    // In a real implementation, you might use:
-    // 1. A PDF compression library
-    // 2. WebAssembly-based compression
-    // 3. Or just return the original blob if no additional compression is needed
-    
-    // For this example, we'll just return the original blob
-    return blob;
-    
-    /* In a production environment, you might use something like:
-    try {
-      const pdf = await PDFLib.PDFDocument.load(await blob.arrayBuffer());
-      // Apply compression settings here
-      const compressedBytes = await pdf.save({
-        useObjectStreams: true,
-        // Other compression options...
-      });
-      return new Blob([compressedBytes], { type: 'application/pdf' });
-    } catch (e) {
-      console.warn('Additional compression failed, using original PDF', e);
-      return blob;
-    }
-    */
   }
 </script>
 
