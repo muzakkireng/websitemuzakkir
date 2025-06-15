@@ -3,22 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Calculator</title>
+    <title>Neon Scientific Calculator</title>
     <style>
         :root {
-            --primary: #3498db;
-            --secondary: #2ecc71;
-            --danger: #e74c3c;
-            --dark: #2c3e50;
-            --light: #ecf0f1;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --neon-blue: #00f2ff;
+            --neon-pink: #ff00f2;
+            --neon-purple: #b400ff;
+            --neon-green: #00ff9d;
+            --dark-bg: #0a0a14;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glow: 0 0 15px;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Orbitron', 'Rajdhani', sans-serif;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes hologram {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes buttonGlow {
+            0% { box-shadow: var(--glow) var(--neon-blue); }
+            33% { box-shadow: var(--glow) var(--neon-pink); }
+            66% { box-shadow: var(--glow) var(--neon-green); }
+            100% { box-shadow: var(--glow) var(--neon-blue); }
         }
         
         body {
@@ -26,42 +50,139 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-        
-        .calculator {
-            width: 320px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
+            background: var(--dark-bg);
             overflow: hidden;
         }
         
+        .holographic-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(transparent 95%, rgba(0, 242, 255, 0.1) 95%),
+                linear-gradient(90deg, transparent 95%, rgba(0, 242, 255, 0.1) 95%);
+            background-size: 30px 30px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .calculator {
+            width: 380px;
+            background: rgba(10, 10, 20, 0.8);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            box-shadow: 
+                0 0 30px rgba(0, 242, 255, 0.2),
+                0 0 60px rgba(180, 0, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .calculator::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink), var(--neon-purple), var(--neon-green));
+            background-size: 400%;
+            z-index: -1;
+            border-radius: 22px;
+            animation: hologram 15s infinite, pulse 4s infinite;
+            opacity: 0.7;
+            filter: blur(5px);
+        }
+        
         .display {
-            padding: 20px;
+            padding: 30px 25px;
             text-align: right;
-            background: var(--dark);
             color: white;
+            position: relative;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.2);
         }
         
-        .display .previous-operand {
+        .display::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        .previous-operand {
             min-height: 24px;
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            color: var(--neon-green);
+            opacity: 0.8;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px var(--neon-green);
+            font-family: 'Rajdhani', sans-serif;
         }
         
-        .display .current-operand {
-            font-size: 2.5rem;
-            font-weight: 300;
-            margin-top: 5px;
+        .current-operand {
+            font-size: 3rem;
+            font-weight: 400;
             word-wrap: break-word;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
         }
         
-        .buttons {
+        .tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .tab.active {
+            color: white;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 2px;
+            background: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        .tab:hover {
+            color: white;
+            background: rgba(0, 242, 255, 0.1);
+        }
+        
+        .button-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 1px;
-            background: #ddd;
+            background: rgba(0, 242, 255, 0.05);
         }
         
         button {
@@ -71,96 +192,282 @@
             font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.2s;
-            background: white;
+            background: rgba(10, 10, 20, 0.7);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
         }
         
-        button:hover {
-            background: #f1f1f1;
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 242, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+        
+        button:hover::before {
+            transform: translateX(100%);
         }
         
         button:active {
             transform: scale(0.95);
         }
         
-        .operator {
-            background: var(--primary);
+        .number {
             color: white;
+        }
+        
+        .number:hover {
+            background: rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 10px white;
+        }
+        
+        .operator {
+            color: var(--neon-blue);
+            font-weight: 600;
         }
         
         .operator:hover {
-            background: #2980b9;
+            background: rgba(0, 242, 255, 0.1);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        .function {
+            color: var(--neon-pink);
+        }
+        
+        .function:hover {
+            background: rgba(255, 0, 242, 0.1);
+            text-shadow: 0 0 10px var(--neon-pink);
         }
         
         .equals {
-            background: var(--secondary);
             color: white;
+            background: var(--neon-purple);
+            font-weight: 600;
             grid-column: span 2;
+            animation: buttonGlow 6s infinite;
         }
         
         .equals:hover {
-            background: #27ae60;
+            background: var(--neon-purple);
+            filter: brightness(1.2);
         }
         
         .clear, .delete {
-            background: var(--danger);
             color: white;
+            background: rgba(255, 0, 0, 0.3);
         }
         
         .clear:hover, .delete:hover {
-            background: #c0392b;
+            background: rgba(255, 0, 0, 0.4);
+            text-shadow: 0 0 10px #ff0000;
         }
         
         .span-2 {
             grid-column: span 2;
         }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .calculator-brand {
+            position: absolute;
+            top: 15px;
+            left: 25px;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            opacity: 0.7;
+        }
+        
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 5s infinite ease-in-out;
+        }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="holographic-lines"></div>
+    <div class="floating-particles" id="particles"></div>
+    
     <div class="calculator">
         <div class="display">
+            <div class="calculator-brand">QUANTUM CALC</div>
             <div class="previous-operand" id="previous-operand"></div>
             <div class="current-operand" id="current-operand">0</div>
         </div>
-        <div class="buttons">
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('basic')">BASIC</div>
+            <div class="tab" onclick="switchTab('scientific')">SCI</div>
+            <div class="tab" onclick="switchTab('advanced')">ADV</div>
+        </div>
+        
+        <!-- Basic Operations -->
+        <div class="button-grid" id="basic-buttons">
             <button class="clear span-2" onclick="clearAll()">AC</button>
             <button class="delete" onclick="deleteLast()">DEL</button>
-            <button class="operator" onclick="appendOperator('/')">÷</button>
+            <button class="operator" onclick="appendOperator('/')">/</button>
             
-            <button onclick="appendNumber('7')">7</button>
-            <button onclick="appendNumber('8')">8</button>
-            <button onclick="appendNumber('9')">9</button>
+            <button class="function" onclick="appendFunction('Math.sqrt(')">√</button>
+            <button class="number" onclick="appendNumber('7')">7</button>
+            <button class="number" onclick="appendNumber('8')">8</button>
+            <button class="number" onclick="appendNumber('9')">9</button>
             <button class="operator" onclick="appendOperator('*')">×</button>
             
-            <button onclick="appendNumber('4')">4</button>
-            <button onclick="appendNumber('5')">5</button>
-            <button onclick="appendNumber('6')">6</button>
+            <button class="function" onclick="appendFunction('Math.pow(')">x^y</button>
+            <button class="number" onclick="appendNumber('4')">4</button>
+            <button class="number" onclick="appendNumber('5')">5</button>
+            <button class="number" onclick="appendNumber('6')">6</button>
             <button class="operator" onclick="appendOperator('-')">-</button>
             
-            <button onclick="appendNumber('1')">1</button>
-            <button onclick="appendNumber('2')">2</button>
-            <button onclick="appendNumber('3')">3</button>
+            <button class="function" onclick="appendNumber('Math.PI')">π</button>
+            <button class="number" onclick="appendNumber('1')">1</button>
+            <button class="number" onclick="appendNumber('2')">2</button>
+            <button class="number" onclick="appendNumber('3')">3</button>
             <button class="operator" onclick="appendOperator('+')">+</button>
             
-            <button onclick="appendNumber('0')">0</button>
-            <button onclick="appendNumber('.')">.</button>
-            <button class="equals span-2" onclick="calculate()">=</button>
+            <button class="function" onclick="appendFunction('Math.log(')">ln</button>
+            <button class="function" onclick="appendNumber('(')">(</button>
+            <button class="number" onclick="appendNumber('0')">0</button>
+            <button class="function" onclick="appendNumber(')')">)</button>
+            <button class="equals" onclick="calculate()">=</button>
+        </div>
+        
+        <!-- Scientific Operations -->
+        <div class="button-grid hidden" id="scientific-buttons">
+            <button class="clear span-2" onclick="clearAll()">AC</button>
+            <button class="delete" onclick="deleteLast()">DEL</button>
+            <button class="operator" onclick="appendOperator('/')">/</button>
+            
+            <button class="function" onclick="appendFunction('Math.sin(')">sin</button>
+            <button class="function" onclick="appendFunction('Math.cos(')">cos</button>
+            <button class="function" onclick="appendFunction('Math.tan(')">tan</button>
+            <button class="operator" onclick="appendOperator('*')">×</button>
+            
+            <button class="function" onclick="appendFunction('Math.asin(')">sin⁻¹</button>
+            <button class="function" onclick="appendFunction('Math.acos(')">cos⁻¹</button>
+            <button class="function" onclick="appendFunction('Math.atan(')">tan⁻¹</button>
+            <button class="operator" onclick="appendOperator('-')">-</button>
+            
+            <button class="function" onclick="appendFunction('Math.log10(')">log</button>
+            <button class="function" onclick="appendFunction('Math.exp(')">e^x</button>
+            <button class="function" onclick="appendNumber('Math.E')">e</button>
+            <button class="operator" onclick="appendOperator('+')">+</button>
+            
+            <button class="function" onclick="appendFunction('Math.pow(10,')">10^x</button>
+            <button class="function" onclick="appendFunction('Math.pow(')">x^y</button>
+            <button class="function" onclick="appendNumber('(')">(</button>
+            <button class="function" onclick="appendNumber(')')">)</button>
+            <button class="equals" onclick="calculate()">=</button>
+        </div>
+        
+        <!-- Advanced Operations -->
+        <div class="button-grid hidden" id="advanced-buttons">
+            <button class="clear span-2" onclick="clearAll()">AC</button>
+            <button class="delete" onclick="deleteLast()">DEL</button>
+            <button class="operator" onclick="appendOperator('/')">/</button>
+            
+            <button class="function" onclick="appendFunction('factorial(')">x!</button>
+            <button class="function" onclick="appendFunction('Math.abs(')">abs</button>
+            <button class="function" onclick="appendFunction('Math.floor(')">floor</button>
+            <button class="operator" onclick="appendOperator('*')">×</button>
+            
+            <button class="function" onclick="appendFunction('Math.ceil(')">ceil</button>
+            <button class="function" onclick="appendFunction('Math.round(')">round</button>
+            <button class="function" onclick="appendFunction('Math.random()')">rand</button>
+            <button class="operator" onclick="appendOperator('-')">-</button>
+            
+            <button class="function" onclick="appendFunction('Math.sqrt(')">√</button>
+            <button class="function" onclick="appendFunction('Math.cbrt(')">∛</button>
+            <button class="function" onclick="appendFunction('Math.pow(')">x^y</button>
+            <button class="operator" onclick="appendOperator('+')">+</button>
+            
+            <button class="function" onclick="appendFunction('Math.log2(')">log₂</button>
+            <button class="function" onclick="appendFunction('Math.log(')">ln</button>
+            <button class="function" onclick="appendNumber('(')">(</button>
+            <button class="function" onclick="appendNumber(')')">)</button>
+            <button class="equals" onclick="calculate()">=</button>
         </div>
     </div>
 
     <script>
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.width = `${1 + Math.random() * 3}px`;
+            particle.style.height = particle.style.width;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            particle.style.animationDuration = `${3 + Math.random() * 7}s`;
+            particle.style.opacity = Math.random() * 0.5;
+            particlesContainer.appendChild(particle);
+        }
+
+        // Calculator state
         let currentOperand = '0';
         let previousOperand = '';
         let operation = undefined;
         let resetScreen = false;
+        let currentTab = 'basic';
 
+        // DOM elements
         const currentOperandElement = document.getElementById('current-operand');
         const previousOperandElement = document.getElementById('previous-operand');
+        const tabs = document.querySelectorAll('.tab');
+        const buttonGrids = {
+            'basic': document.getElementById('basic-buttons'),
+            'scientific': document.getElementById('scientific-buttons'),
+            'advanced': document.getElementById('advanced-buttons')
+        };
 
+        // Switch between tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            Object.values(buttonGrids).forEach(grid => grid.classList.add('hidden'));
+            buttonGrids[tab].classList.remove('hidden');
+        }
+
+        // Update display
         function updateDisplay() {
             currentOperandElement.innerText = currentOperand;
             previousOperandElement.innerText = previousOperand;
         }
 
+        // Append number or decimal
         function appendNumber(number) {
             if (currentOperand === '0' || resetScreen) {
                 currentOperand = '';
@@ -171,6 +478,7 @@
             updateDisplay();
         }
 
+        // Append operator
         function appendOperator(op) {
             if (currentOperand === '') return;
             if (previousOperand !== '') {
@@ -182,36 +490,80 @@
             updateDisplay();
         }
 
-        function calculate() {
-            let computation;
-            const prev = parseFloat(previousOperand);
-            const current = parseFloat(currentOperand);
-            if (isNaN(prev) || isNaN(current)) return;
-            
-            switch (operation) {
-                case '+':
-                    computation = prev + current;
-                    break;
-                case '-':
-                    computation = prev - current;
-                    break;
-                case '*':
-                    computation = prev * current;
-                    break;
-                case '/':
-                    computation = prev / current;
-                    break;
-                default:
-                    return;
+        // Append function
+        function appendFunction(func) {
+            if (resetScreen) {
+                currentOperand = '';
+                resetScreen = false;
             }
             
-            currentOperand = computation.toString();
-            operation = undefined;
-            previousOperand = '';
-            resetScreen = true;
+            if (func.endsWith('(')) {
+                currentOperand += func;
+            } else if (func === 'Math.random()') {
+                currentOperand = Math.random().toString();
+            } else {
+                currentOperand += func;
+            }
             updateDisplay();
         }
 
+        // Calculate result
+        function calculate() {
+            let computation;
+            let expression = '';
+            
+            if (operation) {
+                expression = `${previousOperand} ${currentOperand}`;
+            } else if (currentOperand.includes('(')) {
+                expression = currentOperand;
+                // Close any unclosed parentheses
+                const open = (expression.match(/\(/g) || []).length;
+                const close = (expression.match(/\)/g) || []).length;
+                for (let i = 0; i < open - close; i++) {
+                    expression += ')';
+                }
+            } else {
+                expression = currentOperand;
+            }
+            
+            try {
+                // Replace visual operators with JavaScript operators
+                expression = expression.replace(/×/g, '*').replace(/÷/g, '/');
+                
+                // Handle special cases like x^y
+                expression = expression.replace(/(\d+)\^(\d+)/g, 'Math.pow($1,$2)');
+                
+                computation = eval(expression);
+                
+                // Handle very large/small numbers
+                if (Math.abs(computation) > 1e12 || Math.abs(computation) < 1e-6) {
+                    currentOperand = computation.toExponential(6);
+                } else {
+                    currentOperand = parseFloat(computation.toFixed(10)).toString();
+                }
+                
+                operation = undefined;
+                previousOperand = '';
+                resetScreen = true;
+                updateDisplay();
+            } catch (error) {
+                currentOperand = 'Error';
+                updateDisplay();
+            }
+        }
+
+        // Factorial function
+        function factorial(n) {
+            if (n < 0) return NaN;
+            if (n === 0 || n === 1) return 1;
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        // Clear all
         function clearAll() {
             currentOperand = '0';
             previousOperand = '';
@@ -219,6 +571,7 @@
             updateDisplay();
         }
 
+        // Delete last character
         function deleteLast() {
             if (currentOperand.length === 1) {
                 currentOperand = '0';
@@ -228,7 +581,7 @@
             updateDisplay();
         }
 
-        // Initialize display
+        // Initialize
         updateDisplay();
     </script>
 </body>
