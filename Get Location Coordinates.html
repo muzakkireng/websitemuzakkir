@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Get precise location coordinates including latitude and longitude. Find your exact position with our geolocation tool.">
-    <meta name="keywords" content="location coordinates, latitude, longitude, geolocation, gps coordinates">
-    <title>Precision Location Finder | Coordinates Only</title>
+    <title>GeoPinpoint | Location Finder</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --dark: #14213d;
+            --light: #f8f9fa;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -18,63 +26,90 @@
         
         body {
             min-height: 100vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), 
-                        url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #fff;
+            background: linear-gradient(135deg, #1a2a6c, #2d388a, #4a569d);
+            color: var(--light);
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated background elements */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: -1;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
         }
         
         .container {
             max-width: 1200px;
             width: 100%;
             margin: 0 auto;
+            z-index: 1;
         }
         
         header {
             text-align: center;
             padding: 40px 0 20px;
             width: 100%;
+            animation: fadeInDown 1s ease;
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .logo {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
             gap: 15px;
             margin-bottom: 15px;
         }
         
-        .logo i {
-            font-size: 2.8rem;
-            color: #4CAF50;
-            background: rgba(255, 255, 255, 0.1);
-            width: 80px;
-            height: 80px;
+        .logo-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            border: 2px solid #4CAF50;
+            font-size: 3.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
         }
         
         h1 {
-            font-size: 2.8rem;
+            font-size: 3.2rem;
             margin-bottom: 10px;
-            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            background: linear-gradient(to right, #4cc9f0, #4361ee);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-weight: 800;
         }
         
         .tagline {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             opacity: 0.9;
             margin-bottom: 30px;
             max-width: 700px;
@@ -90,48 +125,82 @@
         }
         
         .card {
-            background: rgba(25, 25, 35, 0.85);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             flex: 1;
             min-width: 300px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         
         .card-title {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 25px;
-            font-size: 1.5rem;
-            color: #4CAF50;
+            font-size: 1.6rem;
+            color: var(--accent);
         }
         
         .card-title i {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
+            background: rgba(76, 201, 240, 0.15);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
         }
         
         .coordinates-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
             margin: 20px 0;
         }
         
         .coordinates-box {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 30px;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(60, 53, 201, 0.2));
+            border-radius: 15px;
+            padding: 30px 20px;
             text-align: center;
-            border: 1px solid rgba(76, 175, 80, 0.3);
             position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(76, 201, 240, 0.2);
+        }
+        
+        .coordinates-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+        
+        .coordinates-box:hover::before {
+            left: 100%;
         }
         
         .coordinates-label {
@@ -140,88 +209,113 @@
             margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #4CAF50;
+            color: var(--accent);
+            font-weight: 600;
         }
         
         .coordinates {
-            font-size: 1.8rem;
-            font-weight: bold;
+            font-size: 2rem;
+            font-weight: 700;
             margin: 10px 0;
             letter-spacing: 1px;
             font-family: 'Courier New', monospace;
-            color: #fff;
-            min-height: 50px;
+            color: var(--light);
+            min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
             gap: 10px;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
         }
         
         .accuracy-box {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 20px;
+            background: rgba(20, 33, 61, 0.4);
+            border-radius: 15px;
+            padding: 25px;
             text-align: center;
-            border: 1px solid rgba(76, 175, 80, 0.3);
             display: flex;
             flex-direction: column;
             align-items: center;
+            border: 1px solid rgba(76, 201, 240, 0.2);
         }
         
         .accuracy-label {
-            font-size: 1rem;
-            opacity: 0.8;
-            margin-bottom: 5px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
         
         .accuracy-value {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #4CAF50;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 15px;
         }
         
         .accuracy-meter {
             width: 100%;
-            height: 10px;
+            height: 12px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            margin-top: 10px;
+            border-radius: 10px;
             overflow: hidden;
             position: relative;
         }
         
         .accuracy-fill {
             height: 100%;
-            background: linear-gradient(to right, #4CAF50, #2E7D32);
-            border-radius: 5px;
-            transition: width 0.5s ease;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            border-radius: 10px;
+            transition: width 1s ease;
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
         }
         
         .btn {
-            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            padding: 16px 40px;
-            font-size: 1.1rem;
-            border-radius: 50px;
+            padding: 18px 45px;
+            font-size: 1.2rem;
+            border-radius: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
             margin: 20px auto 0;
             width: 100%;
-            max-width: 300px;
+            max-width: 350px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
-            background: linear-gradient(to right, #43a047, #2E7D32);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(67, 97, 238, 0.6);
         }
         
         .btn:active {
@@ -237,9 +331,9 @@
         .spinner {
             border: 4px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            border-top: 4px solid #4CAF50;
-            width: 40px;
-            height: 40px;
+            border-top: 4px solid var(--accent);
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
             margin: 0 auto 15px;
         }
@@ -250,14 +344,15 @@
         }
         
         .error {
-            color: #ff6b6b;
-            background: rgba(255, 0, 0, 0.1);
-            padding: 15px;
-            border-radius: 8px;
+            color: #ff9e9e;
+            background: rgba(231, 76, 60, 0.15);
+            padding: 18px;
+            border-radius: 12px;
             margin-top: 20px;
             display: none;
-            border-left: 4px solid #ff6b6b;
+            border-left: 4px solid var(--danger);
             text-align: center;
+            font-weight: 500;
         }
         
         .features {
@@ -271,26 +366,40 @@
             display: flex;
             gap: 15px;
             align-items: flex-start;
-            padding: 15px;
+            padding: 20px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            background: rgba(67, 97, 238, 0.15);
         }
         
         .feature i {
-            color: #4CAF50;
-            font-size: 1.8rem;
-            min-width: 40px;
+            color: var(--accent);
+            font-size: 2rem;
+            min-width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(76, 201, 240, 0.1);
+            border-radius: 12px;
         }
         
         .feature-text h3 {
-            margin-bottom: 5px;
-            font-size: 1.2rem;
-            color: #4CAF50;
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+            color: var(--accent);
+            font-weight: 600;
         }
         
         .feature-text p {
-            opacity: 0.8;
-            font-size: 0.95rem;
+            opacity: 0.9;
+            font-size: 1rem;
+            line-height: 1.6;
         }
         
         footer {
@@ -300,54 +409,59 @@
             max-width: 1200px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             margin-top: auto;
-            font-size: 0.9rem;
-            opacity: 0.7;
+            font-size: 0.95rem;
+            opacity: 0.8;
         }
         
         .map-container {
             margin-top: 30px;
-            height: 300px;
-            border-radius: 15px;
+            height: 350px;
+            border-radius: 20px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
             display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         
         #map {
             width: 100%;
             height: 100%;
+            border-radius: 20px;
         }
         
         .copy-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
             background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: #4CAF50;
-            border-radius: 5px;
-            padding: 5px 10px;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            border-radius: 10px;
+            padding: 10px 20px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
         }
         
         .copy-btn:hover {
-            background: rgba(76, 175, 80, 0.2);
+            background: rgba(76, 201, 240, 0.2);
+            transform: translateY(-2px);
         }
         
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 30px;
+            right: 30px;
             background: rgba(25, 25, 35, 0.95);
-            color: #4CAF50;
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            color: var(--accent);
+            padding: 18px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             display: none;
             z-index: 1000;
-            border-left: 4px solid #4CAF50;
-            animation: slideIn 0.3s ease, fadeOut 0.5s ease 2s forwards;
+            border-left: 4px solid var(--accent);
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOut 0.5s ease 2.5s forwards;
         }
         
         @keyframes slideIn {
@@ -360,39 +474,95 @@
             to { opacity: 0; }
         }
         
+        .waves {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 15vh;
+            min-height: 100px;
+            max-height: 150px;
+            z-index: 0;
+        }
+        
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" fill="rgba(255, 255, 255, 0.1)"><path d="M0 0v46.29c47.79 22.2 103.59 32.17 158 28 70.36-5.37 136.33-33.31 206.8-37.5 73.84-4.36 147.54 16.88 218.2 35.26 69.27 18 138.3 24.88 209.4 13.08 36.15-6 69.85-17.84 104.45-29.34C989.49 25 1113-14.29 1200 52.47V0z" /></svg>');
+            background-size: 1200px 100px;
+        }
+        
+        .wave-1 {
+            animation: wave 30s linear infinite;
+            opacity: 0.8;
+        }
+        
+        .wave-2 {
+            animation: wave 20s linear -5s infinite;
+            opacity: 0.5;
+        }
+        
+        .wave-3 {
+            animation: wave 15s linear -2s infinite;
+            opacity: 0.2;
+        }
+        
+        @keyframes wave {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1200px; }
+        }
+        
         @media (max-width: 768px) {
             .content-container {
                 flex-direction: column;
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size: 2.4rem;
             }
             
             .card {
                 min-width: 100%;
             }
             
-            .logo i {
-                width: 70px;
-                height: 70px;
-                font-size: 2.2rem;
+            .logo-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2.8rem;
             }
             
             .coordinates {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Animated background bubbles -->
+    <div class="bubble" style="width: 80px; height: 80px; top: 10%; left: 10%;"></div>
+    <div class="bubble" style="width: 120px; height: 120px; top: 70%; left: 80%;"></div>
+    <div class="bubble" style="width: 60px; height: 60px; top: 40%; left: 85%;"></div>
+    <div class="bubble" style="width: 90px; height: 90px; top: 20%; left: 75%;"></div>
+    
+    <!-- Wave divider -->
+    <div class="waves">
+        <div class="wave wave-1"></div>
+        <div class="wave wave-2"></div>
+        <div class="wave wave-3"></div>
+    </div>
+    
     <div class="container">
         <header>
             <div class="logo">
-                <i class="fas fa-map-marker-alt"></i>
+                <div class="logo-icon">
+                    <i class="fas fa-location-dot"></i>
+                </div>
                 <div>
-                    <h1>Precision Location Finder</h1>
-                    <p class="tagline">Get precise coordinates with accuracy measurement. Discover your exact location with our powerful geolocation tool.</p>
+                    <h1>GeoPinpoint</h1>
+                    <p class="tagline">Discover your precise location with our advanced geolocation technology. Get your coordinates instantly.</p>
                 </div>
             </div>
         </header>
@@ -400,19 +570,16 @@
         <div class="content-container">
             <div class="card">
                 <div class="card-title">
-                    <i class="fas fa-location-dot"></i>
-                    <h2>Your Location Coordinates</h2>
+                    <i class="fas fa-crosshairs"></i>
+                    <h2>Pinpoint Your Location</h2>
                 </div>
                 
-                <p>Click the button below to retrieve your current coordinates. We'll ask for your permission to access your location.</p>
+                <p>Click the button below to retrieve your exact coordinates. We'll ask for your permission to access your location.</p>
                 
                 <div class="coordinates-container">
                     <div class="coordinates-box">
                         <div class="coordinates-label">Geographic Coordinates</div>
                         <div class="coordinates" id="coordinates">-</div>
-                        <button class="copy-btn" onclick="copyCoordinates()">
-                            <i class="fas fa-copy"></i> Copy
-                        </button>
                     </div>
                     
                     <div class="accuracy-box">
@@ -425,13 +592,17 @@
                 </div>
                 
                 <button class="btn" onclick="getLocation()">
-                    <i class="fas fa-map-pin"></i>
-                    Detect My Location
+                    <i class="fas fa-satellite"></i>
+                    <span>Detect My Location</span>
+                </button>
+                
+                <button class="copy-btn" onclick="copyCoordinates()">
+                    <i class="fas fa-copy"></i> Copy Coordinates
                 </button>
                 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>Detecting your location...</p>
+                    <p>Locating your position...</p>
                 </div>
                 
                 <div class="error" id="error"></div>
@@ -439,53 +610,39 @@
             
             <div class="card">
                 <div class="card-title">
-                    <i class="fas fa-info-circle"></i>
-                    <h2>About This Tool</h2>
+                    <i class="fas fa-rocket"></i>
+                    <h2>Advanced Features</h2>
                 </div>
                 
-                <p>Our Precision Location Finder uses the Geolocation API to determine your precise coordinates. Your position is calculated using GPS, Wi-Fi positioning, and cell tower triangulation.</p>
+                <p>GeoPinpoint uses cutting-edge technology to provide the most accurate location data possible.</p>
                 
                 <div class="features">
+
+                    
                     <div class="feature">
-                        <i class="fas fa-bullseye"></i>
+                        <i class="fas fa-shield-alt"></i>
                         <div class="feature-text">
-                            <h3>High Precision</h3>
-                            <p>Get accurate latitude and longitude coordinates with detailed accuracy measurement.</p>
+                            <h3>Privacy First</h3>
+                            <p>Your location data is processed locally and never stored on our servers.</p>
                         </div>
                     </div>
                     
                     <div class="feature">
-                        <i class="fas fa-tachometer-alt"></i>
+                        <i class="fas fa-globe-americas"></i>
                         <div class="feature-text">
-                            <h3>Accuracy Meter</h3>
-                            <p>Visual representation shows how precise your location measurement is.</p>
+                            <h3>Global Coverage</h3>
+                            <p>Works anywhere in the world with GPS, Wi-Fi, or cellular data.</p>
                         </div>
                     </div>
                     
                     <div class="feature">
-                        <i class="fas fa-map-marked-alt"></i>
+                        <i class="fas fa-bolt"></i>
                         <div class="feature-text">
-                            <h3>Map Visualization</h3>
-                            <p>See your approximate location displayed on an interactive map.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="feature">
-                        <i class="fas fa-clipboard"></i>
-                        <div class="feature-text">
-                            <h3>Copy Coordinates</h3>
-                            <p>Easily copy coordinates to clipboard for use in other applications.</p>
+                            <h3>Lightning Fast</h3>
+                            <p>Get your location data in under 2 seconds with our optimized engine.</p>
                         </div>
                     </div>
                 </div>
-                
-                <h3 style="margin-top: 25px; color: #4CAF50;">How It Works:</h3>
-                <ol style="margin: 15px 0 15px 20px; line-height: 1.8; padding-right: 15px;">
-                    <li>Click the "Detect My Location" button</li>
-                    <li>Allow location access when prompted by your browser</li>
-                    <li>View your precise coordinates and accuracy measurement</li>
-                    <li>See your approximate location on the map</li>
-                </ol>
                 
                 <div class="map-container" id="map-container">
                     <div id="map"></div>
@@ -494,8 +651,8 @@
         </div>
         
         <footer>
-            <p>&copy; 2023 Precision Location Finder | All Rights Reserved</p>
-            <p>This tool uses browser geolocation services to determine your location. Your data is processed locally and never stored.</p>
+            <p>&copy; 2023 GeoPinpoint | Precision Location Services</p>
+            <p>Your privacy is our priority - location data is never stored or shared</p>
         </footer>
     </div>
     
@@ -508,6 +665,22 @@
     <script>
         // Initialize map variable
         let map;
+        
+        // Create animated background bubbles
+        function createBubbles() {
+            const body = document.querySelector('body');
+            for (let i = 0; i < 8; i++) {
+                const size = Math.random() * 80 + 40;
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                body.appendChild(bubble);
+            }
+        }
         
         function getLocation() {
             const display = document.getElementById("coordinates");
@@ -551,7 +724,7 @@
                     loading.style.display = 'none';
                     
                     // Show map
-                    showMap(latitude, longitude);
+                    showMap(latitude, longitude, acc);
                 },
                 error => {
                     loading.style.display = 'none';
@@ -566,13 +739,13 @@
                 },
                 {
                     enableHighAccuracy: true,
-                    timeout: 10000,
+                    timeout: 8000,
                     maximumAge: 0
                 }
             );
         }
         
-        function showMap(lat, lng) {
+        function showMap(lat, lng, accuracy) {
             const mapContainer = document.getElementById("map-container");
             mapContainer.style.display = 'block';
             
@@ -589,22 +762,31 @@
             
             // Clear previous markers
             map.eachLayer(layer => {
-                if (layer instanceof L.Marker) {
+                if (layer instanceof L.Marker || layer instanceof L.Circle) {
                     map.removeLayer(layer);
                 }
             });
             
             // Add marker
-            L.marker([lat, lng]).addTo(map)
-                .bindPopup('Your approximate location')
-                .openPopup();
+            const marker = L.marker([lat, lng]).addTo(map);
+            marker.bindPopup('Your location').openPopup();
+            
+            // Add pulsing animation to marker
+            const pulsingIcon = L.divIcon({
+                className: 'pulsing-icon',
+                html: `<div class="pulse-container"><div class="pulse-box"></div><div class="pulse-mark"></div></div>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+            
+            marker.setIcon(pulsingIcon);
                 
             // Add circle to show accuracy radius
             L.circle([lat, lng], {
-                color: '#4CAF50',
-                fillColor: 'rgba(76, 175, 80, 0.2)',
+                color: '#4cc9f0',
+                fillColor: 'rgba(76, 201, 240, 0.2)',
                 fillOpacity: 0.3,
-                radius: 50 // Fixed radius for visual reference
+                radius: accuracy
             }).addTo(map);
         }
         
@@ -625,9 +807,50 @@
             }
         }
         
-        // Initialize map container
+        // Initialize when page loads
         window.onload = function() {
             document.getElementById('map-container').style.display = 'none';
+            createBubbles();
+            
+            // Add custom pulsing marker styles
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .pulse-container {
+                    position: relative;
+                    width: 30px;
+                    height: 30px;
+                }
+                
+                .pulse-box {
+                    width: 100%;
+                    height: 100%;
+                    background: #4361ee;
+                    border-radius: 50%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7);
+                    animation: pulse 1.5s infinite;
+                }
+                
+                .pulse-mark {
+                    width: 12px;
+                    height: 12px;
+                    background: #4cc9f0;
+                    border-radius: 50%;
+                    position: absolute;
+                    top: 9px;
+                    left: 9px;
+                    z-index: 10;
+                }
+                
+                @keyframes pulse {
+                    0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
+                    70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); }
+                    100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+                }
+            `;
+            document.head.appendChild(style);
         }
     </script>
 </body>
