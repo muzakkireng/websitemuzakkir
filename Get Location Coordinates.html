@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Get your precise location coordinates including country, region, and city. Find your latitude and longitude with our easy-to-use location finder tool.">
-    <meta name="keywords" content="location coordinates, latitude, longitude, geolocation, country, region, city, gps coordinates">
-    <title>Advanced Location Finder | Coordinates + Country/Region/City</title>
+    <meta name="description" content="Get precise location coordinates including latitude and longitude. Find your exact position with our geolocation tool.">
+    <meta name="keywords" content="location coordinates, latitude, longitude, geolocation, gps coordinates">
+    <title>Precision Location Finder | Coordinates Only</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -118,61 +118,84 @@
             font-size: 1.8rem;
         }
         
-        .location-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        .coordinates-container {
+            display: flex;
+            flex-direction: column;
             gap: 15px;
             margin: 20px 0;
-        }
-        
-        .info-box {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid rgba(76, 175, 80, 0.3);
-        }
-        
-        .info-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .info-value {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #4CAF50;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .coordinates-box {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 12px;
-            padding: 25px;
+            padding: 30px;
             text-align: center;
-            margin-top: 20px;
             border: 1px solid rgba(76, 175, 80, 0.3);
+            position: relative;
+        }
+        
+        .coordinates-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #4CAF50;
         }
         
         .coordinates {
             font-size: 1.8rem;
             font-weight: bold;
-            margin: 15px 0;
+            margin: 10px 0;
             letter-spacing: 1px;
             font-family: 'Courier New', monospace;
             color: #fff;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
-        .accuracy {
-            font-size: 0.95rem;
+        .accuracy-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .accuracy-label {
+            font-size: 1rem;
             opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .accuracy-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #4CAF50;
+        }
+        
+        .accuracy-meter {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
             margin-top: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .accuracy-fill {
+            height: 100%;
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            border-radius: 5px;
+            transition: width 0.5s ease;
         }
         
         .btn {
@@ -295,6 +318,48 @@
             height: 100%;
         }
         
+        .copy-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #4CAF50;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(76, 175, 80, 0.2);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(25, 25, 35, 0.95);
+            color: #4CAF50;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+            border-left: 4px solid #4CAF50;
+            animation: slideIn 0.3s ease, fadeOut 0.5s ease 2s forwards;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
         @media (max-width: 768px) {
             .content-container {
                 flex-direction: column;
@@ -313,6 +378,10 @@
                 height: 70px;
                 font-size: 2.2rem;
             }
+            
+            .coordinates {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -322,8 +391,8 @@
             <div class="logo">
                 <i class="fas fa-map-marker-alt"></i>
                 <div>
-                    <h1>Advanced Location Finder</h1>
-                    <p class="tagline">Get precise coordinates with country, region, and city information. Discover your exact location with our powerful geolocation tool.</p>
+                    <h1>Precision Location Finder</h1>
+                    <p class="tagline">Get precise coordinates with accuracy measurement. Discover your exact location with our powerful geolocation tool.</p>
                 </div>
             </div>
         </header>
@@ -332,32 +401,27 @@
             <div class="card">
                 <div class="card-title">
                     <i class="fas fa-location-dot"></i>
-                    <h2>Your Location Details</h2>
+                    <h2>Your Location Coordinates</h2>
                 </div>
                 
-                <p>Click the button below to retrieve your current location information. We'll ask for your permission to access your location.</p>
+                <p>Click the button below to retrieve your current coordinates. We'll ask for your permission to access your location.</p>
                 
-                <div class="location-info">
-                    <div class="info-box">
-                        <div class="info-label">Country</div>
-                        <div class="info-value" id="country">-</div>
+                <div class="coordinates-container">
+                    <div class="coordinates-box">
+                        <div class="coordinates-label">Geographic Coordinates</div>
+                        <div class="coordinates" id="coordinates">-</div>
+                        <button class="copy-btn" onclick="copyCoordinates()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
                     </div>
                     
-                    <div class="info-box">
-                        <div class="info-label">Region</div>
-                        <div class="info-value" id="region">-</div>
+                    <div class="accuracy-box">
+                        <div class="accuracy-label">Accuracy Measurement</div>
+                        <div class="accuracy-value" id="accuracy">-</div>
+                        <div class="accuracy-meter">
+                            <div class="accuracy-fill" id="accuracy-fill"></div>
+                        </div>
                     </div>
-                    
-                    <div class="info-box">
-                        <div class="info-label">City</div>
-                        <div class="info-value" id="city">-</div>
-                    </div>
-                </div>
-                
-                <div class="coordinates-box">
-                    <p>Geographic Coordinates:</p>
-                    <div class="coordinates" id="coordinates">-</div>
-                    <div class="accuracy" id="accuracy"></div>
                 </div>
                 
                 <button class="btn" onclick="getLocation()">
@@ -379,38 +443,38 @@
                     <h2>About This Tool</h2>
                 </div>
                 
-                <p>Our Advanced Location Finder uses the Geolocation API to determine your precise location including country, region, and city. Your coordinates are calculated using GPS, Wi-Fi positioning, and cell tower triangulation.</p>
+                <p>Our Precision Location Finder uses the Geolocation API to determine your precise coordinates. Your position is calculated using GPS, Wi-Fi positioning, and cell tower triangulation.</p>
                 
                 <div class="features">
                     <div class="feature">
-                        <i class="fas fa-globe-americas"></i>
+                        <i class="fas fa-bullseye"></i>
                         <div class="feature-text">
-                            <h3>Country Detection</h3>
-                            <p>Identifies your current country based on your precise location coordinates.</p>
+                            <h3>High Precision</h3>
+                            <p>Get accurate latitude and longitude coordinates with detailed accuracy measurement.</p>
                         </div>
                     </div>
                     
                     <div class="feature">
-                        <i class="fas fa-map"></i>
+                        <i class="fas fa-tachometer-alt"></i>
                         <div class="feature-text">
-                            <h3>Region & State</h3>
-                            <p>Shows your region, state, or province information for better location context.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="feature">
-                        <i class="fas fa-city"></i>
-                        <div class="feature-text">
-                            <h3>City Information</h3>
-                            <p>Detects your nearest city based on your current geographical position.</p>
+                            <h3>Accuracy Meter</h3>
+                            <p>Visual representation shows how precise your location measurement is.</p>
                         </div>
                     </div>
                     
                     <div class="feature">
                         <i class="fas fa-map-marked-alt"></i>
                         <div class="feature-text">
-                            <h3>Precise Coordinates</h3>
-                            <p>Provides latitude and longitude with accuracy measurement in meters.</p>
+                            <h3>Map Visualization</h3>
+                            <p>See your approximate location displayed on an interactive map.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <i class="fas fa-clipboard"></i>
+                        <div class="feature-text">
+                            <h3>Copy Coordinates</h3>
+                            <p>Easily copy coordinates to clipboard for use in other applications.</p>
                         </div>
                     </div>
                 </div>
@@ -419,7 +483,7 @@
                 <ol style="margin: 15px 0 15px 20px; line-height: 1.8; padding-right: 15px;">
                     <li>Click the "Detect My Location" button</li>
                     <li>Allow location access when prompted by your browser</li>
-                    <li>View your country, region, city, and precise coordinates</li>
+                    <li>View your precise coordinates and accuracy measurement</li>
                     <li>See your approximate location on the map</li>
                 </ol>
                 
@@ -430,10 +494,12 @@
         </div>
         
         <footer>
-            <p>&copy; 2023 Advanced Location Finder | All Rights Reserved</p>
+            <p>&copy; 2023 Precision Location Finder | All Rights Reserved</p>
             <p>This tool uses browser geolocation services to determine your location. Your data is processed locally and never stored.</p>
         </footer>
     </div>
+    
+    <div class="notification" id="notification">Coordinates copied to clipboard!</div>
 
     <!-- Leaflet CSS & JS for mapping -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -444,11 +510,9 @@
         let map;
         
         function getLocation() {
-            const countryEl = document.getElementById("country");
-            const regionEl = document.getElementById("region");
-            const cityEl = document.getElementById("city");
             const display = document.getElementById("coordinates");
             const accuracy = document.getElementById("accuracy");
+            const accuracyFill = document.getElementById("accuracy-fill");
             const errorDiv = document.getElementById("error");
             const loading = document.getElementById("loading");
             const mapContainer = document.getElementById("map-container");
@@ -458,10 +522,8 @@
             errorDiv.innerHTML = '';
             loading.style.display = 'block';
             display.innerHTML = '-';
-            accuracy.innerHTML = '';
-            countryEl.innerHTML = '-';
-            regionEl.innerHTML = '-';
-            cityEl.innerHTML = '-';
+            accuracy.innerHTML = '-';
+            accuracyFill.style.width = '0';
             mapContainer.style.display = 'none';
             
             // Check if geolocation is supported
@@ -474,34 +536,22 @@
             
             // Get current position
             navigator.geolocation.getCurrentPosition(
-                async position => {
-                    const { latitude, longitude } = position.coords;
+                position => {
+                    const { latitude, longitude, accuracy: acc } = position.coords;
                     
                     // Display coordinates
                     display.innerHTML = `${latitude.toFixed(6)}° N, ${longitude.toFixed(6)}° E`;
-                    accuracy.innerHTML = `Accuracy: ${position.coords.accuracy} meters`;
+                    accuracy.innerHTML = `${Math.round(acc)} meters`;
                     
-                    // Simulate reverse geocoding to get country/region/city
-                    // In a real application, you would use a geocoding API here
-                    setTimeout(() => {
-                        // Simulated location data
-                        const locationData = {
-                            country: "United States",
-                            region: "California",
-                            city: "San Francisco"
-                        };
-                        
-                        // Display location info
-                        countryEl.innerHTML = locationData.country;
-                        regionEl.innerHTML = locationData.region;
-                        cityEl.innerHTML = locationData.city;
-                        
-                        // Hide loading
-                        loading.style.display = 'none';
-                        
-                        // Show map
-                        showMap(latitude, longitude);
-                    }, 1500);
+                    // Update accuracy meter (inverse relationship: lower accuracy value is better)
+                    const accuracyPercentage = Math.min(100, Math.max(0, 100 - (acc / 100)));
+                    accuracyFill.style.width = `${accuracyPercentage}%`;
+                    
+                    // Hide loading
+                    loading.style.display = 'none';
+                    
+                    // Show map
+                    showMap(latitude, longitude);
                 },
                 error => {
                     loading.style.display = 'none';
@@ -528,13 +578,13 @@
             
             // Initialize map if not already exists
             if (!map) {
-                map = L.map('map').setView([lat, lng], 13);
+                map = L.map('map').setView([lat, lng], 15);
                 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
             } else {
-                map.setView([lat, lng], 13);
+                map.setView([lat, lng], 15);
             }
             
             // Clear previous markers
@@ -548,6 +598,31 @@
             L.marker([lat, lng]).addTo(map)
                 .bindPopup('Your approximate location')
                 .openPopup();
+                
+            // Add circle to show accuracy radius
+            L.circle([lat, lng], {
+                color: '#4CAF50',
+                fillColor: 'rgba(76, 175, 80, 0.2)',
+                fillOpacity: 0.3,
+                radius: 50 // Fixed radius for visual reference
+            }).addTo(map);
+        }
+        
+        function copyCoordinates() {
+            const coordinates = document.getElementById("coordinates").textContent;
+            if (coordinates !== '-') {
+                navigator.clipboard.writeText(coordinates)
+                    .then(() => {
+                        const notification = document.getElementById("notification");
+                        notification.style.display = 'block';
+                        setTimeout(() => {
+                            notification.style.display = 'none';
+                        }, 2500);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+            }
         }
         
         // Initialize map container
