@@ -3,241 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Location Coordinates</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="description" content="Get your precise location coordinates instantly. Find your latitude and longitude with our easy-to-use location finder tool.">
+    <meta name="keywords" content="location coordinates, latitude, longitude, geolocation, gps coordinates, map coordinates, find my location">
+    <title>Location Coordinates Finder | Get Your Precise Latitude & Longitude</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                        url('https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
             color: #fff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        header {
             text-align: center;
+            padding: 30px 0;
+            width: 100%;
+            max-width: 1200px;
         }
-
-        .container {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            max-width: 600px;
-            width: 90%;
-            backdrop-filter: blur(5px);
-            animation: fadeIn 1s ease-in-out;
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
         }
-
-        h1 {
-            margin-top: 0;
+        
+        .logo i {
             font-size: 2.5rem;
-            margin-bottom: 20px;
             color: #4CAF50;
         }
-
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            line-height: 1.6;
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-
-        button {
-            padding: 12px 30px;
-            background-color: #4CAF50;
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: rgba(25, 25, 35, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            flex: 1;
+            min-width: 300px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            color: #4CAF50;
+        }
+        
+        .card-title i {
+            font-size: 1.8rem;
+        }
+        
+        .location-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .coordinates {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 15px 0;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .accuracy {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
             color: white;
             border: none;
+            padding: 15px 35px;
+            font-size: 1.1rem;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
             transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-top: 20px;
         }
-
-        button:hover {
-            background-color: #45a049;
+        
+        .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
         }
-
-        button:active {
-            transform: translateY(1px);
+        
+        .btn:active {
+            transform: translateY(0);
         }
-
-        #coordinates {
-            margin-top: 30px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
+        
+        .loading {
             display: none;
-            animation: fadeIn 0.5s ease-in-out;
+            margin: 20px auto;
+            text-align: center;
         }
-
-        #coordinates h3 {
-            margin-top: 0;
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #4CAF50;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .feature i {
             color: #4CAF50;
             font-size: 1.5rem;
+            margin-top: 3px;
         }
-
-        .coordinate-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 15px 0;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        
+        .feature-text h3 {
+            margin-bottom: 5px;
+            font-size: 1.2rem;
         }
-
-        .coordinate-label {
-            font-weight: 600;
-            color: #4CAF50;
+        
+        .feature-text p {
+            opacity: 0.8;
+            font-size: 0.95rem;
         }
-
-        .coordinate-value {
-            font-family: 'Courier New', monospace;
-            font-size: 1.1rem;
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            width: 100%;
+            max-width: 1200px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+            font-size: 0.9rem;
+            opacity: 0.7;
         }
-
-        #error {
-            color: #ff6b6b;
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: rgba(255, 0, 0, 0.1);
-            display: none;
-        }
-
-        .compass-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: #4CAF50;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        @media (max-width: 600px) {
+        
+        @media (max-width: 768px) {
             .container {
-                padding: 25px;
+                flex-direction: column;
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+            
+            .card {
+                min-width: 100%;
             }
         }
     </style>
 </head>
 <body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-map-marker-alt"></i>
+            <h1>Location Coordinates Finder</h1>
+        </div>
+        <p class="tagline">Get your precise latitude and longitude in seconds</p>
+    </header>
+    
     <div class="container">
-        <div class="compass-icon">🌍</div>
-        <h1>Discover Your Coordinates</h1>
-        <p>Find out your exact location on Earth by clicking the button below. We'll show you your current latitude and longitude.</p>
-        
-        <button onclick="getLocation()">Locate Me</button>
-        
-        <div id="coordinates">
-            <h3>Your Position</h3>
-            <div class="coordinate-item">
-                <span class="coordinate-label">Latitude:</span>
-                <span class="coordinate-value" id="latitude"></span>
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-location-dot"></i>
+                <h2>Get Your Coordinates</h2>
             </div>
-            <div class="coordinate-item">
-                <span class="coordinate-label">Longitude:</span>
-                <span class="coordinate-value" id="longitude"></span>
+            
+            <p>Click the button below to retrieve your current location coordinates. We'll ask for your permission to access your location.</p>
+            
+            <div class="location-box">
+                <p>Your current coordinates:</p>
+                <div class="coordinates" id="coordinates">-</div>
+                <div class="accuracy" id="accuracy"></div>
             </div>
+            
+            <button class="btn" onclick="getLocation()">
+                <i class="fas fa-map-pin"></i>
+                Get My Location
+            </button>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Detecting your location...</p>
+            </div>
+            
+            <div class="error" id="error"></div>
         </div>
         
-        <div id="error"></div>
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-info-circle"></i>
+                <h2>About This Tool</h2>
+            </div>
+            
+            <p>Our Location Coordinates Finder uses the Geolocation API built into modern browsers to determine your precise location. Your coordinates are calculated using GPS (on mobile devices), Wi-Fi positioning, cell tower triangulation, and IP address location.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-lock"></i>
+                    <div class="feature-text">
+                        <h3>Privacy First</h3>
+                        <p>We never store your location data. All processing happens locally in your browser.</p>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-mobile-alt"></i>
+                    <div class="feature-text">
+                        <h3>Mobile Friendly</h3>
+                        <p>Works perfectly on all devices - smartphones, tablets, and desktops.</p>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <div class="feature-text">
+                        <h3>Instant Results</h3>
+                        <p>Get your coordinates in seconds with just one click.</p>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-globe"></i>
+                    <div class="feature-text">
+                        <h3>Worldwide</h3>
+                        <p>Works anywhere in the world where geolocation services are available.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 25px;">How to Use:</h3>
+            <ol style="margin: 15px 0 15px 20px; line-height: 1.8;">
+                <li>Click the "Get My Location" button</li>
+                <li>Allow location access when prompted by your browser</li>
+                <li>View your precise coordinates in the box above</li>
+            </ol>
+        </div>
     </div>
     
+    <footer>
+        <p>&copy; 2023 Location Coordinates Finder | All Rights Reserved</p>
+        <p>This tool uses browser geolocation services to determine your location coordinates.</p>
+    </footer>
+
     <script>
         function getLocation() {
-            const coordinatesDiv = document.getElementById("coordinates");
+            const display = document.getElementById("coordinates");
+            const accuracy = document.getElementById("accuracy");
             const errorDiv = document.getElementById("error");
-            const button = document.querySelector("button");
+            const loading = document.getElementById("loading");
             
-            // Clear previous results
-            coordinatesDiv.style.display = "none";
-            errorDiv.style.display = "none";
-            errorDiv.textContent = "";
+            // Reset previous state
+            errorDiv.style.display = 'none';
+            errorDiv.innerHTML = '';
+            loading.style.display = 'block';
+            display.innerHTML = '-';
+            accuracy.innerHTML = '';
             
-            // Add loading state to button
-            button.innerHTML = '<span class="loading">Locating...</span>';
-            button.disabled = true;
-            
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    showPosition,
-                    showError,
-                    { enableHighAccuracy: true, timeout: 10000 }
-                );
-            } else {
-                showError({ message: "Geolocation is not supported by this browser." });
+            // Check if geolocation is supported
+            if (!navigator.geolocation) {
+                loading.style.display = 'none';
+                errorDiv.innerHTML = 'Geolocation is not supported by your browser. Please try a modern browser like Chrome, Firefox, or Safari.';
+                errorDiv.style.display = 'block';
+                return;
             }
-        }
-        
-        function showPosition(position) {
-            const button = document.querySelector("button");
-            const latitude = position.coords.latitude.toFixed(6);
-            const longitude = position.coords.longitude.toFixed(6);
             
-            document.getElementById("latitude").textContent = latitude;
-            document.getElementById("longitude").textContent = longitude;
-            
-            document.getElementById("coordinates").style.display = "block";
-            
-            // Reset button
-            button.textContent = "Locate Me Again";
-            button.disabled = false;
-        }
-        
-        function showError(error) {
-            const button = document.querySelector("button");
-            const errorDiv = document.getElementById("error");
-            
-            let errorMessage = "An error occurred while getting your location.";
-            
-            if (error.code) {
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        errorMessage = "Location access was denied. Please enable permissions to use this feature.";
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        errorMessage = "Your location information is currently unavailable.";
-                        break;
-                    case error.TIMEOUT:
-                        errorMessage = "The request to get your location timed out. Please try again.";
-                        break;
-                    case error.UNKNOWN_ERROR:
-                        errorMessage = "An unknown error occurred while getting your location.";
-                        break;
+            // Get current position
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    loading.style.display = 'none';
+                    const { latitude, longitude } = position.coords;
+                    display.innerHTML = `${latitude.toFixed(6)}° N, ${longitude.toFixed(6)}° E`;
+                    accuracy.innerHTML = `Accuracy: ${position.coords.accuracy} meters`;
+                },
+                error => {
+                    loading.style.display = 'none';
+                    const errors = {
+                        1: 'Permission denied. Please allow location access to use this feature.',
+                        2: 'Location information is unavailable. Please check your connection.',
+                        3: 'The request to get your location timed out. Please try again.',
+                        0: 'An unknown error occurred. Please try again later.'
+                    };
+                    errorDiv.innerHTML = `Error: ${errors[error.code] || error.message}`;
+                    errorDiv.style.display = 'block';
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
                 }
-            } else if (error.message) {
-                errorMessage = error.message;
-            }
-            
-            errorDiv.textContent = errorMessage;
-            errorDiv.style.display = "block";
-            
-            // Reset button
-            button.textContent = "Try Again";
-            button.disabled = false;
+            );
         }
     </script>
 </body>
