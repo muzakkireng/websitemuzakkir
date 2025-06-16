@@ -20,6 +20,11 @@
             min-height: 100vh;
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             padding: 20px;
+            transition: background 0.5s ease;
+        }
+        
+        body.light-theme {
+            background: linear-gradient(135deg, #8e9eab, #eef2f3);
         }
         
         .calculator-container {
@@ -30,12 +35,23 @@
             border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-theme .calculator-container {
+            background: #f5f7fa;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
         }
         
         .calculator {
             flex: 1;
             padding: 30px;
             background: linear-gradient(to bottom right, #1b1b2f, #1f1f3a);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-theme .calculator {
+            background: linear-gradient(to bottom right, #ffffff, #f0f5ff);
         }
         
         .calculator-header {
@@ -49,6 +65,11 @@
             color: #e94560;
             font-size: 28px;
             font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-theme .calculator-title {
+            color: #4a6fa5;
         }
         
         .mode-toggle {
@@ -65,9 +86,18 @@
             transition: all 0.3s ease;
         }
         
+        body.light-theme .mode-toggle {
+            background: #dbe6f6;
+            color: #4a6fa5;
+        }
+        
         .mode-toggle:hover {
             background: #1a1a2e;
             transform: translateY(-2px);
+        }
+        
+        body.light-theme .mode-toggle:hover {
+            background: #c8d4e8;
         }
         
         .display {
@@ -78,6 +108,13 @@
             margin-bottom: 25px;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(79, 93, 117, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        body.light-theme .display {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(200, 210, 230, 0.5);
         }
         
         .previous-operand {
@@ -87,6 +124,11 @@
             margin-bottom: 10px;
             overflow: hidden;
             letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-theme .previous-operand {
+            color: rgba(0, 0, 0, 0.6);
         }
         
         .current-operand {
@@ -95,6 +137,11 @@
             color: white;
             overflow: hidden;
             font-weight: 300;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-theme .current-operand {
+            color: #1a1a1a;
         }
         
         .keys {
@@ -116,9 +163,19 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         
+        body.light-theme button {
+            background: rgba(245, 247, 250, 0.8);
+            color: #2c3e50;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
         button:hover {
             background: rgba(40, 50, 100, 0.9);
             transform: translateY(-3px);
+        }
+        
+        body.light-theme button:hover {
+            background: rgba(230, 235, 245, 0.9);
         }
         
         button:active {
@@ -131,8 +188,17 @@
             font-weight: bold;
         }
         
+        body.light-theme .operator {
+            background: rgba(74, 111, 165, 0.9);
+            color: white;
+        }
+        
         .operator:hover {
             background: rgba(233, 69, 96, 1);
+        }
+        
+        body.light-theme .operator:hover {
+            background: rgba(74, 111, 165, 1);
         }
         
         .equals {
@@ -141,7 +207,16 @@
             font-weight: bold;
         }
         
+        body.light-theme .equals {
+            background: #4cc9f0;
+            color: white;
+        }
+        
         .equals:hover {
+            background: #5fd3f8;
+        }
+        
+        body.light-theme .equals:hover {
             background: #5fd3f8;
         }
         
@@ -149,16 +224,33 @@
             background: rgba(76, 201, 240, 0.2);
         }
         
+        body.light-theme .function {
+            background: rgba(76, 201, 240, 0.15);
+        }
+        
         .function:hover {
             background: rgba(76, 201, 240, 0.3);
         }
         
+        body.light-theme .function:hover {
+            background: rgba(76, 201, 240, 0.25);
+        }
+        
         .scientific {
             background: rgba(105, 48, 195, 0.3);
+            font-size: 1.2rem;
+        }
+        
+        body.light-theme .scientific {
+            background: rgba(105, 48, 195, 0.15);
         }
         
         .scientific:hover {
             background: rgba(105, 48, 195, 0.4);
+        }
+        
+        body.light-theme .scientific:hover {
+            background: rgba(105, 48, 195, 0.25);
         }
         
         .history-panel {
@@ -168,6 +260,11 @@
             border-left: 1px solid rgba(79, 93, 117, 0.2);
             overflow-y: auto;
             max-height: 680px;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-theme .history-panel {
+            background: rgba(245, 247, 250, 0.9);
         }
         
         .history-header {
@@ -179,6 +276,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-theme .history-header {
+            color: #4a6fa5;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
         
         .clear-history {
@@ -189,10 +292,19 @@
             cursor: pointer;
             padding: 5px 10px;
             border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-theme .clear-history {
+            color: #e74c3c;
         }
         
         .clear-history:hover {
             background: rgba(233, 69, 96, 0.1);
+        }
+        
+        body.light-theme .clear-history:hover {
+            background: rgba(231, 76, 60, 0.1);
         }
         
         .history-list {
@@ -204,6 +316,12 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             color: rgba(255, 255, 255, 0.8);
             font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-theme .history-item {
+            color: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
         
         .history-item:last-child {
@@ -213,6 +331,11 @@
         .history-expression {
             color: #4cc9f0;
             font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-theme .history-expression {
+            color: #4a6fa5;
         }
         
         .history-result {
@@ -220,6 +343,11 @@
             font-weight: 600;
             margin-top: 5px;
             font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-theme .history-result {
+            color: #1a1a1a;
         }
         
         .calculator-footer {
@@ -227,6 +355,11 @@
             color: rgba(255, 255, 255, 0.5);
             margin-top: 20px;
             font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-theme .calculator-footer {
+            color: rgba(0, 0, 0, 0.5);
         }
         
         @media (max-width: 900px) {
@@ -241,6 +374,40 @@
                 border-left: none;
                 border-top: 1px solid rgba(79, 93, 117, 0.2);
             }
+            
+            body.light-theme .history-panel {
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .keys {
+                gap: 8px;
+            }
+            
+            button {
+                padding: 14px 0;
+                font-size: 1.2rem;
+            }
+            
+            .calculator-title {
+                font-size: 22px;
+            }
+            
+            .current-operand {
+                font-size: 2.5rem;
+            }
+        }
+        
+        .error {
+            color: #ff6b6b !important;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            20%, 60% {transform: translateX(-5px);}
+            40%, 80% {transform: translateX(5px);}
         }
     </style>
 </head>
@@ -333,9 +500,14 @@
                 this.previousOperand = '';
                 this.operation = undefined;
                 this.resetOnNextInput = false;
+                this.errorState = false;
             }
             
             delete() {
+                if (this.errorState) {
+                    this.clear();
+                    return;
+                }
                 this.currentOperand = this.currentOperand.toString().slice(0, -1);
                 if (this.currentOperand === '' || this.currentOperand === '-') {
                     this.currentOperand = '0';
@@ -343,6 +515,10 @@
             }
             
             appendNumber(number) {
+                if (this.errorState) {
+                    this.clear();
+                }
+                
                 if (this.resetOnNextInput) {
                     this.currentOperand = '0';
                     this.resetOnNextInput = false;
@@ -358,9 +534,11 @@
             }
             
             chooseOperation(operation) {
-                if (this.currentOperand === '0') return;
+                if (this.errorState) return;
                 
-                if (this.previousOperand !== '') {
+                if (this.currentOperand === '0' && operation !== 'negate') return;
+                
+                if (this.previousOperand !== '' && !this.resetOnNextInput) {
                     this.calculate();
                 }
                 
@@ -370,40 +548,56 @@
             }
             
             calculate() {
+                if (this.errorState) return;
+                
                 let computation;
                 const prev = parseFloat(this.previousOperand);
                 const current = parseFloat(this.currentOperand);
                 
-                if (isNaN(prev) || isNaN(current)) return;
-                
-                switch (this.operation) {
-                    case 'add':
-                        computation = prev + current;
-                        break;
-                    case 'subtract':
-                        computation = prev - current;
-                        break;
-                    case 'multiply':
-                        computation = prev * current;
-                        break;
-                    case 'divide':
-                        computation = prev / current;
-                        break;
-                    case 'percentage':
-                        computation = prev * (current / 100);
-                        break;
-                    case 'power':
-                        computation = Math.pow(prev, current);
-                        break;
-                    default:
-                        return;
+                if (isNaN(prev) || isNaN(current)) {
+                    this.showError();
+                    return;
                 }
                 
-                this.addToHistory(`${this.previousOperand} ${this.getOperationSymbol()} ${this.currentOperand}`, computation);
-                this.currentOperand = computation.toString();
-                this.operation = undefined;
-                this.previousOperand = '';
-                this.resetOnNextInput = true;
+                try {
+                    switch (this.operation) {
+                        case 'add':
+                            computation = prev + current;
+                            break;
+                        case 'subtract':
+                            computation = prev - current;
+                            break;
+                        case 'multiply':
+                            computation = prev * current;
+                            break;
+                        case 'divide':
+                            if (current === 0) throw new Error("Division by zero");
+                            computation = prev / current;
+                            break;
+                        case 'percentage':
+                            computation = prev * (current / 100);
+                            break;
+                        case 'power':
+                            computation = Math.pow(prev, current);
+                            break;
+                        default:
+                            return;
+                    }
+                    
+                    // Handle very large/small numbers
+                    if (Math.abs(computation) > 1e12 || (Math.abs(computation) < 1e-6 && computation !== 0)) {
+                        this.currentOperand = computation.toExponential(6);
+                    } else {
+                        this.currentOperand = computation.toString();
+                    }
+                    
+                    this.addToHistory(`${this.previousOperand} ${this.getOperationSymbol()} ${this.currentOperand}`, computation);
+                    this.operation = undefined;
+                    this.previousOperand = '';
+                    this.resetOnNextInput = true;
+                } catch (error) {
+                    this.showError();
+                }
             }
             
             addToHistory(expression, result) {
@@ -437,96 +631,169 @@
             }
             
             percentage() {
-                this.currentOperand = (parseFloat(this.currentOperand) / 100).toString();
+                if (this.errorState) return;
+                const current = parseFloat(this.currentOperand);
+                if (isNaN(current)) {
+                    this.showError();
+                    return;
+                }
+                this.currentOperand = (current / 100).toString();
             }
             
             negate() {
-                this.currentOperand = (parseFloat(this.currentOperand) * -1 + '';
+                if (this.errorState) return;
+                const current = parseFloat(this.currentOperand);
+                if (isNaN(current)) {
+                    this.showError();
+                    return;
+                }
+                this.currentOperand = (current * -1).toString();
             }
             
             // Scientific functions
             square() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`(${current})²`, Math.pow(current, 2));
-                this.currentOperand = Math.pow(current, 2).toString();
+                if (isNaN(current)) {
+                    this.showError();
+                    return;
+                }
+                this.currentOperand = (current * current).toString();
+                this.addToHistory(`(${current})²`, current * current);
             }
             
             squareRoot() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`√(${current})`, Math.sqrt(current));
+                if (isNaN(current) || current < 0) {
+                    this.showError();
+                    return;
+                }
                 this.currentOperand = Math.sqrt(current).toString();
+                this.addToHistory(`√(${current})`, Math.sqrt(current));
             }
             
             factorial() {
-                const current = parseInt(this.currentOperand);
-                if (current < 0) return;
+                if (this.errorState) return;
+                const current = parseFloat(this.currentOperand);
+                if (isNaN(current) || current < 0 || !Number.isInteger(current)) {
+                    this.showError();
+                    return;
+                }
                 let result = 1;
                 for (let i = 2; i <= current; i++) {
                     result *= i;
                 }
-                this.addToHistory(`(${current})!`, result);
                 this.currentOperand = result.toString();
+                this.addToHistory(`(${current})!`, result);
             }
             
             sin() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`sin(${current})`, Math.sin(current));
+                if (isNaN(current)) {
+                    this.showError();
+                    return;
+                }
                 this.currentOperand = Math.sin(current).toString();
+                this.addToHistory(`sin(${current})`, Math.sin(current));
             }
             
             cos() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`cos(${current})`, Math.cos(current));
+                if (isNaN(current)) {
+                    this.showError();
+                    return;
+                }
                 this.currentOperand = Math.cos(current).toString();
+                this.addToHistory(`cos(${current})`, Math.cos(current));
             }
             
             tan() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`tan(${current})`, Math.tan(current));
+                if (isNaN(current)) {
+                    this.showError();
+                    return;
+                }
                 this.currentOperand = Math.tan(current).toString();
+                this.addToHistory(`tan(${current})`, Math.tan(current));
             }
             
             log() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`log(${current})`, Math.log10(current));
+                if (isNaN(current) || current <= 0) {
+                    this.showError();
+                    return;
+                }
                 this.currentOperand = Math.log10(current).toString();
+                this.addToHistory(`log(${current})`, Math.log10(current));
             }
             
             ln() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`ln(${current})`, Math.log(current));
+                if (isNaN(current) || current <= 0) {
+                    this.showError();
+                    return;
+                }
                 this.currentOperand = Math.log(current).toString();
+                this.addToHistory(`ln(${current})`, Math.log(current));
             }
             
             pow10() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`10^(${current})`, Math.pow(10, current));
+                if (isNaN(current)) {
+                    this.showError();
+                    return;
+                }
                 this.currentOperand = Math.pow(10, current).toString();
+                this.addToHistory(`10^(${current})`, Math.pow(10, current));
             }
             
             exp() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`e^(${current})`, Math.exp(current));
+                if (isNaN(current)) {
+                    this.showError();
+                    return;
+                }
                 this.currentOperand = Math.exp(current).toString();
+                this.addToHistory(`e^(${current})`, Math.exp(current));
             }
             
             inverse() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`1/(${current})`, 1/current);
-                this.currentOperand = (1/current).toString();
+                if (isNaN(current) || current === 0) {
+                    this.showError();
+                    return;
+                }
+                this.currentOperand = (1 / current).toString();
+                this.addToHistory(`1/(${current})`, 1 / current);
             }
             
             abs() {
+                if (this.errorState) return;
                 const current = parseFloat(this.currentOperand);
-                this.addToHistory(`|${current}|`, Math.abs(current));
+                if (isNaN(current)) {
+                    this.showError();
+                    return;
+                }
                 this.currentOperand = Math.abs(current).toString();
+                this.addToHistory(`|${current}|`, Math.abs(current));
             }
             
             pi() {
+                if (this.errorState) this.clear();
                 this.currentOperand = Math.PI.toString();
             }
             
             e() {
+                if (this.errorState) this.clear();
                 this.currentOperand = Math.E.toString();
             }
             
@@ -544,6 +811,13 @@
             
             getDisplayNumber(number) {
                 const stringNumber = number.toString();
+                
+                // Handle exponential notation
+                if (stringNumber.includes('e')) {
+                    const [coefficient, exponent] = stringNumber.split('e');
+                    return `${parseFloat(coefficient).toFixed(6)}e${exponent}`;
+                }
+                
                 const integerDigits = parseFloat(stringNumber.split('.')[0]);
                 const decimalDigits = stringNumber.split('.')[1];
                 
@@ -557,10 +831,7 @@
                 }
                 
                 if (decimalDigits != null) {
-                    // Limit decimal places for display
-                    const decimal = parseFloat('0.' + decimalDigits);
-                    const decimalDisplay = decimal.toFixed(8).replace(/0+$/, '').replace(/\.$/, '');
-                    return `${integerDisplay}${decimalDisplay === '0' ? '' : '.' + decimalDisplay.substring(2)}`;
+                    return `${integerDisplay}.${decimalDigits}`;
                 } else {
                     return integerDisplay;
                 }
@@ -575,6 +846,16 @@
                 } else {
                     this.previousOperandElement.innerText = '';
                 }
+            }
+            
+            showError() {
+                this.currentOperand = 'Error';
+                this.errorState = true;
+                this.currentOperandElement.classList.add('error');
+                
+                setTimeout(() => {
+                    this.currentOperandElement.classList.remove('error');
+                }, 1000);
             }
         }
         
@@ -687,104 +968,6 @@
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
             }
         });
-        
-        // Add light theme styles
-        const style = document.createElement('style');
-        style.textContent = `
-            body.light-theme {
-                background: linear-gradient(135deg, #8e9eab, #eef2f3);
-            }
-            
-            body.light-theme .calculator-container {
-                background: #f5f7fa;
-                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-            }
-            
-            body.light-theme .calculator {
-                background: linear-gradient(to bottom right, #ffffff, #f0f5ff);
-            }
-            
-            body.light-theme .calculator-title {
-                color: #4a6fa5;
-            }
-            
-            body.light-theme .display {
-                background: rgba(255, 255, 255, 0.9);
-                box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-                border: 1px solid rgba(200, 210, 230, 0.5);
-            }
-            
-            body.light-theme .previous-operand {
-                color: rgba(0, 0, 0, 0.6);
-            }
-            
-            body.light-theme .current-operand {
-                color: #1a1a1a;
-            }
-            
-            body.light-theme button {
-                background: rgba(245, 247, 250, 0.8);
-                color: #2c3e50;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-            
-            body.light-theme button:hover {
-                background: rgba(230, 235, 245, 0.9);
-            }
-            
-            body.light-theme .operator {
-                background: rgba(74, 111, 165, 0.9);
-                color: white;
-            }
-            
-            body.light-theme .operator:hover {
-                background: rgba(74, 111, 165, 1);
-            }
-            
-            body.light-theme .equals {
-                background: #4cc9f0;
-                color: white;
-            }
-            
-            body.light-theme .equals:hover {
-                background: #5fd3f8;
-            }
-            
-            body.light-theme .function {
-                background: rgba(76, 201, 240, 0.15);
-            }
-            
-            body.light-theme .scientific {
-                background: rgba(105, 48, 195, 0.15);
-            }
-            
-            body.light-theme .history-panel {
-                background: rgba(245, 247, 250, 0.9);
-            }
-            
-            body.light-theme .history-header {
-                color: #4a6fa5;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            }
-            
-            body.light-theme .history-item {
-                color: rgba(0, 0, 0, 0.8);
-                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            }
-            
-            body.light-theme .history-expression {
-                color: #4a6fa5;
-            }
-            
-            body.light-theme .history-result {
-                color: #1a1a1a;
-            }
-            
-            body.light-theme .clear-history {
-                color: #e74c3c;
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
