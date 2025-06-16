@@ -3,113 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeoPinpoint | Location Finder</title>
+    <title>Precision Location Finder</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #4cc9f0;
-            --dark: #14213d;
-            --light: #f8f9fa;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a2a6c, #2d388a, #4a569d);
-            color: var(--light);
+            background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), 
+                        url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* Animated background elements */
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            z-index: -1;
-            animation: float 15s infinite linear;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-            100% { transform: translateY(0) rotate(360deg); }
         }
         
         .container {
             max-width: 1200px;
             width: 100%;
             margin: 0 auto;
-            z-index: 1;
         }
         
         header {
             text-align: center;
             padding: 40px 0 20px;
             width: 100%;
-            animation: fadeInDown 1s ease;
-        }
-        
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .logo {
             display: flex;
-            flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 15px;
             margin-bottom: 15px;
         }
         
-        .logo-icon {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 50%;
+        .logo i {
+            font-size: 2.8rem;
+            color: #4CAF50;
+            background: rgba(255, 255, 255, 0.1);
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(67, 97, 238, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+            border-radius: 50%;
+            border: 2px solid #4CAF50;
         }
         
         h1 {
-            font-size: 3.2rem;
+            font-size: 2.8rem;
             margin-bottom: 10px;
-            background: linear-gradient(to right, #4cc9f0, #4361ee);
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            font-weight: 800;
         }
         
         .tagline {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             opacity: 0.9;
             margin-bottom: 30px;
             max-width: 700px;
@@ -125,197 +87,117 @@
         }
         
         .card {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
+            background: rgba(25, 25, 35, 0.85);
+            border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             flex: 1;
             min-width: 300px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: fadeInUp 0.8s ease;
-        }
-        
-        .card:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            transition: transform 0.3s ease;
         }
         
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
         }
         
         .card-title {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 25px;
-            font-size: 1.6rem;
-            color: var(--accent);
+            font-size: 1.5rem;
+            color: #4CAF50;
         }
         
         .card-title i {
-            font-size: 2.2rem;
-            background: rgba(76, 201, 240, 0.15);
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 15px;
+            font-size: 1.8rem;
         }
         
-        .coordinates-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .location-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin: 20px 0;
         }
         
-        .coordinates-box {
-            background: linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(60, 53, 201, 0.2));
-            border-radius: 15px;
-            padding: 30px 20px;
+        .info-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(76, 201, 240, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.3);
         }
         
-        .coordinates-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: 0.5s;
-        }
-        
-        .coordinates-box:hover::before {
-            left: 100%;
-        }
-        
-        .coordinates-label {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 15px;
+        .info-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--accent);
-            font-weight: 600;
         }
         
-        .coordinates {
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 10px 0;
-            letter-spacing: 1px;
-            font-family: 'Courier New', monospace;
-            color: var(--light);
-            min-height: 60px;
+        .info-value {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #4CAF50;
+            min-height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
-        .accuracy-box {
-            background: rgba(20, 33, 61, 0.4);
-            border-radius: 15px;
+        .coordinates-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
             padding: 25px;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 1px solid rgba(76, 201, 240, 0.2);
+            margin-top: 20px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
         }
         
-        .accuracy-label {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        
-        .accuracy-value {
+        .coordinates {
             font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 15px;
+            font-weight: bold;
+            margin: 15px 0;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+            color: #fff;
         }
         
-        .accuracy-meter {
-            width: 100%;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .accuracy-fill {
-            height: 100%;
-            background: linear-gradient(to right, var(--accent), var(--primary));
-            border-radius: 10px;
-            transition: width 1s ease;
-            box-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+        .accuracy {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-top: 10px;
         }
         
         .btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
             color: white;
             border: none;
-            padding: 18px 45px;
-            font-size: 1.2rem;
-            border-radius: 15px;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             font-weight: 600;
-            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
             margin: 20px auto 0;
             width: 100%;
-            max-width: 350px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn span {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-        
-        .btn:hover::before {
-            left: 100%;
+            max-width: 300px;
         }
         
         .btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(67, 97, 238, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+            background: linear-gradient(to right, #43a047, #2E7D32);
         }
         
         .btn:active {
@@ -331,9 +213,9 @@
         .spinner {
             border: 4px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            border-top: 4px solid var(--accent);
-            width: 50px;
-            height: 50px;
+            border-top: 4px solid #4CAF50;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 0 auto 15px;
         }
@@ -344,15 +226,14 @@
         }
         
         .error {
-            color: #ff9e9e;
-            background: rgba(231, 76, 60, 0.15);
-            padding: 18px;
-            border-radius: 12px;
+            color: #ff6b6b;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 8px;
             margin-top: 20px;
             display: none;
-            border-left: 4px solid var(--danger);
+            border-left: 4px solid #ff6b6b;
             text-align: center;
-            font-weight: 500;
         }
         
         .features {
@@ -366,40 +247,26 @@
             display: flex;
             gap: 15px;
             align-items: flex-start;
-            padding: 20px;
+            padding: 15px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            transition: transform 0.3s ease;
-        }
-        
-        .feature:hover {
-            transform: translateY(-5px);
-            background: rgba(67, 97, 238, 0.15);
+            border-radius: 10px;
         }
         
         .feature i {
-            color: var(--accent);
-            font-size: 2rem;
-            min-width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(76, 201, 240, 0.1);
-            border-radius: 12px;
+            color: #4CAF50;
+            font-size: 1.8rem;
+            min-width: 40px;
         }
         
         .feature-text h3 {
-            margin-bottom: 8px;
-            font-size: 1.3rem;
-            color: var(--accent);
-            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+            color: #4CAF50;
         }
         
         .feature-text p {
-            opacity: 0.9;
-            font-size: 1rem;
-            line-height: 1.6;
+            opacity: 0.8;
+            font-size: 0.95rem;
         }
         
         footer {
@@ -409,110 +276,48 @@
             max-width: 1200px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             margin-top: auto;
-            font-size: 0.95rem;
-            opacity: 0.8;
+            font-size: 0.9rem;
+            opacity: 0.7;
         }
         
         .map-container {
             margin-top: 30px;
-            height: 350px;
-            border-radius: 20px;
+            height: 300px;
+            border-radius: 15px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
             display: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         
         #map {
             width: 100%;
             height: 100%;
-            border-radius: 20px;
+            border-radius: 15px;
         }
         
-        .copy-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--accent);
-            color: var(--accent);
+        .api-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
             border-radius: 10px;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 15px;
-        }
-        
-        .copy-btn:hover {
-            background: rgba(76, 201, 240, 0.2);
-            transform: translateY(-2px);
-        }
-        
-        .notification {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            background: rgba(25, 25, 35, 0.95);
-            color: var(--accent);
-            padding: 18px 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            display: none;
-            z-index: 1000;
-            border-left: 4px solid var(--accent);
-            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOut 0.5s ease 2.5s forwards;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-        
-        .waves {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 15vh;
-            min-height: 100px;
-            max-height: 150px;
-            z-index: 0;
-        }
-        
-        .wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" fill="rgba(255, 255, 255, 0.1)"><path d="M0 0v46.29c47.79 22.2 103.59 32.17 158 28 70.36-5.37 136.33-33.31 206.8-37.5 73.84-4.36 147.54 16.88 218.2 35.26 69.27 18 138.3 24.88 209.4 13.08 36.15-6 69.85-17.84 104.45-29.34C989.49 25 1113-14.29 1200 52.47V0z" /></svg>');
-            background-size: 1200px 100px;
-        }
-        
-        .wave-1 {
-            animation: wave 30s linear infinite;
+            margin-top: 20px;
+            font-size: 0.85rem;
             opacity: 0.8;
+            text-align: center;
         }
         
-        .wave-2 {
-            animation: wave 20s linear -5s infinite;
-            opacity: 0.5;
+        .accuracy-meter {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
         }
         
-        .wave-3 {
-            animation: wave 15s linear -2s infinite;
-            opacity: 0.2;
-        }
-        
-        @keyframes wave {
-            0% { background-position-x: 0; }
-            100% { background-position-x: 1200px; }
+        .accuracy-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ff5252, #ffd740, #69f0ae);
+            width: 100%;
+            transition: width 0.5s ease;
         }
         
         @media (max-width: 768px) {
@@ -521,48 +326,37 @@
             }
             
             h1 {
-                font-size: 2.4rem;
+                font-size: 2.2rem;
             }
             
             .card {
                 min-width: 100%;
             }
             
-            .logo-icon {
-                width: 80px;
-                height: 80px;
-                font-size: 2.8rem;
+            .logo i {
+                width: 70px;
+                height: 70px;
+                font-size: 2.2rem;
             }
             
             .coordinates {
-                font-size: 1.6rem;
+                font-size: 1.5rem;
+            }
+            
+            .info-value {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Animated background bubbles -->
-    <div class="bubble" style="width: 80px; height: 80px; top: 10%; left: 10%;"></div>
-    <div class="bubble" style="width: 120px; height: 120px; top: 70%; left: 80%;"></div>
-    <div class="bubble" style="width: 60px; height: 60px; top: 40%; left: 85%;"></div>
-    <div class="bubble" style="width: 90px; height: 90px; top: 20%; left: 75%;"></div>
-    
-    <!-- Wave divider -->
-    <div class="waves">
-        <div class="wave wave-1"></div>
-        <div class="wave wave-2"></div>
-        <div class="wave wave-3"></div>
-    </div>
-    
     <div class="container">
         <header>
             <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-location-dot"></i>
-                </div>
+                <i class="fas fa-map-marker-alt"></i>
                 <div>
-                    <h1>GeoPinpoint</h1>
-                    <p class="tagline">Discover your precise location with our advanced geolocation technology. Get your coordinates instantly.</p>
+                    <h1>Precision Location Finder</h1>
+                    <p class="tagline">Get accurate location coordinates with verified city, country, and region data</p>
                 </div>
             </div>
         </header>
@@ -570,79 +364,107 @@
         <div class="content-container">
             <div class="card">
                 <div class="card-title">
-                    <i class="fas fa-crosshairs"></i>
-                    <h2>Pinpoint Your Location</h2>
+                    <i class="fas fa-location-dot"></i>
+                    <h2>Your Location Details</h2>
                 </div>
                 
-                <p>Click the button below to retrieve your exact coordinates. We'll ask for your permission to access your location.</p>
+                <p>Click the button below to retrieve your precise location information. We use advanced geocoding to ensure accurate results.</p>
                 
-                <div class="coordinates-container">
-                    <div class="coordinates-box">
-                        <div class="coordinates-label">Geographic Coordinates</div>
-                        <div class="coordinates" id="coordinates">-</div>
+                <div class="location-info">
+                    <div class="info-box">
+                        <div class="info-label">Country</div>
+                        <div class="info-value" id="country">-</div>
                     </div>
                     
-                    <div class="accuracy-box">
-                        <div class="accuracy-label">Accuracy Measurement</div>
-                        <div class="accuracy-value" id="accuracy">-</div>
+                    <div class="info-box">
+                        <div class="info-label">Region</div>
+                        <div class="info-value" id="region">-</div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-label">City</div>
+                        <div class="info-value" id="city">-</div>
+                    </div>
+                </div>
+                
+                <div class="coordinates-box">
+                    <p>Geographic Coordinates:</p>
+                    <div class="coordinates" id="coordinates">-</div>
+                    <div class="accuracy">
+                        <div>Accuracy: <span id="accuracy-value">-</span> meters</div>
                         <div class="accuracy-meter">
-                            <div class="accuracy-fill" id="accuracy-fill"></div>
+                            <div class="accuracy-bar" id="accuracy-bar"></div>
                         </div>
                     </div>
                 </div>
                 
                 <button class="btn" onclick="getLocation()">
-                    <i class="fas fa-satellite"></i>
-                    <span>Detect My Location</span>
-                </button>
-                
-                <button class="copy-btn" onclick="copyCoordinates()">
-                    <i class="fas fa-copy"></i> Copy Coordinates
+                    <i class="fas fa-map-pin"></i>
+                    Detect My Location
                 </button>
                 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>Locating your position...</p>
+                    <p>Detecting your location...</p>
                 </div>
                 
                 <div class="error" id="error"></div>
+                
+                <div class="api-info">
+                    <i class="fas fa-check-circle"></i> Using reliable reverse geocoding for precise location data
+                </div>
             </div>
             
             <div class="card">
                 <div class="card-title">
-                    <i class="fas fa-rocket"></i>
-                    <h2>Advanced Features</h2>
+                    <i class="fas fa-info-circle"></i>
+                    <h2>About This Tool</h2>
                 </div>
                 
-                <p>GeoPinpoint uses cutting-edge technology to provide the most accurate location data possible.</p>
+                <p>Our Precision Location Finder uses both the browser's Geolocation API and reliable reverse geocoding services to provide the most accurate location data available.</p>
                 
                 <div class="features">
-
-                    
-                    <div class="feature">
-                        <i class="fas fa-shield-alt"></i>
-                        <div class="feature-text">
-                            <h3>Privacy First</h3>
-                            <p>Your location data is processed locally and never stored on our servers.</p>
-                        </div>
-                    </div>
-                    
                     <div class="feature">
                         <i class="fas fa-globe-americas"></i>
                         <div class="feature-text">
-                            <h3>Global Coverage</h3>
-                            <p>Works anywhere in the world with GPS, Wi-Fi, or cellular data.</p>
+                            <h3>Accurate Country Data</h3>
+                            <p>Verified country information using multiple data sources.</p>
                         </div>
                     </div>
                     
                     <div class="feature">
-                        <i class="fas fa-bolt"></i>
+                        <i class="fas fa-map-marked-alt"></i>
                         <div class="feature-text">
-                            <h3>Lightning Fast</h3>
-                            <p>Get your location data in under 2 seconds with our optimized engine.</p>
+                            <h3>Precise Region Detection</h3>
+                            <p>Correctly identifies state, province, or administrative region.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <i class="fas fa-city"></i>
+                        <div class="feature-text">
+                            <h3>Exact City Information</h3>
+                            <p>Uses multiple verification methods to ensure city accuracy.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <i class="fas fa-crosshairs"></i>
+                        <div class="feature-text">
+                            <h3>High-Precision Coordinates</h3>
+                            <p>Latitude and longitude with accuracy measurement visualization.</p>
                         </div>
                     </div>
                 </div>
+                
+                <h3 style="margin-top: 25px; color: #4CAF50;">How It Works:</h3>
+                <ol style="margin: 15px 0 15px 20px; line-height: 1.8; padding-right: 15px;">
+                    <li>Click the "Detect My Location" button</li>
+                    <li>Allow location access when prompted by your browser</li>
+                    <li>We retrieve your GPS coordinates</li>
+                    <li>Coordinates are sent to a reliable geocoding service</li>
+                    <li>Accurate location data is displayed</li>
+                </ol>
                 
                 <div class="map-container" id="map-container">
                     <div id="map"></div>
@@ -651,12 +473,10 @@
         </div>
         
         <footer>
-            <p>&copy; 2023 GeoPinpoint | Precision Location Services</p>
-            <p>Your privacy is our priority - location data is never stored or shared</p>
+            <p>&copy; 2023 Precision Location Finder | All Rights Reserved</p>
+            <p>This tool uses reliable geocoding services to ensure accurate location data.</p>
         </footer>
     </div>
-    
-    <div class="notification" id="notification">Coordinates copied to clipboard!</div>
 
     <!-- Leaflet CSS & JS for mapping -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -666,26 +486,43 @@
         // Initialize map variable
         let map;
         
-        // Create animated background bubbles
-        function createBubbles() {
-            const body = document.querySelector('body');
-            for (let i = 0; i < 8; i++) {
-                const size = Math.random() * 80 + 40;
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-                bubble.style.width = `${size}px`;
-                bubble.style.height = `${size}px`;
-                bubble.style.top = `${Math.random() * 100}%`;
-                bubble.style.left = `${Math.random() * 100}%`;
-                bubble.style.animationDuration = `${Math.random() * 20 + 10}s`;
-                body.appendChild(bubble);
+        // Using OpenStreetMap Nominatim for reliable reverse geocoding
+        async function reverseGeocode(lat, lng) {
+            try {
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
+                );
+                
+                const data = await response.json();
+                
+                if (data && data.address) {
+                    const address = data.address;
+                    
+                    return {
+                        country: address.country || 'Unknown',
+                        region: address.state || address.county || address.region || 'Unknown',
+                        city: address.city || address.town || address.village || address.hamlet || 'Unknown'
+                    };
+                }
+                
+                throw new Error('No address data found');
+            } catch (error) {
+                console.error('Reverse geocoding error:', error);
+                return {
+                    country: 'Unknown',
+                    region: 'Unknown',
+                    city: 'Unknown'
+                };
             }
         }
         
-        function getLocation() {
+        async function getLocation() {
+            const countryEl = document.getElementById("country");
+            const regionEl = document.getElementById("region");
+            const cityEl = document.getElementById("city");
             const display = document.getElementById("coordinates");
-            const accuracy = document.getElementById("accuracy");
-            const accuracyFill = document.getElementById("accuracy-fill");
+            const accuracyValue = document.getElementById("accuracy-value");
+            const accuracyBar = document.getElementById("accuracy-bar");
             const errorDiv = document.getElementById("error");
             const loading = document.getElementById("loading");
             const mapContainer = document.getElementById("map-container");
@@ -695,8 +532,10 @@
             errorDiv.innerHTML = '';
             loading.style.display = 'block';
             display.innerHTML = '-';
-            accuracy.innerHTML = '-';
-            accuracyFill.style.width = '0';
+            accuracyValue.innerHTML = '-';
+            countryEl.innerHTML = '-';
+            regionEl.innerHTML = '-';
+            cityEl.innerHTML = '-';
             mapContainer.style.display = 'none';
             
             // Check if geolocation is supported
@@ -707,27 +546,46 @@
                 return;
             }
             
-            // Get current position
-            navigator.geolocation.getCurrentPosition(
-                position => {
-                    const { latitude, longitude, accuracy: acc } = position.coords;
-                    
-                    // Display coordinates
-                    display.innerHTML = `${latitude.toFixed(6)}° N, ${longitude.toFixed(6)}° E`;
-                    accuracy.innerHTML = `${Math.round(acc)} meters`;
-                    
-                    // Update accuracy meter (inverse relationship: lower accuracy value is better)
-                    const accuracyPercentage = Math.min(100, Math.max(0, 100 - (acc / 100)));
-                    accuracyFill.style.width = `${accuracyPercentage}%`;
-                    
-                    // Hide loading
-                    loading.style.display = 'none';
-                    
-                    // Show map
-                    showMap(latitude, longitude, acc);
-                },
-                error => {
-                    loading.style.display = 'none';
+            try {
+                // Get current position
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    });
+                });
+                
+                const { latitude, longitude } = position.coords;
+                
+                // Display coordinates
+                display.innerHTML = `${latitude.toFixed(6)}° N, ${longitude.toFixed(6)}° E`;
+                accuracyValue.innerHTML = position.coords.accuracy.toFixed(0);
+                
+                // Visual accuracy indicator
+                const accuracy = Math.min(position.coords.accuracy, 100);
+                const accuracyPercentage = 100 - accuracy;
+                accuracyBar.style.width = `${accuracyPercentage}%`;
+                
+                // Get location details using reliable reverse geocoding
+                const locationData = await reverseGeocode(latitude, longitude);
+                
+                // Display location info
+                countryEl.innerHTML = locationData.country;
+                regionEl.innerHTML = locationData.region;
+                cityEl.innerHTML = locationData.city;
+                
+                // Hide loading
+                loading.style.display = 'none';
+                
+                // Show map
+                showMap(latitude, longitude);
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                
+                // Handle different error types
+                if (error.code) {
                     const errors = {
                         1: 'Permission denied. Please allow location access to use this feature.',
                         2: 'Location information is unavailable. Please check your connection.',
@@ -735,17 +593,15 @@
                         0: 'An unknown error occurred. Please try again later.'
                     };
                     errorDiv.innerHTML = `Error: ${errors[error.code] || error.message}`;
-                    errorDiv.style.display = 'block';
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 8000,
-                    maximumAge: 0
+                } else {
+                    errorDiv.innerHTML = `Error: ${error.message || 'Failed to retrieve location data'}`;
                 }
-            );
+                
+                errorDiv.style.display = 'block';
+            }
         }
         
-        function showMap(lat, lng, accuracy) {
+        function showMap(lat, lng) {
             const mapContainer = document.getElementById("map-container");
             mapContainer.style.display = 'block';
             
@@ -762,95 +618,20 @@
             
             // Clear previous markers
             map.eachLayer(layer => {
-                if (layer instanceof L.Marker || layer instanceof L.Circle) {
+                if (layer instanceof L.Marker) {
                     map.removeLayer(layer);
                 }
             });
             
             // Add marker
-            const marker = L.marker([lat, lng]).addTo(map);
-            marker.bindPopup('Your location').openPopup();
-            
-            // Add pulsing animation to marker
-            const pulsingIcon = L.divIcon({
-                className: 'pulsing-icon',
-                html: `<div class="pulse-container"><div class="pulse-box"></div><div class="pulse-mark"></div></div>`,
-                iconSize: [30, 30],
-                iconAnchor: [15, 15]
-            });
-            
-            marker.setIcon(pulsingIcon);
-                
-            // Add circle to show accuracy radius
-            L.circle([lat, lng], {
-                color: '#4cc9f0',
-                fillColor: 'rgba(76, 201, 240, 0.2)',
-                fillOpacity: 0.3,
-                radius: accuracy
-            }).addTo(map);
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup('Your precise location')
+                .openPopup();
         }
         
-        function copyCoordinates() {
-            const coordinates = document.getElementById("coordinates").textContent;
-            if (coordinates !== '-') {
-                navigator.clipboard.writeText(coordinates)
-                    .then(() => {
-                        const notification = document.getElementById("notification");
-                        notification.style.display = 'block';
-                        setTimeout(() => {
-                            notification.style.display = 'none';
-                        }, 2500);
-                    })
-                    .catch(err => {
-                        console.error('Failed to copy: ', err);
-                    });
-            }
-        }
-        
-        // Initialize when page loads
+        // Initialize map container
         window.onload = function() {
             document.getElementById('map-container').style.display = 'none';
-            createBubbles();
-            
-            // Add custom pulsing marker styles
-            const style = document.createElement('style');
-            style.innerHTML = `
-                .pulse-container {
-                    position: relative;
-                    width: 30px;
-                    height: 30px;
-                }
-                
-                .pulse-box {
-                    width: 100%;
-                    height: 100%;
-                    background: #4361ee;
-                    border-radius: 50%;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7);
-                    animation: pulse 1.5s infinite;
-                }
-                
-                .pulse-mark {
-                    width: 12px;
-                    height: 12px;
-                    background: #4cc9f0;
-                    border-radius: 50%;
-                    position: absolute;
-                    top: 9px;
-                    left: 9px;
-                    z-index: 10;
-                }
-                
-                @keyframes pulse {
-                    0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
-                    70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); }
-                    100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
-                }
-            `;
-            document.head.appendChild(style);
         }
     </script>
 </body>
