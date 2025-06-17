@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online speaker tester tool - Check your device speakers with our audio diagnostics tool. Test left/right channels, frequency response, and speaker quality.">
+    <meta name="keywords" content="speaker tester, audio test, sound test, speaker check, audio diagnostics, speaker quality">
+    <title>Speaker Tester Pro | Free Online Audio Diagnostics Tool</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: var(--light);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff8a00, #e52e71, #4361ee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #e0e0e0;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .tester-section {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .tester-section h2 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tester-section h2 i {
+            color: var(--success);
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-stop {
+            background: linear-gradient(to right, #e52e71, #b21f1f);
+        }
+        
+        .visualizer {
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 10px;
+            height: 200px;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--accent);
+        }
+        
+        .visualizer-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            z-index: 2;
+        }
+        
+        .visualizer-bars {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 10px;
+            z-index: 1;
+        }
+        
+        .bar {
+            width: 15px;
+            background: var(--accent);
+            border-radius: 5px 5px 0 0;
+            transition: height 0.2s ease;
+        }
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .volume-control input {
+            width: 100%;
+        }
+        
+        .info-section {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .info-section h2 {
+            color: var(--success);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .info-section h3 {
+            color: var(--accent);
+            margin: 25px 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        .info-section p {
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            margin: 20px 0;
+        }
+        
+        .feature-list li {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: rgba(67, 97, 238, 0.15);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-list li i {
+            color: var(--success);
+        }
+        
+        .seo-section {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .seo-section h2 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .seo-section h3 {
+            color: var(--success);
+            margin: 25px 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        .seo-section p {
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .tip-card {
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(67, 97, 238, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .tip-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+        
+        .tip-card h4 {
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        footer p {
+            color: #b0b0b0;
+        }
+        
+        .status {
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(30, 30, 46, 0.9);
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .status.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .frequency-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: var(--success);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-volume-up"></i> Speaker Tester Pro</h1>
+            <p>Test your device speakers with our comprehensive audio diagnostics tool. Check left/right channels, frequency response, and speaker quality.</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="tester-section">
+                <h2><i class="fas fa-sliders-h"></i> Speaker Testing Controls</h2>
+                
+                <div class="controls">
+                    <button id="testLeft" class="btn"><i class="fas fa-arrow-left"></i> Test Left Speaker</button>
+                    <button id="testRight" class="btn"><i class="fas fa-arrow-right"></i> Test Right Speaker</button>
+                    <button id="testStereo" class="btn"><i class="fas fa-volume-up"></i> Test Stereo Sound</button>
+                    <button id="testBass" class="btn"><i class="fas fa-wave-square"></i> Bass Frequency</button>
+                    <button id="stopSound" class="btn btn-stop"><i class="fas fa-stop"></i> Stop Test</button>
+                </div>
+                
+                <div class="status" id="status">
+                    Speaker test in progress... Please listen for audio output
+                </div>
+                
+                <div class="visualizer">
+                    <div class="visualizer-content">
+                        <h3>Audio Visualizer</h3>
+                        <p>Visual feedback will appear here during audio tests</p>
+                    </div>
+                    <div class="visualizer-bars" id="visualizerBars"></div>
+                </div>
+                
+                <div class="volume-control">
+                    <i class="fas fa-volume-down"></i>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                
+                <div class="frequency-display">
+                    <span>20 Hz</span>
+                    <span>Current: <span id="currentFreq">0 Hz</span></span>
+                    <span>20,000 Hz</span>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h2><i class="fas fa-info-circle"></i> About This Tool</h2>
+                
+                <p>The Speaker Tester Pro is a free online tool that helps you diagnose and test your device's audio output capabilities. Whether you're troubleshooting speaker issues or simply want to check your audio quality, our tool provides comprehensive testing options.</p>
+                
+                <h3>Key Features</h3>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Individual left/right channel testing</li>
+                    <li><i class="fas fa-check-circle"></i> Stereo sound quality assessment</li>
+                    <li><i class="fas fa-check-circle"></i> Bass frequency response testing</li>
+                    <li><i class="fas fa-check-circle"></i> Real-time audio visualization</li>
+                    <li><i class="fas fa-check-circle"></i> Volume control during tests</li>
+                    <li><i class="fas fa-check-circle"></i> No installation required</li>
+                </ul>
+                
+                <h3>How to Use</h3>
+                <p>1. Ensure your speakers or headphones are properly connected</p>
+                <p>2. Click on the desired test button (Left, Right, Stereo, or Bass)</p>
+                <p>3. Listen for audio output from your speakers</p>
+                <p>4. Adjust volume using the slider if needed</p>
+                <p>5. Click "Stop Test" when finished</p>
+                
+                <h3>Common Speaker Issues</h3>
+                <p>If you're experiencing problems with your speakers, our tool can help identify:</p>
+                <p>- Distorted audio output</p>
+                <p>- Channel imbalance (one speaker louder than the other)</p>
+                <p>- Complete speaker failure</p>
+                <p>- Frequency response issues</p>
+            </div>
+        </div>
+        
+        <div class="seo-section">
+            <h2><i class="fas fa-chart-line"></i> Speaker Testing & SEO Tips</h2>
+            
+            <p>To improve your website's ranking for speaker-related keywords, consider the following SEO best practices:</p>
+            
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h4><i class="fas fa-key"></i> Keyword Optimization</h4>
+                    <p>Use relevant keywords like "speaker tester", "audio diagnostics", "sound test", and "speaker check" in your content, headings, and meta tags.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <h4><i class="fas fa-file-alt"></i> Quality Content</h4>
+                    <p>Create comprehensive content about speaker troubleshooting, audio testing techniques, and how to interpret test results.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <h4><i class="fas fa-mobile-alt"></i> Mobile Optimization</h4>
+                    <p>Ensure your web tool is fully responsive and works well on all devices, as mobile-friendliness is a ranking factor.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <h4><i class="fas fa-tachometer-alt"></i> Page Speed</h4>
+                    <p>Optimize images, minify code, and use caching to improve loading times, which impacts SEO rankings.</p>
+                </div>
+            </div>
+            
+            <h3>Content Ideas for Better Ranking</h3>
+            <p>Create blog posts and guides around these topics to attract organic traffic:</p>
+            <p>- "How to Test Your Computer Speakers in 5 Easy Steps"</p>
+            <p>- "Common Speaker Problems and How to Fix Them"</p>
+            <p>- "Understanding Audio Frequencies: A Beginner's Guide"</p>
+            <p>- "The Importance of Regular Speaker Testing"</p>
+            <p>- "How to Choose the Right Speakers for Your Setup"</p>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 Speaker Tester Pro | A Free Online Audio Diagnostics Tool</p>
+            <p>This tool works best on Chrome, Firefox, Edge, and Safari browsers</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Create audio context
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+        
+        // DOM elements
+        const testLeftBtn = document.getElementById('testLeft');
+        const testRightBtn = document.getElementById('testRight');
+        const testStereoBtn = document.getElementById('testStereo');
+        const testBassBtn = document.getElementById('testBass');
+        const stopSoundBtn = document.getElementById('stopSound');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const statusElement = document.getElementById('status');
+        const visualizerBars = document.getElementById('visualizerBars');
+        const currentFreq = document.getElementById('currentFreq');
+        
+        // Audio variables
+        let oscillator;
+        let gainNode;
+        let panner;
+        let isPlaying = false;
+        let animationId;
+        
+        // Create bars for visualizer
+        for (let i = 0; i < 32; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.height = '5px';
+            bar.style.backgroundColor = i % 2 === 0 ? '#4361ee' : '#4895ef';
+            visualizerBars.appendChild(bar);
+        }
+        const bars = document.querySelectorAll('.bar');
+        
+        // Initialize Web Audio components
+        function initAudio() {
+            oscillator = audioCtx.createOscillator();
+            gainNode = audioCtx.createGain();
+            panner = audioCtx.createStereoPanner();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(panner);
+            panner.connect(audioCtx.destination);
+            
+            gainNode.gain.value = volumeSlider.value;
+            oscillator.type = 'sine';
+            
+            oscillator.onended = () => {
+                isPlaying = false;
+                statusElement.classList.remove('active');
+                cancelAnimationFrame(animationId);
+                resetVisualizer();
+            };
+        }
+        
+        // Play test sound
+        function playTest(frequency = 440, pan = 0, duration = 2) {
+            if (isPlaying) return;
+            
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            
+            initAudio();
+            
+            oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            panner.pan.setValueAtTime(pan, audioCtx.currentTime);
+            
+            oscillator.start();
+            isPlaying = true;
+            statusElement.classList.add('active');
+            
+            // Start visualization
+            visualize();
+            
+            // Auto-stop after duration
+            setTimeout(() => {
+                if (isPlaying) {
+                    stopTest();
+                }
+            }, duration * 1000);
+        }
+        
+        // Stop test
+        function stopTest() {
+            if (!isPlaying) return;
+            
+            oscillator.stop();
+            isPlaying = false;
+            statusElement.classList.remove('active');
+            cancelAnimationFrame(animationId);
+            resetVisualizer();
+        }
+        
+        // Update volume
+        volumeSlider.addEventListener('input', () => {
+            if (gainNode) {
+                gainNode.gain.value = volumeSlider.value;
+            }
+        });
+        
+        // Button event listeners
+        testLeftBtn.addEventListener('click', () => {
+            playTest(440, -1, 3);
+            statusElement.textContent = "Testing LEFT speaker... Please listen for audio output";
+        });
+        
+        testRightBtn.addEventListener('click', () => {
+            playTest(440, 1, 3);
+            statusElement.textContent = "Testing RIGHT speaker... Please listen for audio output";
+        });
+        
+        testStereoBtn.addEventListener('click', () => {
+            playTest(440, 0, 4);
+            statusElement.textContent = "Testing STEREO sound... Please listen for audio output";
+        });
+        
+        testBassBtn.addEventListener('click', () => {
+            const bassFreq = 100;
+            playTest(bassFreq, 0, 5);
+            statusElement.textContent = `Testing BASS frequencies (${bassFreq}Hz)... Please listen for audio output`;
+        });
+        
+        stopSoundBtn.addEventListener('click', stopTest);
+        
+        // Visualizer animation
+        function visualize() {
+            if (!isPlaying) return;
+            
+            // Update frequency display
+            currentFreq.textContent = oscillator.frequency.value.toFixed(0);
+            
+            // Animate bars
+            for (let i = 0; i < bars.length; i++) {
+                const height = 5 + Math.random() * 180;
+                bars[i].style.height = `${height}px`;
+                
+                // Add color variation for more dynamic effect
+                const blueValue = Math.floor(100 + Math.random() * 100);
+                bars[i].style.backgroundColor = `rgba(67, 97, 238, ${0.4 + Math.random() * 0.6})`;
+            }
+            
+            animationId = requestAnimationFrame(visualize);
+        }
+        
+        // Reset visualizer
+        function resetVisualizer() {
+            for (let i = 0; i < bars.length; i++) {
+                bars[i].style.height = '5px';
+            }
+            currentFreq.textContent = '0';
+        }
+        
+        // Initialize
+        window.addEventListener('load', () => {
+            // Check if browser supports Web Audio API
+            if (!AudioContext) {
+                statusElement.textContent = "Web Audio API is not supported in your browser. Please use Chrome, Firefox, Edge, or Safari.";
+                statusElement.classList.add('active');
+                statusElement.style.backgroundColor = 'rgba(178, 31, 31, 0.3)';
+                
+                // Disable buttons
+                testLeftBtn.disabled = true;
+                testRightBtn.disabled = true;
+                testStereoBtn.disabled = true;
+                testBassBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>
