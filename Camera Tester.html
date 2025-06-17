@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test your device camera online with our free web-based camera tester tool. Check camera functionality, resolution, and more.">
+    <meta name="keywords" content="camera tester, webcam test, device camera, camera check, online camera test">
+    <meta name="author" content="Your WebTools">
+    <title>WebTools Camera Tester | Free Online Camera Testing Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #555;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .camera-section {
+            flex: 1 1 600px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .info-section {
+            flex: 1 1 500px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .section-title {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fdbb2d;
+        }
+        
+        .camera-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        #camera-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .camera-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #fdbb2d;
+            color: #333;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #e9f7ef;
+            border-left: 4px solid #28a745;
+        }
+        
+        .status.error {
+            background: #fdecea;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #1a2a6c;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-card i {
+            font-size: 2rem;
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        
+        .seo-content {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .seo-content h2 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+        }
+        
+        .seo-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .camera-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-camera"></i> WebTools Camera Tester</h1>
+            <p class="subtitle">Test your device camera in real-time with our free online tool</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="camera-section">
+                <h2 class="section-title">Camera Preview</h2>
+                <div class="camera-container">
+                    <div class="camera-overlay">Live Camera Feed</div>
+                    <video id="camera-feed" autoplay playsinline></video>
+                </div>
+                
+                <div class="controls">
+                    <button id="start-camera" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Start Camera
+                    </button>
+                    <button id="stop-camera" class="btn btn-secondary" disabled>
+                        <i class="fas fa-stop"></i> Stop Camera
+                    </button>
+                    <button id="capture-photo" class="btn btn-success" disabled>
+                        <i class="fas fa-camera"></i> Capture Photo
+                    </button>
+                </div>
+                
+                <div id="status" class="status">
+                    <p>Click "Start Camera" to begin testing your device camera.</p>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h2 class="section-title">Camera Information</h2>
+                <div id="camera-info">
+                    <p>Camera information will be displayed here once the camera is active.</p>
+                </div>
+                
+                <h2 class="section-title" style="margin-top: 30px;">Features</h2>
+                <div class="feature-list">
+                    <div class="feature-card">
+                        <i class="fas fa-video"></i>
+                        <h3>Real-time Preview</h3>
+                        <p>See exactly what your camera sees in real-time</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-camera-retro"></i>
+                        <h3>Photo Capture</h3>
+                        <p>Capture and download test photos</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-info-circle"></i>
+                        <h3>Camera Details</h3>
+                        <p>Get technical information about your camera</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>Mobile Friendly</h3>
+                        <p>Works on all devices - smartphones, tablets, laptops</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="seo-content">
+            <h2>Why Test Your Camera with Our Online Tool?</h2>
+            <p>Our free web-based camera tester provides a simple yet powerful way to verify your device's camera functionality. Whether you're preparing for an important video conference, setting up a new device, or troubleshooting camera issues, this tool offers immediate visual feedback.</p>
+            
+            <p>With the increasing reliance on video communication for work, education, and social connections, ensuring your camera works properly has become essential. Our camera testing tool helps you:</p>
+            
+            <ul style="margin: 20px; line-height: 1.8;">
+                <li>Confirm that your camera is properly connected and functioning</li>
+                <li>Check image quality, focus, and color reproduction</li>
+                <li>Verify microphone functionality when used with video</li>
+                <li>Troubleshoot common camera issues</li>
+                <li>Ensure proper lighting conditions for video calls</li>
+                <li>Test different camera resolutions and aspect ratios</li>
+            </ul>
+            
+            <p>This camera testing tool works directly in your browser with no downloads required. We respect your privacy - all camera processing happens locally on your device, and no images or video are transmitted to our servers.</p>
+            
+            <h2>How to Use Our Camera Tester</h2>
+            <p>Using our camera testing tool is simple: just click the "Start Camera" button and grant permission when your browser asks for camera access. Once active, you'll see a live feed from your camera. Use the "Capture Photo" button to test still image capture functionality.</p>
+            
+            <p>If you encounter any issues, try these troubleshooting tips:</p>
+            
+            <ul style="margin: 20px; line-height: 1.8;">
+                <li>Ensure no other applications are using your camera</li>
+                <li>Check your browser's permission settings for camera access</li>
+                <li>Verify your camera is properly connected (for external cameras)</li>
+                <li>Update your browser to the latest version</li>
+                <li>Restart your device if you continue to experience issues</li>
+            </ul>
+            
+            <p>For best results, use our camera tester with modern browsers like Chrome, Firefox, Edge, or Safari. The tool works on Windows, macOS, Linux, iOS, and Android devices.</p>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 WebTools Camera Tester | All Rights Reserved</p>
+            <p>Privacy Policy: Your camera data never leaves your device. No images or videos are stored or transmitted to our servers.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('camera-feed');
+            const startBtn = document.getElementById('start-camera');
+            const stopBtn = document.getElementById('stop-camera');
+            const captureBtn = document.getElementById('capture-photo');
+            const statusDiv = document.getElementById('status');
+            const cameraInfoDiv = document.getElementById('camera-info');
+            
+            let stream = null;
+            
+            // Function to start the camera
+            async function startCamera() {
+                try {
+                    statusDiv.innerHTML = '<p>Requesting camera access...</p>';
+                    
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            facingMode: 'environment',
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        } 
+                    });
+                    
+                    video.srcObject = stream;
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                    captureBtn.disabled = false;
+                    statusDiv.innerHTML = '<p>Camera is active. You should see your camera feed above.</p>';
+                    
+                    // Display camera information
+                    const track = stream.getVideoTracks()[0];
+                    const capabilities = track.getCapabilities ? track.getCapabilities() : {};
+                    const settings = track.getSettings ? track.getSettings() : {};
+                    
+                    let infoHTML = `
+                        <p><strong>Status:</strong> Active</p>
+                        <p><strong>Resolution:</strong> ${settings.width || 'Unknown'} × ${settings.height || 'Unknown'}</p>
+                        <p><strong>Aspect Ratio:</strong> ${settings.aspectRatio ? settings.aspectRatio.toFixed(2) : 'Unknown'}</p>
+                        <p><strong>Frame Rate:</strong> ${settings.frameRate ? settings.frameRate + ' fps' : 'Unknown'}</p>
+                        <p><strong>Device:</strong> ${track.label || 'Camera'}</p>
+                    `;
+                    
+                    cameraInfoDiv.innerHTML = infoHTML;
+                    
+                } catch (err) {
+                    console.error('Error accessing camera:', err);
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = `
+                        <p>Could not access the camera:</p>
+                        <p><strong>${err.name}</strong>: ${err.message}</p>
+                        <p>Please ensure your camera is connected and you've granted permission.</p>
+                    `;
+                }
+            }
+            
+            // Function to stop the camera
+            function stopCamera() {
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    video.srcObject = null;
+                    stream = null;
+                    
+                    startBtn.disabled = false;
+                    stopBtn.disabled = true;
+                    captureBtn.disabled = true;
+                    
+                    statusDiv.className = 'status';
+                    statusDiv.innerHTML = '<p>Camera has been stopped. Click "Start Camera" to begin again.</p>';
+                    cameraInfoDiv.innerHTML = '<p>Camera information will be displayed here once the camera is active.</p>';
+                }
+            }
+            
+            // Function to capture a photo
+            function capturePhoto() {
+                if (!stream) return;
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                
+                const context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.download = 'camera-test-photo.jpg';
+                link.href = canvas.toDataURL('image/jpeg');
+                link.click();
+                
+                statusDiv.innerHTML = '<p>Photo captured and downloaded!</p>';
+            }
+            
+            // Event listeners
+            startBtn.addEventListener('click', startCamera);
+            stopBtn.addEventListener('click', stopCamera);
+            captureBtn.addEventListener('click', capturePhoto);
+            
+            // Check camera access on page load
+            if (navigator.mediaDevices) {
+                navigator.mediaDevices.enumerateDevices()
+                    .then(devices => {
+                        const hasCamera = devices.some(device => device.kind === 'videoinput');
+                        if (!hasCamera) {
+                            statusDiv.className = 'status error';
+                            statusDiv.innerHTML = '<p>No camera detected on this device.</p>';
+                        }
+                    });
+            } else {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '<p>Your browser does not support camera access. Please try with a modern browser like Chrome, Firefox, or Edge.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
