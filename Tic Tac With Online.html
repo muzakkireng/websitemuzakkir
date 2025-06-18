@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Tic Tac Toe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            padding: 20px;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, #ff5252, #4fc3f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 20px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+        
+        .player-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4caf50;
+        }
+        
+        .status-indicator.offline {
+            background: #f44336;
+        }
+        
+        .online-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(79, 195, 247, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        
+        .game-modes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .mode-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mode-card:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(79, 195, 247, 0.5);
+        }
+        
+        .mode-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #4fc3f7;
+        }
+        
+        .mode-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .mode-description {
+            opacity: 0.8;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        
+        .lobby {
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .lobby-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .lobby-id {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-family: monospace;
+            font-size: 1.2rem;
+        }
+        
+        .players-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .player-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            width: 150px;
+            transition: all 0.3s ease;
+        }
+        
+        .player-card.you {
+            border: 2px solid #4fc3f7;
+            box-shadow: 0 0 15px rgba(79, 195, 247, 0.5);
+        }
+        
+        .player-card.waiting {
+            opacity: 0.6;
+        }
+        
+        .player-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .player-name {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .player-status {
+            font-size: 0.9rem;
+            color: #4caf50;
+        }
+        
+        .game-board-container {
+            display: none;
+            margin-bottom: 30px;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .player-marker {
+            font-size: 1.8rem;
+        }
+        
+        .turn-indicator {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #4fc3f7;
+        }
+        
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+        }
+        
+        .cell {
+            aspect-ratio: 1/1;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .cell:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+        
+        .cell.x {
+            color: #ff5252;
+        }
+        
+        .cell.o {
+            color: #4fc3f7;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #ff5252, #ff7675);
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+        }
+        
+        .chat-container {
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 25px;
+            max-height: 300px;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-messages {
+            height: 180px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding-right: 10px;
+        }
+        
+        .message {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        
+        .message .sender {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #4fc3f7;
+        }
+        
+        .message.you .sender {
+            color: #ff5252;
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .chat-input button {
+            padding: 12px 20px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-left: 4px solid #4caf50;
+        }
+        
+        .notification.info {
+            border-left: 4px solid #4fc3f7;
+        }
+        
+        .notification.warning {
+            border-left: 4px solid #ff9800;
+        }
+        
+        .notification.error {
+            border-left: 4px solid #f44336;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .game-modes {
+                grid-template-columns: 1fr;
+            }
+            
+            .players-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .game-board {
+                max-width: 350px;
+            }
+            
+            .cell {
+                font-size: 3.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .player-info {
+                font-size: 1rem;
+            }
+            
+            .game-board {
+                max-width: 300px;
+                grid-gap: 10px;
+                padding: 15px;
+            }
+            
+            .cell {
+                font-size: 3rem;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="notification" id="notification">
+        <div class="notification-content"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-gamepad"></i> ONLINE TIC TAC TOE</h1>
+            <p class="subtitle">Play with friends or random opponents in real-time</p>
+        </header>
+        
+        <div class="status-bar">
+            <div class="player-status">
+                <div class="status-indicator"></div>
+                <span>Connected: <span id="player-name">Guest_1234</span></span>
+            </div>
+            <div class="online-count">
+                <i class="fas fa-users"></i>
+                <span><span id="online-players">1,245</span> players online</span>
+            </div>
+        </div>
+        
+        <div class="game-modes" id="game-modes">
+            <div class="mode-card" id="create-room">
+                <div class="mode-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <h3 class="mode-title">Create Room</h3>
+                <p class="mode-description">Create a private room and invite friends to play with you</p>
+                <button class="btn-success">
+                    <i class="fas fa-plus"></i> Create Room
+                </button>
+            </div>
+            
+            <div class="mode-card" id="join-room">
+                <div class="mode-icon">
+                    <i class="fas fa-door-open"></i>
+                </div>
+                <h3 class="mode-title">Join Room</h3>
+                <p class="mode-description">Join a room using the ID provided by your friend</p>
+                <button class="btn-secondary">
+                    <i class="fas fa-sign-in-alt"></i> Join Room
+                </button>
+            </div>
+            
+            <div class="mode-card" id="quick-play">
+                <div class="mode-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="mode-title">Quick Play</h3>
+                <p class="mode-description">Play against a random opponent online</p>
+                <button class="btn-success">
+                    <i class="fas fa-play"></i> Find Match
+                </button>
+            </div>
+        </div>
+        
+        <div class="lobby" id="lobby">
+            <div class="lobby-header">
+                <h2>Game Lobby</h2>
+                <div class="lobby-id">Room ID: <span id="room-id">X7B9K2</span></div>
+            </div>
+            
+            <p>Share this room ID with your friend to invite them to play:</p>
+            
+            <div class="players-container">
+                <div class="player-card you">
+                    <div class="player-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="player-name" id="lobby-player1">Guest_1234</div>
+                    <div class="player-status">You (X)</div>
+                </div>
+                
+                <div class="player-card waiting">
+                    <div class="player-icon">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                    <div class="player-name">Waiting...</div>
+                    <div class="player-status">(O)</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn-secondary" id="copy-room-id">
+                    <i class="fas fa-copy"></i> Copy Room ID
+                </button>
+                <button class="btn-success" id="start-game">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+                <button class="btn-secondary" id="leave-lobby">
+                    <i class="fas fa-sign-out-alt"></i> Leave Lobby
+                </button>
+            </div>
+        </div>
+        
+        <div class="game-board-container" id="game-container">
+            <div class="game-info">
+                <div class="player-info">
+                    <span class="player-marker x">X</span>
+                    <span id="player-x-name">Player X</span>
+                </div>
+                
+                <div class="turn-indicator" id="turn-indicator">Your Turn!</div>
+                
+                <div class="player-info">
+                    <span class="player-marker o">O</span>
+                    <span id="player-o-name">Player O</span>
+                </div>
+            </div>
+            
+            <div class="game-board" id="game-board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn-secondary" id="rematch-btn">
+                    <i class="fas fa-redo"></i> Rematch
+                </button>
+                <button class="btn-secondary" id="leave-game">
+                    <i class="fas fa-sign-out-alt"></i> Leave Game
+                </button>
+            </div>
+        </div>
+        
+        <div class="chat-container" id="chat-container">
+            <div class="chat-header">
+                <h3>Game Chat</h3>
+                <div class="online-count">
+                    <i class="fas fa-comments"></i>
+                    <span>Chat</span>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chat-messages">
+                <div class="message info">
+                    <div class="sender">System</div>
+                    <div class="content">You joined the game. Say hello to your opponent!</div>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" id="chat-input" placeholder="Type your message...">
+                <button id="send-message">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const gameModes = document.getElementById('game-modes');
+            const lobby = document.getElementById('lobby');
+            const gameContainer = document.getElementById('game-container');
+            const chatContainer = document.getElementById('chat-container');
+            const notification = document.getElementById('notification');
+            
+            // Buttons
+            const createRoomBtn = document.querySelector('#create-room button');
+            const joinRoomBtn = document.querySelector('#join-room button');
+            const quickPlayBtn = document.querySelector('#quick-play button');
+            const copyRoomIdBtn = document.getElementById('copy-room-id');
+            const startGameBtn = document.getElementById('start-game');
+            const leaveLobbyBtn = document.getElementById('leave-lobby');
+            const rematchBtn = document.getElementById('rematch-btn');
+            const leaveGameBtn = document.getElementById('leave-game');
+            const sendMessageBtn = document.getElementById('send-message');
+            
+            // Game elements
+            const cells = document.querySelectorAll('.cell');
+            const turnIndicator = document.getElementById('turn-indicator');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            
+            // Game state
+            let gameActive = false;
+            let currentPlayer = 'X';
+            let gameBoard = ['', '', '', '', '', '', '', '', ''];
+            let playerMark = 'X';
+            let opponentName = 'Player_O';
+            
+            // Player info
+            const playerName = "Player_" + Math.floor(Math.random() * 10000);
+            document.getElementById('player-name').textContent = playerName;
+            document.getElementById('lobby-player1').textContent = playerName;
+            document.getElementById('player-x-name').textContent = playerName;
+            
+            // Online players count
+            setInterval(() => {
+                const onlinePlayers = Math.floor(1200 + Math.random() * 100);
+                document.getElementById('online-players').textContent = onlinePlayers.toLocaleString();
+            }, 5000);
+            
+            // Show notification
+            function showNotification(message, type = 'info') {
+                const content = notification.querySelector('.notification-content');
+                content.textContent = message;
+                notification.className = `notification ${type} show`;
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Create room
+            createRoomBtn.addEventListener('click', () => {
+                gameModes.style.display = 'none';
+                lobby.style.display = 'block';
+                chatContainer.style.display = 'block';
+                showNotification('Room created! Share the ID with your friend.', 'success');
+            });
+            
+            // Join room
+            joinRoomBtn.addEventListener('click', () => {
+                const roomId = prompt('Enter Room ID:');
+                if (roomId && roomId.trim() !== '') {
+                    gameModes.style.display = 'none';
+                    lobby.style.display = 'block';
+                    chatContainer.style.display = 'block';
+                    document.getElementById('room-id').textContent = roomId;
+                    document.querySelector('.lobby .player-card.you .player-name').textContent = playerName;
+                    showNotification(`Joined room ${roomId}`, 'success');
+                    
+                    // Simulate opponent joining after delay
+                    setTimeout(() => {
+                        document.querySelector('.lobby .player-card.waiting').innerHTML = `
+                            <div class="player-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="player-name">Opponent_5678</div>
+                            <div class="player-status">Ready</div>
+                        `;
+                        showNotification('Opponent joined the room!', 'success');
+                        startGameBtn.disabled = false;
+                    }, 2000);
+                } else {
+                    showNotification('Please enter a valid room ID', 'error');
+                }
+            });
+            
+            // Quick play
+            quickPlayBtn.addEventListener('click', () => {
+                gameModes.style.display = 'none';
+                showNotification('Searching for an opponent...', 'info');
+                
+                // Simulate matchmaking
+                setTimeout(() => {
+                    gameContainer.style.display = 'block';
+                    chatContainer.style.display = 'block';
+                    showNotification('Match found! Starting game...', 'success');
+                    
+                    // Set opponent name
+                    opponentName = "Player_" + Math.floor(Math.random() * 10000);
+                    document.getElementById('player-o-name').textContent = opponentName;
+                    
+                    // Start game with random first player
+                    startGame();
+                }, 3000);
+            });
+            
+            // Copy room ID
+            copyRoomIdBtn.addEventListener('click', () => {
+                const roomId = document.getElementById('room-id').textContent;
+                navigator.clipboard.writeText(roomId);
+                showNotification('Room ID copied to clipboard!', 'success');
+            });
+            
+            // Start game
+            startGameBtn.addEventListener('click', () => {
+                lobby.style.display = 'none';
+                gameContainer.style.display = 'block';
+                showNotification('Game started! You are X', 'success');
+                
+                // Set opponent name
+                opponentName = "Player_" + Math.floor(Math.random() * 10000);
+                document.getElementById('player-o-name').textContent = opponentName;
+                
+                startGame();
+            });
+            
+            // Leave lobby
+            leaveLobbyBtn.addEventListener('click', () => {
+                lobby.style.display = 'none';
+                gameModes.style.display = 'grid';
+                chatContainer.style.display = 'none';
+                showNotification('Left the lobby', 'info');
+            });
+            
+            // Leave game
+            leaveGameBtn.addEventListener('click', () => {
+                gameContainer.style.display = 'none';
+                gameModes.style.display = 'grid';
+                chatContainer.style.display = 'none';
+                showNotification('Left the game', 'info');
+            });
+            
+            // Rematch
+            rematchBtn.addEventListener('click', () => {
+                resetGame();
+                showNotification('Starting rematch...', 'info');
+                
+                // Randomize starting player
+                currentPlayer = Math.random() > 0.5 ? 'X' : 'O';
+                playerMark = currentPlayer;
+                
+                // Update UI
+                updateTurnIndicator();
+                
+                // Disable board if not player's turn
+                if (playerMark !== currentPlayer) {
+                    disableBoard();
+                }
+            });
+            
+            // Send chat message
+            sendMessageBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    addMessage(playerName, message, true);
+                    chatInput.value = '';
+                    
+                    // Simulate opponent reply
+                    setTimeout(() => {
+                        const replies = [
+                            "Nice move!",
+                            "Good game!",
+                            "You're good at this!",
+                            "Let's play again after this",
+                            "Almost had you there"
+                        ];
+                        const reply = replies[Math.floor(Math.random() * replies.length)];
+                        addMessage(opponentName, reply, false);
+                    }, 2000);
+                }
+            }
+            
+            function addMessage(sender, content, isYou) {
+                const messageElement = document.createElement('div');
+                messageElement.className = `message ${isYou ? 'you' : ''}`;
+                messageElement.innerHTML = `
+                    <div class="sender">${sender}</div>
+                    <div class="content">${content}</div>
+                `;
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Game functions
+            function startGame() {
+                resetGame();
+                gameActive = true;
+                
+                // Randomize starting player
+                currentPlayer = Math.random() > 0.5 ? 'X' : 'O';
+                playerMark = currentPlayer;
+                
+                // Update UI
+                updateTurnIndicator();
+                
+                // Add event listeners to cells
+                cells.forEach(cell => {
+                    cell.addEventListener('click', handleCellClick);
+                });
+            }
+            
+            function handleCellClick(e) {
+                if (!gameActive) return;
+                
+                const cell = e.target;
+                const index = parseInt(cell.getAttribute('data-index'));
+                
+                // Check if cell is empty
+                if (gameBoard[index] !== '') return;
+                
+                // Update game state
+                gameBoard[index] = currentPlayer;
+                cell.textContent = currentPlayer;
+                cell.classList.add(currentPlayer.toLowerCase());
+                
+                // Check for win or draw
+                if (checkWin()) {
+                    endGame(false);
+                    return;
+                }
+                
+                if (checkDraw()) {
+                    endGame(true);
+                    return;
+                }
+                
+                // Switch player
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                updateTurnIndicator();
+                
+                // Disable board during opponent's turn
+                if (playerMark !== currentPlayer) {
+                    disableBoard();
+                    
+                    // Simulate opponent move after delay
+                    setTimeout(makeOpponentMove, 1000);
+                }
+            }
+            
+            function makeOpponentMove() {
+                if (!gameActive) return;
+                
+                // Find available moves
+                const availableMoves = [];
+                gameBoard.forEach((cell, index) => {
+                    if (cell === '') availableMoves.push(index);
+                });
+                
+                if (availableMoves.length === 0) return;
+                
+                // Select random move
+                const randomIndex = Math.floor(Math.random() * availableMoves.length);
+                const move = availableMoves[randomIndex];
+                
+                // Make move
+                gameBoard[move] = currentPlayer;
+                cells[move].textContent = currentPlayer;
+                cells[move].classList.add(currentPlayer.toLowerCase());
+                
+                // Check for win or draw
+                if (checkWin()) {
+                    endGame(false);
+                    return;
+                }
+                
+                if (checkDraw()) {
+                    endGame(true);
+                    return;
+                }
+                
+                // Switch player
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                updateTurnIndicator();
+                
+                // Re-enable board if it's player's turn
+                if (playerMark === currentPlayer) {
+                    enableBoard();
+                }
+            }
+            
+            function checkWin() {
+                const winPatterns = [
+                    [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+                    [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+                    [0, 4, 8], [2, 4, 6]             // diagonals
+                ];
+                
+                for (const pattern of winPatterns) {
+                    const [a, b, c] = pattern;
+                    if (gameBoard[a] && 
+                        gameBoard[a] === gameBoard[b] && 
+                        gameBoard[a] === gameBoard[c]) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            function checkDraw() {
+                return gameBoard.every(cell => cell !== '');
+            }
+            
+            function endGame(isDraw) {
+                gameActive = false;
+                
+                if (isDraw) {
+                    turnIndicator.textContent = "It's a Draw!";
+                    showNotification("Game ended in a draw!", "info");
+                } else {
+                    const winner = currentPlayer === 'X' ? playerName : opponentName;
+                    turnIndicator.textContent = `${winner} Wins!`;
+                    
+                    if (currentPlayer === playerMark) {
+                        showNotification("You won! 🎉", "success");
+                    } else {
+                        showNotification(`${opponentName} won!`, "info");
+                    }
+                }
+            }
+            
+            function resetGame() {
+                gameBoard = ['', '', '', '', '', '', '', '', ''];
+                gameActive = false;
+                
+                // Clear board
+                cells.forEach(cell => {
+                    cell.textContent = '';
+                    cell.classList.remove('x', 'o');
+                });
+                
+                // Enable board
+                enableBoard();
+                
+                // Reset turn indicator
+                turnIndicator.textContent = playerMark === currentPlayer ? "Your Turn!" : `${opponentName}'s Turn`;
+            }
+            
+            function updateTurnIndicator() {
+                if (playerMark === currentPlayer) {
+                    turnIndicator.textContent = "Your Turn!";
+                } else {
+                    turnIndicator.textContent = `${opponentName}'s Turn`;
+                }
+            }
+            
+            function disableBoard() {
+                cells.forEach(cell => {
+                    cell.style.pointerEvents = 'none';
+                    cell.style.opacity = '0.7';
+                });
+            }
+            
+            function enableBoard() {
+                cells.forEach(cell => {
+                    cell.style.pointerEvents = 'auto';
+                    cell.style.opacity = '1';
+                });
+            }
+            
+            // Initial chat message
+            addMessage("System", "Welcome to Tic Tac Toe Online! Create a room or find a match to start playing.", false);
+        });
+    </script>
+</body>
+</html>
