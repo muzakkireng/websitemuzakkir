@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Comparison Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .upload-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .upload-box {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .upload-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .upload-box h2 {
+            margin-bottom: 20px;
+            color: #3498db;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area:hover {
+            background-color: #f1f9ff;
+        }
+        
+        .upload-area i {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .upload-area p {
+            margin: 10px 0;
+            color: #7f8c8d;
+        }
+        
+        .file-info {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .file-info.active {
+            display: block;
+        }
+        
+        .file-info p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+        
+        .btn-secondary {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .results-section.active {
+            display: block;
+        }
+        
+        .summary-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .card {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+        }
+        
+        .card h3 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        
+        .added {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+        
+        .removed {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .changed {
+            background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
+        }
+        
+        .unchanged {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:hover {
+            background-color: #f5f9ff;
+        }
+        
+        .added-row {
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        
+        .removed-row {
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+        
+        .changed-cell {
+            background-color: rgba(243, 156, 18, 0.2);
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .instructions {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .instructions h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 25px;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .upload-section {
+                flex-direction: column;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSV Comparison Tool</h1>
+            <p class="subtitle">Upload two CSV files to compare their contents and visualize differences</p>
+        </header>
+        
+        <section class="instructions">
+            <h2>📋 How to Use This Tool</h2>
+            <ul>
+                <li>Upload two CSV files using the upload areas below</li>
+                <li>The tool assumes the first row contains headers and the first column is the unique identifier</li>
+                <li>After uploading both files, click the "Compare CSV Files" button</li>
+                <li>Review the comparison summary and detailed differences in the results table</li>
+                <li>Use the "Reset" button to start over with new files</li>
+            </ul>
+        </section>
+        
+        <section class="upload-section">
+            <div class="upload-box">
+                <h2>📁 File 1 (Original)</h2>
+                <div class="upload-area" id="dropArea1">
+                    <i>📤</i>
+                    <p>Drag & drop your CSV file here</p>
+                    <p>or</p>
+                    <button class="btn btn-primary">Choose File</button>
+                    <input type="file" id="fileInput1" accept=".csv" hidden>
+                </div>
+                <div class="file-info" id="fileInfo1">
+                    <p><strong>File Name:</strong> <span id="fileName1"></span></p>
+                    <p><strong>File Size:</strong> <span id="fileSize1"></span></p>
+                    <p><strong>Rows:</strong> <span id="rowCount1"></span></p>
+                    <p><strong>Columns:</strong> <span id="colCount1"></span></p>
+                </div>
+            </div>
+            
+            <div class="upload-box">
+                <h2>📁 File 2 (Modified)</h2>
+                <div class="upload-area" id="dropArea2">
+                    <i>📤</i>
+                    <p>Drag & drop your CSV file here</p>
+                    <p>or</p>
+                    <button class="btn btn-primary">Choose File</button>
+                    <input type="file" id="fileInput2" accept=".csv" hidden>
+                </div>
+                <div class="file-info" id="fileInfo2">
+                    <p><strong>File Name:</strong> <span id="fileName2"></span></p>
+                    <p><strong>File Size:</strong> <span id="fileSize2"></span></p>
+                    <p><strong>Rows:</strong> <span id="rowCount2"></span></p>
+                    <p><strong>Columns:</strong> <span id="colCount2"></span></p>
+                </div>
+            </div>
+        </section>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="compareBtn" disabled>
+                <i>🔍</i> Compare CSV Files
+            </button>
+            <button class="btn btn-secondary" id="resetBtn">
+                <i>🔄</i> Reset
+            </button>
+        </div>
+        
+        <section class="results-section" id="resultsSection">
+            <h2 style="margin-bottom: 20px;">📊 Comparison Results</h2>
+            
+            <div class="summary-cards">
+                <div class="card added">
+                    <h3>Added Rows</h3>
+                    <div class="card-value" id="addedCount">0</div>
+                </div>
+                <div class="card removed">
+                    <h3>Removed Rows</h3>
+                    <div class="card-value" id="removedCount">0</div>
+                </div>
+                <div class="card changed">
+                    <h3>Changed Cells</h3>
+                    <div class="card-value" id="changedCount">0</div>
+                </div>
+                <div class="card unchanged">
+                    <h3>Unchanged Rows</h3>
+                    <div class="card-value" id="unchangedCount">0</div>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table id="comparisonTable">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Salary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Results will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <footer>
+            <p>CSV Comparison Tool • All processing happens in your browser • Your files are never uploaded to a server</p>
+        </footer>
+    </div>
+    
+    <script>
+        // DOM elements
+        const fileInput1 = document.getElementById('fileInput1');
+        const fileInput2 = document.getElementById('fileInput2');
+        const dropArea1 = document.getElementById('dropArea1');
+        const dropArea2 = document.getElementById('dropArea2');
+        const fileInfo1 = document.getElementById('fileInfo1');
+        const fileInfo2 = document.getElementById('fileInfo2');
+        const compareBtn = document.getElementById('compareBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const comparisonTable = document.getElementById('comparisonTable');
+        
+        // File info elements
+        const fileName1 = document.getElementById('fileName1');
+        const fileSize1 = document.getElementById('fileSize1');
+        const rowCount1 = document.getElementById('rowCount1');
+        const colCount1 = document.getElementById('colCount1');
+        const fileName2 = document.getElementById('fileName2');
+        const fileSize2 = document.getElementById('fileSize2');
+        const rowCount2 = document.getElementById('rowCount2');
+        const colCount2 = document.getElementById('colCount2');
+        
+        // Summary elements
+        const addedCount = document.getElementById('addedCount');
+        const removedCount = document.getElementById('removedCount');
+        const changedCount = document.getElementById('changedCount');
+        const unchangedCount = document.getElementById('unchangedCount');
+        
+        // Data storage
+        let csvData1 = null;
+        let csvData2 = null;
+        
+        // Event listeners for file inputs
+        dropArea1.addEventListener('click', () => fileInput1.click());
+        dropArea2.addEventListener('click', () => fileInput2.click());
+        
+        fileInput1.addEventListener('change', (e) => handleFile(e.target.files[0], 1));
+        fileInput2.addEventListener('change', (e) => handleFile(e.target.files[0], 2));
+        
+        // Drag and drop functionality
+        function setupDragAndDrop(dropArea, fileNum) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.style.backgroundColor = '#f1f9ff';
+            }
+            
+            function unhighlight() {
+                dropArea.style.backgroundColor = '';
+            }
+            
+            dropArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const file = dt.files[0];
+                handleFile(file, fileNum);
+            }
+        }
+        
+        setupDragAndDrop(dropArea1, 1);
+        setupDragAndDrop(dropArea2, 2);
+        
+        // Handle file upload
+        function handleFile(file, fileNum) {
+            if (!file || !file.name.endsWith('.csv')) {
+                alert('Please select a valid CSV file.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const rows = content.split('\n').filter(row => row.trim() !== '');
+                const headers = rows[0].split(',').map(h => h.trim());
+                const data = [];
+                
+                for (let i = 1; i < rows.length; i++) {
+                    const values = rows[i].split(',');
+                    const rowData = {};
+                    headers.forEach((header, index) => {
+                        rowData[header] = values[index] ? values[index].trim() : '';
+                    });
+                    data.push(rowData);
+                }
+                
+                if (fileNum === 1) {
+                    csvData1 = {
+                        name: file.name,
+                        size: formatFileSize(file.size),
+                        rows: data.length,
+                        cols: headers.length,
+                        headers: headers,
+                        data: data
+                    };
+                    
+                    fileName1.textContent = csvData1.name;
+                    fileSize1.textContent = csvData1.size;
+                    rowCount1.textContent = csvData1.rows;
+                    colCount1.textContent = csvData1.cols;
+                    fileInfo1.classList.add('active');
+                } else {
+                    csvData2 = {
+                        name: file.name,
+                        size: formatFileSize(file.size),
+                        rows: data.length,
+                        cols: headers.length,
+                        headers: headers,
+                        data: data
+                    };
+                    
+                    fileName2.textContent = csvData2.name;
+                    fileSize2.textContent = csvData2.size;
+                    rowCount2.textContent = csvData2.rows;
+                    colCount2.textContent = csvData2.cols;
+                    fileInfo2.classList.add('active');
+                }
+                
+                if (csvData1 && csvData2) {
+                    compareBtn.disabled = false;
+                }
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Compare CSV files
+        compareBtn.addEventListener('click', () => {
+            if (!csvData1 || !csvData2) return;
+            
+            // Compare the data
+            const comparisonResults = compareCSVData(csvData1.data, csvData2.data);
+            
+            // Update summary cards
+            addedCount.textContent = comparisonResults.added.length;
+            removedCount.textContent = comparisonResults.removed.length;
+            changedCount.textContent = comparisonResults.changed.length;
+            unchangedCount.textContent = comparisonResults.unchanged.length;
+            
+            // Populate the comparison table
+            populateComparisonTable(comparisonResults);
+            
+            // Show results section
+            resultsSection.classList.add('active');
+        });
+        
+        // Reset button
+        resetBtn.addEventListener('click', () => {
+            // Reset file inputs
+            fileInput1.value = '';
+            fileInput2.value = '';
+            
+            // Reset data
+            csvData1 = null;
+            csvData2 = null;
+            
+            // Reset file info displays
+            fileInfo1.classList.remove('active');
+            fileInfo2.classList.remove('active');
+            
+            // Disable compare button
+            compareBtn.disabled = true;
+            
+            // Hide results section
+            resultsSection.classList.remove('active');
+            
+            // Clear table
+            const tbody = comparisonTable.querySelector('tbody');
+            tbody.innerHTML = '';
+        });
+        
+        // Compare CSV data
+        function compareCSVData(data1, data2) {
+            const results = {
+                added: [],
+                removed: [],
+                changed: [],
+                unchanged: []
+            };
+            
+            // Create maps for faster lookup
+            const map1 = new Map();
+            data1.forEach(row => map1.set(row.ID, row));
+            
+            const map2 = new Map();
+            data2.forEach(row => map2.set(row.ID, row));
+            
+            // Check for removed rows (in data1 but not in data2)
+            data1.forEach(row => {
+                if (!map2.has(row.ID)) {
+                    results.removed.push({...row, status: 'Removed'});
+                }
+            });
+            
+            // Check for added rows (in data2 but not in data1)
+            data2.forEach(row => {
+                if (!map1.has(row.ID)) {
+                    results.added.push({...row, status: 'Added'});
+                }
+            });
+            
+            // Check for changed and unchanged rows
+            data1.forEach(row1 => {
+                const row2 = map2.get(row1.ID);
+                if (row2) {
+                    // Compare the rows
+                    let isChanged = false;
+                    const changes = {};
+                    
+                    for (const key in row1) {
+                        if (row1[key] !== row2[key]) {
+                            isChanged = true;
+                            changes[key] = {
+                                old: row1[key],
+                                new: row2[key]
+                            };
+                        }
+                    }
+                    
+                    if (isChanged) {
+                        results.changed.push({
+                            ...row1,
+                            status: 'Changed',
+                            changes: changes
+                        });
+                    } else {
+                        results.unchanged.push({
+                            ...row1,
+                            status: 'Unchanged'
+                        });
+                    }
+                }
+            });
+            
+            return results;
+        }
+        
+        // Populate comparison table
+        function populateComparisonTable(results) {
+            const tbody = comparisonTable.querySelector('tbody');
+            tbody.innerHTML = '';
+            
+            // Combine all results
+            const allResults = [
+                ...results.removed,
+                ...results.added,
+                ...results.changed,
+                ...results.unchanged
+            ];
+            
+            // Sort by ID
+            allResults.sort((a, b) => a.ID - b.ID);
+            
+            // Add rows to table
+            allResults.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Add class based on status
+                if (item.status === 'Added') row.classList.add('added-row');
+                if (item.status === 'Removed') row.classList.add('removed-row');
+                
+                // Status cell
+                const statusCell = document.createElement('td');
+                statusCell.textContent = item.status;
+                statusCell.style.fontWeight = 'bold';
+                
+                if (item.status === 'Added') statusCell.style.color = '#27ae60';
+                if (item.status === 'Removed') statusCell.style.color = '#c0392b';
+                if (item.status === 'Changed') statusCell.style.color = '#d35400';
+                if (item.status === 'Unchanged') statusCell.style.color = '#2980b9';
+                
+                row.appendChild(statusCell);
+                
+                // Other cells
+                const idCell = document.createElement('td');
+                idCell.textContent = item.ID;
+                row.appendChild(idCell);
+                
+                const nameCell = document.createElement('td');
+                nameCell.textContent = item.Name;
+                row.appendChild(nameCell);
+                
+                const emailCell = document.createElement('td');
+                emailCell.textContent = item.Email;
+                row.appendChild(emailCell);
+                
+                const deptCell = document.createElement('td');
+                deptCell.textContent = item.Department;
+                row.appendChild(deptCell);
+                
+                const salaryCell = document.createElement('td');
+                salaryCell.textContent = `$${item.Salary}`;
+                row.appendChild(salaryCell);
+                
+                // Highlight changed cells
+                if (item.status === 'Changed') {
+                    for (const key in item.changes) {
+                        switch(key) {
+                            case 'Name':
+                                nameCell.classList.add('changed-cell');
+                                nameCell.textContent += ` → ${item.changes[key].new}`;
+                                break;
+                            case 'Email':
+                                emailCell.classList.add('changed-cell');
+                                emailCell.textContent += ` → ${item.changes[key].new}`;
+                                break;
+                            case 'Department':
+                                deptCell.classList.add('changed-cell');
+                                deptCell.textContent += ` → ${item.changes[key].new}`;
+                                break;
+                            case 'Salary':
+                                salaryCell.classList.add('changed-cell');
+                                salaryCell.textContent = `$${item.Salary} → $${item.changes[key].new}`;
+                                break;
+                        }
+                    }
+                }
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Initialize with sample data for demo purposes
+        window.addEventListener('load', () => {
+            // Create sample CSV data
+            const sampleData1 = [
+                {ID: "1", Name: "John Smith", Email: "john@example.com", Department: "Marketing", Salary: "65000"},
+                {ID: "2", Name: "Sarah Johnson", Email: "sarah@example.com", Department: "Sales", Salary: "72000"},
+                {ID: "3", Name: "Michael Brown", Email: "michael@example.com", Department: "IT", Salary: "85000"},
+                {ID: "4", Name: "Emily Davis", Email: "emily@example.com", Department: "HR", Salary: "60000"},
+                {ID: "5", Name: "David Wilson", Email: "david@example.com", Department: "Finance", Salary: "78000"}
+            ];
+            
+            const sampleData2 = [
+                {ID: "1", Name: "John Smith", Email: "john@example.com", Department: "Marketing", Salary: "65000"},
+                {ID: "2", Name: "Sarah Johnson", Email: "sarah.j@example.com", Department: "Sales", Salary: "75000"},
+                {ID: "3", Name: "Michael Brown", Email: "michael@example.com", Department: "IT", Salary: "88000"},
+                {ID: "4", Name: "Emily Davis", Email: "emily.d@example.com", Department: "HR", Salary: "62000"},
+                {ID: "6", Name: "Lisa Anderson", Email: "lisa@example.com", Department: "Operations", Salary: "70000"}
+            ];
+            
+            // Set up for demo
+            csvData1 = {
+                name: "employees_2023.csv",
+                size: "2.5 KB",
+                rows: sampleData1.length,
+                cols: Object.keys(sampleData1[0]).length,
+                headers: Object.keys(sampleData1[0]),
+                data: sampleData1
+            };
+            
+            csvData2 = {
+                name: "employees_2024.csv",
+                size: "2.8 KB",
+                rows: sampleData2.length,
+                cols: Object.keys(sampleData2[0]).length,
+                headers: Object.keys(sampleData2[0]),
+                data: sampleData2
+            };
+            
+            // Update UI
+            fileName1.textContent = csvData1.name;
+            fileSize1.textContent = csvData1.size;
+            rowCount1.textContent = csvData1.rows;
+            colCount1.textContent = csvData1.cols;
+            fileInfo1.classList.add('active');
+            
+            fileName2.textContent = csvData2.name;
+            fileSize2.textContent = csvData2.size;
+            rowCount2.textContent = csvData2.rows;
+            colCount2.textContent = csvData2.cols;
+            fileInfo2.classList.add('active');
+            
+            compareBtn.disabled = false;
+        });
+    </script>
+</body>
+</html>
