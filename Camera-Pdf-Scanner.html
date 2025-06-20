@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Scanner with Camera</title>
+    <title>Smart PDF Scanner</title>
+    <!-- Include Tesseract.js and jsPDF libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.3/dist/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -20,6 +24,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            color: #333;
         }
         
         .container {
@@ -33,32 +38,34 @@
         header {
             text-align: center;
             padding: 20px;
+            animation: fadeIn 1s ease;
         }
         
         h1 {
-            font-size: 2.5rem;
-            color: #2c3e50;
+            font-size: 2.8rem;
             margin-bottom: 10px;
             background: linear-gradient(to right, #3498db, #2c3e50);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .subtitle {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
+            color: #555;
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
         }
         
-        .main-content {
+        .app-container {
             display: flex;
             flex-wrap: wrap;
             gap: 30px;
             justify-content: center;
         }
         
-        .upload-section {
+        .camera-section {
             flex: 1;
             min-width: 300px;
             background: white;
@@ -70,7 +77,7 @@
             align-items: center;
         }
         
-        .preview-section {
+        .result-section {
             flex: 1;
             min-width: 300px;
             background: white;
@@ -82,59 +89,61 @@
         }
         
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: #2c3e50;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
-        .upload-area {
+        .camera-container {
             width: 100%;
-            height: 250px;
-            border: 3px dashed #3498db;
+            height: 350px;
+            background: #222;
             border-radius: 15px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            position: relative;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 25px;
-            background: #f8f9fa;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         
-        .upload-area:hover, .upload-area.dragover {
-            background: #e3f2fd;
-            border-color: #2980b9;
+        #cameraFeed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
         }
         
-        .upload-area i {
+        .camera-placeholder {
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .camera-placeholder i {
             font-size: 5rem;
-            color: #3498db;
             margin-bottom: 20px;
+            color: #3498db;
         }
         
-        .upload-area h3 {
-            color: #2c3e50;
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .upload-area p {
-            color: #7f8c8d;
-            text-align: center;
+        .camera-placeholder p {
+            font-size: 1.1rem;
             max-width: 80%;
+            margin: 0 auto;
         }
         
         .btn {
             background: #3498db;
             color: white;
             border: none;
-            padding: 15px 25px;
-            font-size: 1rem;
+            padding: 15px 30px;
+            font-size: 1.1rem;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -143,10 +152,10 @@
             gap: 10px;
             font-weight: 600;
             box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            margin: 10px 5px;
         }
         
         .btn:hover {
-            background: #2980b9;
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
         }
@@ -162,17 +171,15 @@
         
         .btn.scan:hover {
             background: linear-gradient(to right, #27ae60, #219653);
-            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
         }
         
-        .btn.camera {
+        .btn.capture {
             background: linear-gradient(to right, #9b59b6, #8e44ad);
             box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
         }
         
-        .btn.camera:hover {
+        .btn.capture:hover {
             background: linear-gradient(to right, #8e44ad, #7d3c98);
-            box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
         }
         
         .btn.download {
@@ -182,16 +189,14 @@
         
         .btn.download:hover {
             background: linear-gradient(to right, #c0392b, #a23526);
-            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
         }
         
-        .button-group {
+        .btn-group {
             display: flex;
-            gap: 15px;
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 15px;
         }
         
         .preview-container {
@@ -206,9 +211,10 @@
             border: 1px solid #e0e0e0;
             min-height: 300px;
             position: relative;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
         }
         
-        .pdf-preview {
+        .preview-content {
             width: 100%;
             height: 100%;
             display: flex;
@@ -216,25 +222,31 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            text-align: center;
         }
         
-        .pdf-preview i {
+        .preview-content i {
             font-size: 5rem;
-            color: #e74c3c;
+            color: #3498db;
             margin-bottom: 20px;
         }
         
-        .pdf-preview h4 {
+        .preview-content h4 {
             color: #2c3e50;
-            font-size: 1.2rem;
-            text-align: center;
+            font-size: 1.3rem;
             margin-bottom: 10px;
         }
         
-        .pdf-preview .file-info {
+        .preview-content .file-info {
             color: #7f8c8d;
-            font-size: 0.9rem;
-            text-align: center;
+            font-size: 1rem;
+        }
+        
+        #imagePreview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            display: none;
         }
         
         .progress-container {
@@ -253,6 +265,31 @@
             transition: width 0.5s ease;
         }
         
+        .ocr-result {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #e0e0e0;
+            max-height: 250px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+        
+        .ocr-result h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .ocr-result p {
+            color: #34495e;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -263,139 +300,68 @@
         .feature-card {
             background: white;
             border-radius: 15px;
-            padding: 20px;
+            padding: 25px 20px;
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
         
         .feature-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
         
         .feature-card i {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             color: #3498db;
             margin-bottom: 15px;
         }
         
         .feature-card h3 {
             color: #2c3e50;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-size: 1.4rem;
         }
         
         .feature-card p {
             color: #7f8c8d;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            line-height: 1.5;
         }
         
         footer {
             text-align: center;
-            padding: 20px;
+            padding: 25px;
             color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-        
-        .scanned-text {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
+            font-size: 1rem;
+            border-top: 1px solid #eee;
             margin-top: 20px;
-            border: 1px solid #e0e0e0;
-            display: none;
-            max-height: 200px;
-            overflow-y: auto;
         }
         
-        .scanned-text h4 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        .scanned-text p {
-            color: #34495e;
-            line-height: 1.6;
-        }
-        
-        /* Camera Modal */
-        .camera-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .camera-container {
-            background: white;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 800px;
-            padding: 30px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .camera-preview {
-            width: 100%;
-            height: 400px;
-            background: #333;
+        .status-message {
+            padding: 15px;
             border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        #cameraFeed {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .camera-placeholder {
-            color: white;
+            margin: 15px 0;
             text-align: center;
-        }
-        
-        .camera-placeholder i {
-            font-size: 5rem;
-            margin-bottom: 20px;
-        }
-        
-        .camera-controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
-            color: #7f8c8d;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-        
-        .close-modal:hover {
-            color: #e74c3c;
-        }
-        
-        .captured-image {
-            max-width: 100%;
-            max-height: 400px;
             display: none;
-            border-radius: 10px;
+        }
+        
+        .status-message.success {
+            background: rgba(46, 204, 113, 0.15);
+            color: #27ae60;
+            border: 1px solid #2ecc71;
+        }
+        
+        .status-message.error {
+            background: rgba(231, 76, 60, 0.15);
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+        }
+        
+        .status-message.info {
+            background: rgba(52, 152, 219, 0.15);
+            color: #2980b9;
+            border: 1px solid #3498db;
         }
         
         /* Device compatibility */
@@ -411,32 +377,43 @@
             display: flex;
             justify-content: space-around;
             margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .device-icon {
             text-align: center;
+            flex: 1;
+            min-width: 100px;
         }
         
         .device-icon i {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             color: #3498db;
             margin-bottom: 10px;
         }
         
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
         @media (max-width: 768px) {
-            .main-content {
+            .app-container {
                 flex-direction: column;
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
-            .upload-area {
-                height: 200px;
-            }
-            
-            .camera-preview {
+            .camera-container {
                 height: 300px;
             }
         }
@@ -445,27 +422,19 @@
             .btn {
                 width: 100%;
                 justify-content: center;
-                padding: 12px 20px;
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-            
-            .upload-area i {
-                font-size: 4rem;
+                padding: 16px;
             }
             
             h1 {
                 font-size: 1.8rem;
             }
             
-            .camera-controls {
-                flex-direction: column;
+            .section-title {
+                font-size: 1.5rem;
             }
             
-            .camera-controls .btn {
-                width: 100%;
+            .camera-container {
+                height: 250px;
             }
         }
     </style>
@@ -473,36 +442,43 @@
 <body>
     <div class="container">
         <header>
-            <h1>PDF Scanner with Camera</h1>
-            <p class="subtitle">Scan documents using your camera or upload existing files. Works perfectly on all devices.</p>
+            <h1><i class="fas fa-file-pdf"></i> Smart PDF Scanner</h1>
+            <p class="subtitle">Scan documents with your camera, extract text using OCR, and generate searchable PDFs. Works perfectly on all devices.</p>
         </header>
         
-        <div class="main-content">
-            <div class="upload-section">
-                <h2 class="section-title">Scan Options</h2>
-                <div class="upload-area" id="dropArea">
-                    <i class="fas fa-camera"></i>
-                    <h3>Scan with Camera or Upload PDF</h3>
-                    <p>Click to choose an option below</p>
+        <div class="app-container">
+            <div class="camera-section">
+                <h2 class="section-title"><i class="fas fa-camera"></i> Capture Document</h2>
+                
+                <div class="camera-container">
+                    <div class="camera-placeholder" id="cameraPlaceholder">
+                        <i class="fas fa-camera"></i>
+                        <p>Camera will be activated when you click "Start Camera"</p>
+                    </div>
+                    <video id="cameraFeed" autoplay playsinline></video>
+                    <canvas id="photoCanvas" style="display:none;"></canvas>
                 </div>
                 
-                <div class="button-group">
-                    <button class="btn camera" id="cameraBtn">
-                        <i class="fas fa-camera"></i> Use Camera
+                <div class="btn-group">
+                    <button class="btn" id="startCameraBtn">
+                        <i class="fas fa-play"></i> Start Camera
                     </button>
-                    <button class="btn" id="browseBtn">
-                        <i class="fas fa-folder-open"></i> Upload File
+                    <button class="btn capture" id="captureBtn" disabled>
+                        <i class="fas fa-camera"></i> Capture
+                    </button>
+                    <button class="btn scan" id="processBtn" disabled>
+                        <i class="fas fa-search"></i> Process Image
                     </button>
                 </div>
-                
-                <input type="file" id="fileInput" accept=".pdf,image/*" hidden>
                 
                 <div class="progress-container">
                     <div class="progress-bar" id="progressBar"></div>
                 </div>
                 
+                <div class="status-message" id="statusMessage"></div>
+                
                 <div class="device-compatibility">
-                    <h3>Works on All Devices</h3>
+                    <h3>Works on All Your Devices</h3>
                     <div class="device-icons">
                         <div class="device-icon">
                             <i class="fas fa-mobile-alt"></i>
@@ -516,36 +492,34 @@
                             <i class="fas fa-laptop"></i>
                             <p>Laptops</p>
                         </div>
-                        <div class="device-icon">
-                            <i class="fas fa-desktop"></i>
-                            <p>Desktops</p>
-                        </div>
                     </div>
                 </div>
             </div>
             
-            <div class="preview-section">
-                <h2 class="section-title">Scan Preview</h2>
+            <div class="result-section">
+                <h2 class="section-title"><i class="fas fa-file-alt"></i> Results</h2>
+                
                 <div class="preview-container">
-                    <div class="pdf-preview" id="pdfPreview">
+                    <div class="preview-content" id="imagePreviewContainer">
                         <i class="fas fa-file-image"></i>
-                        <h4>Preview Will Appear Here</h4>
-                        <p class="file-info">Scan a document or upload a file</p>
+                        <h4>Document Preview</h4>
+                        <p class="file-info">Capture an image to see preview</p>
                     </div>
+                    <img id="imagePreview" alt="Captured document">
                 </div>
                 
-                <div class="button-group">
-                    <button class="btn scan" id="scanBtn">
-                        <i class="fas fa-search"></i> Process Document
+                <div class="btn-group">
+                    <button class="btn download" id="downloadPdfBtn" disabled>
+                        <i class="fas fa-download"></i> Download as PDF
                     </button>
-                    <button class="btn download" id="downloadBtn">
-                        <i class="fas fa-download"></i> Save as PDF
+                    <button class="btn" id="newScanBtn">
+                        <i class="fas fa-redo"></i> New Scan
                     </button>
                 </div>
                 
-                <div class="scanned-text" id="scannedText">
-                    <h4>Extracted Text:</h4>
-                    <p>This is where the extracted text from your document will appear. The OCR technology will recognize text from scanned images or PDFs.</p>
+                <div class="ocr-result">
+                    <h4><i class="fas fa-font"></i> Extracted Text</h4>
+                    <p id="extractedText">Text content will appear here after processing...</p>
                 </div>
             </div>
         </div>
@@ -554,313 +528,239 @@
             <div class="feature-card">
                 <i class="fas fa-camera"></i>
                 <h3>Camera Scanning</h3>
-                <p>Scan documents directly using your device's camera</p>
+                <p>Scan documents directly using your device's camera with real-time preview</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-robot"></i>
+                <h3>OCR Technology</h3>
+                <p>Powered by Tesseract.js to extract text from images with high accuracy</p>
             </div>
             <div class="feature-card">
                 <i class="fas fa-file-pdf"></i>
-                <h3>PDF Creation</h3>
-                <p>Convert scans to high-quality PDF documents</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-text-height"></i>
-                <h3>Text Recognition</h3>
-                <p>Extract text from scanned documents using OCR</p>
+                <h3>PDF Generation</h3>
+                <p>Create searchable PDF documents using jsPDF with your scanned content</p>
             </div>
             <div class="feature-card">
                 <i class="fas fa-mobile-alt"></i>
-                <h3>Mobile Optimized</h3>
-                <p>Works perfectly on smartphones and tablets</p>
+                <h3>Fully Responsive</h3>
+                <p>Works perfectly on smartphones, tablets, laptops, and desktops</p>
             </div>
         </div>
         
         <footer>
-            <p>PDF Scanner with Camera &copy; 2023 | Responsive Design for All Devices</p>
+            <p>Smart PDF Scanner &copy; 2023 | Tesseract.js + jsPDF Integration</p>
         </footer>
-    </div>
-    
-    <!-- Camera Modal -->
-    <div class="camera-modal" id="cameraModal">
-        <div class="camera-container">
-            <button class="close-modal" id="closeModal">
-                <i class="fas fa-times"></i>
-            </button>
-            <h2>Document Scanner</h2>
-            <p>Position your document within the frame and capture</p>
-            
-            <div class="camera-preview">
-                <div class="camera-placeholder" id="cameraPlaceholder">
-                    <i class="fas fa-camera"></i>
-                    <p>Camera feed loading...</p>
-                </div>
-                <video id="cameraFeed" autoplay playsinline></video>
-                <canvas id="photoCanvas" style="display:none;"></canvas>
-                <img id="capturedImage" class="captured-image" alt="Captured document">
-            </div>
-            
-            <div class="camera-controls">
-                <button class="btn" id="retryBtn" style="display:none;">
-                    <i class="fas fa-redo"></i> Retry
-                </button>
-                <button class="btn camera" id="captureBtn">
-                    <i class="fas fa-camera"></i> Capture
-                </button>
-                <button class="btn scan" id="usePhotoBtn" style="display:none;">
-                    <i class="fas fa-check"></i> Use This Photo
-                </button>
-            </div>
-        </div>
     </div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Elements
-            const dropArea = document.getElementById('dropArea');
-            const fileInput = document.getElementById('fileInput');
-            const browseBtn = document.getElementById('browseBtn');
-            const cameraBtn = document.getElementById('cameraBtn');
-            const scanBtn = document.getElementById('scanBtn');
-            const downloadBtn = document.getElementById('downloadBtn');
-            const progressBar = document.getElementById('progressBar');
-            const pdfPreview = document.getElementById('pdfPreview');
-            const scannedText = document.getElementById('scannedText');
-            const cameraModal = document.getElementById('cameraModal');
-            const closeModal = document.getElementById('closeModal');
-            const cameraFeed = document.getElementById('cameraFeed');
+            const startCameraBtn = document.getElementById('startCameraBtn');
             const captureBtn = document.getElementById('captureBtn');
-            const retryBtn = document.getElementById('retryBtn');
-            const usePhotoBtn = document.getElementById('usePhotoBtn');
-            const capturedImage = document.getElementById('capturedImage');
-            const photoCanvas = document.getElementById('photoCanvas');
+            const processBtn = document.getElementById('processBtn');
+            const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+            const newScanBtn = document.getElementById('newScanBtn');
+            const cameraFeed = document.getElementById('cameraFeed');
             const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+            const photoCanvas = document.getElementById('photoCanvas');
+            const imagePreview = document.getElementById('imagePreview');
+            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+            const progressBar = document.getElementById('progressBar');
+            const extractedText = document.getElementById('extractedText');
+            const statusMessage = document.getElementById('statusMessage');
             
-            // Camera variables
+            // Variables
             let stream = null;
-            
-            // Open file browser when clicking on browse button
-            browseBtn.addEventListener('click', () => fileInput.click());
-            
-            // Open camera modal
-            cameraBtn.addEventListener('click', () => {
-                cameraModal.style.display = 'flex';
-                startCamera();
-            });
-            
-            // Close camera modal
-            closeModal.addEventListener('click', () => {
-                cameraModal.style.display = 'none';
-                stopCamera();
-            });
-            
-            // Handle file selection
-            fileInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const file = this.files[0];
-                    handleFile(file);
-                }
-            });
-            
-            // Drag and drop events
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                dropArea.addEventListener(eventName, preventDefaults, false);
-            });
-            
-            function preventDefaults(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            
-            ['dragenter', 'dragover'].forEach(eventName => {
-                dropArea.addEventListener(eventName, highlight, false);
-            });
-            
-            ['dragleave', 'drop'].forEach(eventName => {
-                dropArea.addEventListener(eventName, unhighlight, false);
-            });
-            
-            function highlight() {
-                dropArea.classList.add('dragover');
-            }
-            
-            function unhighlight() {
-                dropArea.classList.remove('dragover');
-            }
-            
-            dropArea.addEventListener('drop', function(e) {
-                const dt = e.dataTransfer;
-                const file = dt.files[0];
-                handleFile(file);
-            });
-            
-            // Handle the selected file
-            function handleFile(file) {
-                const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
-                
-                if (!validTypes.includes(file.type)) {
-                    alert('Please upload a PDF or image file (JPG, PNG, GIF).');
-                    return;
-                }
-                
-                if (file.size > 15 * 1024 * 1024) {
-                    alert('File size exceeds 15MB limit.');
-                    return;
-                }
-                
-                // Show preview
-                if (file.type.includes('image')) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        pdfPreview.innerHTML = `
-                            <img src="${e.target.result}" alt="Preview" style="max-width:100%; max-height:300px; border-radius:10px;">
-                            <h4>${file.name}</h4>
-                            <p class="file-info">${formatFileSize(file.size)} | Image</p>
-                        `;
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    // For PDF files
-                    pdfPreview.innerHTML = `
-                        <i class="fas fa-file-pdf"></i>
-                        <h4>${file.name}</h4>
-                        <p class="file-info">${formatFileSize(file.size)} | PDF Document</p>
-                    `;
-                }
-                
-                // Reset scanned text
-                scannedText.style.display = 'none';
-            }
-            
-            // Format file size
-            function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
+            let capturedImageData = null;
             
             // Start camera
-            function startCamera() {
-                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-                        .then(function(mediaStream) {
-                            stream = mediaStream;
-                            cameraFeed.srcObject = stream;
-                            cameraPlaceholder.style.display = 'none';
-                            cameraFeed.style.display = 'block';
-                        })
-                        .catch(function(error) {
-                            console.error("Camera error: ", error);
-                            cameraPlaceholder.innerHTML = '<i class="fas fa-exclamation-triangle"></i><p>Camera access denied. Please enable camera permissions.</p>';
-                        });
-                } else {
-                    cameraPlaceholder.innerHTML = '<i class="fas fa-exclamation-triangle"></i><p>Camera not supported on this device.</p>';
+            startCameraBtn.addEventListener('click', async function() {
+                try {
+                    showStatus('Starting camera...', 'info');
+                    
+                    // Access camera
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: 'environment' } 
+                    });
+                    
+                    // Display camera feed
+                    cameraFeed.srcObject = stream;
+                    cameraFeed.style.display = 'block';
+                    cameraPlaceholder.style.display = 'none';
+                    
+                    // Enable capture button
+                    captureBtn.disabled = false;
+                    processBtn.disabled = true;
+                    downloadPdfBtn.disabled = true;
+                    
+                    // Change button appearance
+                    startCameraBtn.innerHTML = '<i class="fas fa-sync"></i> Switch Camera';
+                    startCameraBtn.classList.add('scan');
+                    
+                    showStatus('Camera ready. Position your document and click Capture.', 'success');
+                } catch (error) {
+                    console.error('Camera error:', error);
+                    showStatus('Camera access denied. Please enable camera permissions.', 'error');
                 }
-            }
+            });
             
-            // Stop camera
-            function stopCamera() {
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    stream = null;
-                }
-                cameraFeed.srcObject = null;
-            }
-            
-            // Capture photo
+            // Capture image
             captureBtn.addEventListener('click', function() {
                 if (!stream) return;
                 
-                // Hide the video and show canvas
-                cameraFeed.style.display = 'none';
-                
-                // Create a canvas element to draw the video frame
+                // Create canvas to capture image
                 const context = photoCanvas.getContext('2d');
                 photoCanvas.width = cameraFeed.videoWidth;
                 photoCanvas.height = cameraFeed.videoHeight;
                 
-                // Draw the current video frame to the canvas
+                // Draw current video frame to canvas
                 context.drawImage(cameraFeed, 0, 0, photoCanvas.width, photoCanvas.height);
                 
-                // Convert canvas to data URL and show as image
-                capturedImage.src = photoCanvas.toDataURL('image/jpeg');
-                capturedImage.style.display = 'block';
+                // Save image data
+                capturedImageData = photoCanvas.toDataURL('image/jpeg');
                 
-                // Show controls
-                retryBtn.style.display = 'block';
-                usePhotoBtn.style.display = 'block';
-                captureBtn.style.display = 'none';
-            });
-            
-            // Retry capture
-            retryBtn.addEventListener('click', function() {
-                capturedImage.style.display = 'none';
-                cameraFeed.style.display = 'block';
-                
-                retryBtn.style.display = 'none';
-                usePhotoBtn.style.display = 'none';
-                captureBtn.style.display = 'block';
-            });
-            
-            // Use captured photo
-            usePhotoBtn.addEventListener('click', function() {
                 // Show preview
-                pdfPreview.innerHTML = `
-                    <img src="${capturedImage.src}" alt="Scanned Document" style="max-width:100%; max-height:300px; border-radius:10px;">
-                    <h4>Scanned Document</h4>
-                    <p class="file-info">Captured from camera</p>
-                `;
+                imagePreview.src = capturedImageData;
+                imagePreview.style.display = 'block';
+                imagePreviewContainer.style.display = 'none';
                 
-                // Close modal
-                cameraModal.style.display = 'none';
-                stopCamera();
+                // Enable process button
+                processBtn.disabled = false;
+                downloadPdfBtn.disabled = true;
                 
-                // Reset camera UI
-                capturedImage.style.display = 'none';
-                cameraFeed.style.display = 'block';
-                retryBtn.style.display = 'none';
-                usePhotoBtn.style.display = 'none';
-                captureBtn.style.display = 'block';
-                cameraPlaceholder.style.display = 'flex';
+                showStatus('Image captured. Click "Process Image" to extract text.', 'info');
             });
             
-            // Scan button event
-            scanBtn.addEventListener('click', function() {
-                if (pdfPreview.querySelector('h4').textContent === 'Preview Will Appear Here') {
-                    alert('Please scan or upload a document first.');
-                    return;
+            // Process image with OCR
+            processBtn.addEventListener('click', async function() {
+                if (!capturedImageData) return;
+                
+                try {
+                    showStatus('Processing image with OCR...', 'info');
+                    processBtn.disabled = true;
+                    
+                    // Reset progress bar
+                    progressBar.style.width = '0%';
+                    
+                    // Simulate progress for demo
+                    let progress = 0;
+                    const progressInterval = setInterval(() => {
+                        progress += 2;
+                        progressBar.style.width = `${progress}%`;
+                        
+                        if (progress >= 100) {
+                            clearInterval(progressInterval);
+                        }
+                    }, 100);
+                    
+                    // Use Tesseract.js for OCR
+                    const result = await Tesseract.recognize(
+                        capturedImageData,
+                        'eng', 
+                        { 
+                            logger: message => {
+                                if (message.status === 'recognizing text') {
+                                    progressBar.style.width = `${message.progress * 100}%`;
+                                }
+                            }
+                        }
+                    );
+                    
+                    // Display extracted text
+                    extractedText.textContent = result.data.text || 'No text detected. Try a clearer image.';
+                    
+                    // Enable download button
+                    downloadPdfBtn.disabled = false;
+                    
+                    showStatus('OCR processing complete! Text extracted successfully.', 'success');
+                } catch (error) {
+                    console.error('OCR Error:', error);
+                    showStatus('OCR processing failed. Please try again.', 'error');
+                    processBtn.disabled = false;
+                }
+            });
+            
+            // Generate and download PDF
+            downloadPdfBtn.addEventListener('click', function() {
+                if (!capturedImageData || !extractedText.textContent) return;
+                
+                try {
+                    showStatus('Generating PDF document...', 'info');
+                    
+                    // Use jsPDF to create PDF
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF();
+                    
+                    // Set document properties
+                    pdf.setProperties({
+                        title: 'Scanned Document',
+                        subject: 'Document scanned with Smart PDF Scanner',
+                        author: 'Smart PDF Scanner'
+                    });
+                    
+                    // Add title
+                    pdf.setFontSize(20);
+                    pdf.text('Scanned Document', 105, 20, null, null, 'center');
+                    
+                    // Add image
+                    const imgProps = pdf.getImageProperties(capturedImageData);
+                    const pdfWidth = pdf.internal.pageSize.getWidth() - 40;
+                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                    
+                    pdf.addImage(capturedImageData, 'JPEG', 20, 30, pdfWidth, pdfHeight);
+                    
+                    // Add extracted text
+                    pdf.setFontSize(12);
+                    pdf.text(extractedText.textContent, 20, pdfHeight + 50, {
+                        maxWidth: pdfWidth
+                    });
+                    
+                    // Save the PDF
+                    pdf.save('scanned-document.pdf');
+                    
+                    showStatus('PDF downloaded successfully!', 'success');
+                } catch (error) {
+                    console.error('PDF Generation Error:', error);
+                    showStatus('Failed to generate PDF. Please try again.', 'error');
+                }
+            });
+            
+            // New scan
+            newScanBtn.addEventListener('click', function() {
+                // Reset everything
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    stream = null;
                 }
                 
-                // Simulate scanning progress
-                let width = 0;
-                const interval = setInterval(() => {
-                    if (width >= 100) {
-                        clearInterval(interval);
-                        
-                        // Show scanned content
-                        scannedText.style.display = 'block';
-                        
-                        // Show success message
-                        const previewContent = pdfPreview.innerHTML;
-                        pdfPreview.innerHTML = `
-                            <div style="text-align:center;">
-                                ${previewContent}
-                                <div style="margin-top:20px;">
-                                    <i class="fas fa-check-circle" style="color:#2ecc71; font-size:3rem;"></i>
-                                    <p style="color:#27ae60; font-weight:bold; margin-top:10px;">Scan Complete!</p>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        width++;
-                        progressBar.style.width = width + '%';
-                    }
-                }, 30);
+                cameraFeed.srcObject = null;
+                cameraFeed.style.display = 'none';
+                cameraPlaceholder.style.display = 'flex';
+                
+                capturedImageData = null;
+                imagePreview.src = '';
+                imagePreview.style.display = 'none';
+                imagePreviewContainer.style.display = 'flex';
+                
+                extractedText.textContent = 'Text content will appear here after processing...';
+                progressBar.style.width = '0%';
+                
+                startCameraBtn.innerHTML = '<i class="fas fa-play"></i> Start Camera';
+                startCameraBtn.classList.remove('scan');
+                
+                captureBtn.disabled = true;
+                processBtn.disabled = true;
+                downloadPdfBtn.disabled = true;
+                
+                statusMessage.style.display = 'none';
             });
             
-            // Download button event
-            downloadBtn.addEventListener('click', function() {
-                alert('PDF download would start now in a real application. This is a frontend demo.');
-            });
+            // Helper function to show status messages
+            function showStatus(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'status-message ' + type;
+                statusMessage.style.display = 'block';
+            }
         });
     </script>
 </body>
