@@ -471,7 +471,7 @@
             </div>
             
             <div class="calculator-footer">
-                Advanced Scientific Calculator. All Process are happening in you local browser.We are not collecting or Stored Data any ever.
+                Advanced Scientific Calculator. All processes happen in your local browser. We are not collecting or storing any data.
             </div>
         </div>
         
@@ -574,9 +574,6 @@
                             if (current === 0) throw new Error("Division by zero");
                             computation = prev / current;
                             break;
-                        case 'percentage':
-                            computation = prev * (current / 100);
-                            break;
                         case 'power':
                             computation = Math.pow(prev, current);
                             break;
@@ -630,14 +627,52 @@
                 this.updateHistoryDisplay();
             }
             
+            // FIXED: Percentage calculation now works correctly
             percentage() {
                 if (this.errorState) return;
+                
                 const current = parseFloat(this.currentOperand);
                 if (isNaN(current)) {
                     this.showError();
                     return;
                 }
-                this.currentOperand = (current / 100).toString();
+                
+                if (this.operation && this.previousOperand !== '') {
+                    // Calculate percentage in context of pending operation
+                    const prev = parseFloat(this.previousOperand);
+                    let result;
+                    
+                    switch (this.operation) {
+                        case 'add':
+                            result = prev + (prev * (current / 100));
+                            break;
+                        case 'subtract':
+                            result = prev - (prev * (current / 100));
+                            break;
+                        case 'multiply':
+                            result = prev * (current / 100);
+                            break;
+                        case 'divide':
+                            if (current === 0) {
+                                this.showError();
+                                return;
+                            }
+                            result = prev / (current / 100);
+                            break;
+                        default:
+                            result = current / 100;
+                    }
+                    
+                    this.currentOperand = result.toString();
+                    this.addToHistory(`${prev} ${this.getOperationSymbol()} ${current}%`, result);
+                    this.operation = undefined;
+                    this.previousOperand = '';
+                    this.resetOnNextInput = true;
+                } else {
+                    // Standalone percentage operation
+                    this.currentOperand = (current / 100).toString();
+                    this.addToHistory(`${current}%`, current/100);
+                }
             }
             
             negate() {
@@ -803,7 +838,6 @@
                     case 'subtract': return '−';
                     case 'multiply': return '×';
                     case 'divide': return '÷';
-                    case 'percentage': return '%';
                     case 'power': return '^';
                     default: return '';
                 }
