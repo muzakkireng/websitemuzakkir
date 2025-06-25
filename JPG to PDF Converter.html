@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free JPG to PDF Converter | Convert Images to PDF Online</title>
+    <meta name="description" content="Convert JPG images to PDF documents instantly. Free online tool with no registration required. Preserve image quality and create professional PDF files.">
+    <meta name="keywords" content="jpg to pdf, image to pdf, jpeg to pdf, convert jpg to pdf, online pdf converter">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.8rem;
+            color: #ff9a00;
+        }
+        
+        .logo h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(to right, #ff9a00, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 20px;
+            color: #f0f0f0;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+        
+        .converter-box {
+            text-align: center;
+        }
+        
+        .converter-box h2 {
+            color: #1a2a6c;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #1a2a6c;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: rgba(26, 42, 108, 0.05);
+        }
+        
+        .upload-area:hover {
+            background: rgba(26, 42, 108, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .upload-area i {
+            font-size: 3.5rem;
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 15px 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #1a2a6c;
+            color: #1a2a6c;
+        }
+        
+        .preview {
+            margin: 25px 0;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            text-align: center;
+            background: white;
+            display: none;
+        }
+        
+        .preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .feature {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature i {
+            font-size: 2.8rem;
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        
+        .feature h3 {
+            margin-bottom: 10px;
+            color: #b21f1f;
+        }
+        
+        .feature p {
+            color: #555;
+        }
+        
+        .seo-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 50px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .seo-content h2 {
+            color: #1a2a6c;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .seo-content h3 {
+            color: #b21f1f;
+            margin: 30px 0 15px;
+            border-left: 4px solid #ff9a00;
+            padding-left: 12px;
+        }
+        
+        .faq {
+            margin-top: 40px;
+        }
+        
+        .question {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            border-left: 4px solid #1a2a6c;
+            transition: all 0.2s ease;
+        }
+        
+        .question:hover {
+            background: #edf2ff;
+        }
+        
+        .question h4 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .answer {
+            padding: 15px;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            margin-top: 10px;
+            display: none;
+            border-left: 2px solid #1a2a6c;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #f0f0f0;
+            margin-top: 50px;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .image-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .image-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .image-item .remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(178, 31, 31, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .logo h1 {
+                font-size: 2.2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .upload-area {
+                padding: 30px 15px;
+            }
+            
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-file-pdf"></i>
+                <h1>JPG to PDF Converter</h1>
+            </div>
+            <p class="tagline">Convert your JPG images to professional PDF documents instantly. Free, secure, and no registration required!</p>
+        </header>
+        
+        <div class="card">
+            <div class="converter-box">
+                <h2><i class="fas fa-file-image"></i> JPG to PDF Converter</h2>
+                
+                <div class="upload-area" id="jpgUploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Upload JPG Images</h3>
+                    <p>Drag & drop or click to select files</p>
+                    <p>(Max 5 images at once)</p>
+                    <input type="file" id="jpgInput" class="file-input" accept=".jpg,.jpeg" multiple>
+                </div>
+                
+                <div class="image-grid" id="imageGrid"></div>
+                
+                <div class="preview" id="jpgPreview">
+                    <img id="previewImg" src="" alt="Preview">
+                    <p id="fileName"></p>
+                </div>
+                
+                <button class="btn" id="convertJpgBtn" disabled>
+                    <i class="fas fa-sync-alt"></i> Convert to PDF
+                </button>
+                <button class="btn btn-outline" id="resetBtn">
+                    <i class="fas fa-trash-alt"></i> Reset
+                </button>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-bolt"></i>
+                <h3>Lightning Fast</h3>
+                <p>Convert images to PDF in seconds with our optimized processing</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shield-alt"></i>
+                <h3>100% Secure</h3>
+                <p>Files never leave your browser - total privacy guaranteed</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-infinity"></i>
+                <h3>Unlimited Conversions</h3>
+                <p>No limits, no watermarks, completely free forever</p>
+            </div>
+        </div>
+        
+        <div class="card seo-content">
+            <h2>Convert JPG to PDF Online - Free and Secure</h2>
+            
+            <p>Welcome to our free online JPG to PDF converter tool. This powerful utility allows you to transform your image files into professional PDF documents with just a few clicks. Whether you're a professional photographer, a student, or a business user, our converter makes document management simple and efficient.</p>
+            
+            <h3>Why Convert JPG to PDF?</h3>
+            <p>PDF (Portable Document Format) is the industry standard for document sharing because it preserves formatting across all devices and platforms. Converting your JPG images to PDF offers several advantages:</p>
+            <ul>
+                <li>Combine multiple images into a single document</li>
+                <li>Maintain image quality during sharing</li>
+                <li>Protect your images from unauthorized editing</li>
+                <li>Create professional portfolios and presentations</li>
+                <li>Compress images for easier sharing</li>
+            </ul>
+            
+            <h3>How to Convert JPG to PDF</h3>
+            <p>Our conversion process is simple and straightforward:</p>
+            <ol>
+                <li>Click the upload area or drag & drop your JPG files</li>
+                <li>Select one or multiple images (up to 5 at once)</li>
+                <li>Preview your images before conversion</li>
+                <li>Click the "Convert to PDF" button</li>
+                <li>Download your PDF file instantly</li>
+            </ol>
+            
+            <div class="faq">
+                <h3>Frequently Asked Questions</h3>
+                
+                <div class="question" onclick="toggleAnswer(this)">
+                    <h4>Is this service really free? <i class="fas fa-chevron-down"></i></h4>
+                    <div class="answer">
+                        <p>Yes, our JPG to PDF converter is completely free to use. There are no hidden fees, watermarks, or limitations on the number of conversions you can perform.</p>
+                    </div>
+                </div>
+                
+                <div class="question" onclick="toggleAnswer(this)">
+                    <h4>Are my images secure? <i class="fas fa-chevron-down"></i></h4>
+                    <div class="answer">
+                        <p>Absolutely! Your images never leave your computer. The conversion process happens entirely in your browser, ensuring complete privacy and security for your files.</p>
+                    </div>
+                </div>
+                
+                <div class="question" onclick="toggleAnswer(this)">
+                    <h4>Can I convert multiple images to one PDF? <i class="fas fa-chevron-down"></i></h4>
+                    <div class="answer">
+                        <p>Yes, you can select up to 5 JPG images at once. They will be combined into a single PDF document with each image on its own page.</p>
+                    </div>
+                </div>
+                
+                <div class="question" onclick="toggleAnswer(this)">
+                    <h4>What is the maximum image size? <i class="fas fa-chevron-down"></i></h4>
+                    <div class="answer">
+                        <p>There are no strict file size limitations. However, very large images may take longer to process. For best results, we recommend images under 10MB each.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2023 JPG to PDF Converter. All rights reserved.</p>
+            <p>Free online tool for converting JPG images to PDF format.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // DOM Elements
+        const jpgInput = document.getElementById('jpgInput');
+        const jpgUploadArea = document.getElementById('jpgUploadArea');
+        const jpgPreview = document.getElementById('jpgPreview');
+        const imageGrid = document.getElementById('imageGrid');
+        const previewImg = document.getElementById('previewImg');
+        const fileName = document.getElementById('fileName');
+        const convertJpgBtn = document.getElementById('convertJpgBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        let uploadedImages = [];
+        
+        // Event Listeners
+        jpgUploadArea.addEventListener('click', () => jpgInput.click());
+        jpgInput.addEventListener('change', handleJpgUpload);
+        convertJpgBtn.addEventListener('click', convertJpgToPdf);
+        resetBtn.addEventListener('click', resetConverter);
+        
+        // Handle drag and drop
+        jpgUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            jpgUploadArea.style.borderColor = '#ff9a00';
+            jpgUploadArea.style.background = 'rgba(255, 154, 0, 0.1)';
+        });
+        
+        jpgUploadArea.addEventListener('dragleave', () => {
+            jpgUploadArea.style.borderColor = '#1a2a6c';
+            jpgUploadArea.style.background = 'rgba(26, 42, 108, 0.05)';
+        });
+        
+        jpgUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            jpgUploadArea.style.borderColor = '#1a2a6c';
+            jpgUploadArea.style.background = 'rgba(26, 42, 108, 0.05)';
+            
+            if (e.dataTransfer.files.length) {
+                jpgInput.files = e.dataTransfer.files;
+                handleJpgUpload({ target: jpgInput });
+            }
+        });
+        
+        // Functions
+        function handleJpgUpload(e) {
+            const files = e.target.files;
+            if (files.length === 0) return;
+            
+            // Reset previous uploads
+            uploadedImages = [];
+            
+            // Process each file
+            for (let i = 0; i < files.length && i < 5; i++) {
+                const file = files[i];
+                if (!file.type.match('image/jpeg')) {
+                    alert('Please upload only JPG/JPEG image files');
+                    continue;
+                }
+                
+                uploadedImages.push(file);
+            }
+            
+            if (uploadedImages.length === 0) return;
+            
+            // Update UI
+            if (uploadedImages.length === 1) {
+                // Show single preview
+                const file = uploadedImages[0];
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    previewImg.src = event.target.result;
+                    fileName.textContent = file.name;
+                    jpgPreview.style.display = 'block';
+                    imageGrid.style.display = 'none';
+                    convertJpgBtn.disabled = false;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Show grid for multiple images
+                imageGrid.innerHTML = '';
+                imageGrid.style.display = 'grid';
+                jpgPreview.style.display = 'none';
+                
+                uploadedImages.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageItem = document.createElement('div');
+                        imageItem.className = 'image-item';
+                        
+                        imageItem.innerHTML = `
+                            <img src="${event.target.result}" alt="Preview ${index + 1}">
+                            <button class="remove" onclick="removeImage(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div style="padding: 8px; font-size: 0.8rem">${file.name}</div>
+                        `;
+                        
+                        imageGrid.appendChild(imageItem);
+                    };
+                    reader.readAsDataURL(file);
+                });
+                
+                convertJpgBtn.disabled = false;
+            }
+        }
+        
+        function removeImage(index) {
+            uploadedImages.splice(index, 1);
+            
+            if (uploadedImages.length === 0) {
+                imageGrid.style.display = 'none';
+                convertJpgBtn.disabled = true;
+                return;
+            }
+            
+            // Rebuild image grid
+            imageGrid.innerHTML = '';
+            uploadedImages.forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imageItem = document.createElement('div');
+                    imageItem.className = 'image-item';
+                    
+                    imageItem.innerHTML = `
+                        <img src="${event.target.result}" alt="Preview ${idx + 1}">
+                        <button class="remove" onclick="removeImage(${idx})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div style="padding: 8px; font-size: 0.8rem">${file.name}</div>
+                    `;
+                    
+                    imageGrid.appendChild(imageItem);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        function convertJpgToPdf() {
+            if (uploadedImages.length === 0) return;
+            
+            // Create PDF
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+            
+            const processImage = (index) => {
+                if (index >= uploadedImages.length) {
+                    pdf.save('converted-images.pdf');
+                    resetConverter();
+                    return;
+                }
+                
+                const file = uploadedImages[index];
+                const img = new Image();
+                img.src = URL.createObjectURL(file);
+                
+                img.onload = function() {
+                    const imgWidth = img.width;
+                    const imgHeight = img.height;
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (imgHeight * pdfWidth) / imgWidth;
+                    
+                    // Add new page for subsequent images
+                    if (index > 0) pdf.addPage();
+                    
+                    pdf.addImage(img, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                    
+                    // Process next image
+                    processImage(index + 1);
+                };
+            };
+            
+            // Start processing first image
+            processImage(0);
+        }
+        
+        function resetConverter() {
+            jpgInput.value = '';
+            uploadedImages = [];
+            jpgPreview.style.display = 'none';
+            imageGrid.style.display = 'none';
+            imageGrid.innerHTML = '';
+            convertJpgBtn.disabled = true;
+        }
+        
+        function toggleAnswer(question) {
+            const answer = question.querySelector('.answer');
+            const icon = question.querySelector('.fa-chevron-down');
+            
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            } else {
+                answer.style.display = 'block';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            }
+        }
+        
+        // Make removeImage available globally for onclick
+        window.removeImage = removeImage;
+    </script>
+</body>
+</html>
