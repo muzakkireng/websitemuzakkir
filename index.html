@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2JVX04ZZJ2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-2JVX04ZZJ2');
+    </script>
+
+    <!-- Google Adsense  -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2103216480432659"
+         crossorigin="anonymous"></script>
+
+    <!-- Meta Tag  -->	
+    <meta name="google-adsense-account" content="ca-pub-2103216480432659">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Online Web Tools – SEO Analyzer, Image Compressor & PDF Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="canonical" href="https://Webtool.world/" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --success: #4ade80;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --border: #e9ecef;
+            --nav-height: 60px;
+            --popular: #ff4757;
+            --new: #2ed573;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation Menu */
+        .main-nav {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--nav-height);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #4cc9f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            height: var(--nav-height);
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            min-width: 240px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .nav-item:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-link {
+            display: block;
+            padding: 12px 20px;
+            color: var(--dark);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .dropdown-link:hover {
+            background: rgba(67, 97, 238, 0.08);
+            color: var(--primary);
+            padding-left: 25px;
+        }
+
+        .dropdown-link i {
+            width: 20px;
+            text-align: center;
+            margin-right: 10px;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Search and Tools Count */
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: var(--nav-height);
+            z-index: 100;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 30px;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--light);
+            color: var(--dark);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .search-container input::placeholder {
+            color: var(--gray);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .tools-count {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .main-content {
+            padding: 30px 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header i {
+            font-size: 1.4rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .tools-list {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .tools-list ul {
+            list-style: none;
+        }
+
+        .tools-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .tools-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tools-list li i {
+            color: var(--primary);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .tools-list li a {
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tools-list li a:hover {
+            color: var(--secondary);
+        }
+
+        .highlight {
+            background-color: rgba(67, 97, 238, 0.1);
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 4px;
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+
+        .badge-popular {
+            background-color: var(--popular);
+            color: white;
+        }
+
+        .badge-new {
+            background-color: var(--new);
+            color: white;
+        }
+
+        /* Featured Categories */
+        .featured-categories {
+            margin-bottom: 40px;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .featured-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .featured-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .featured-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .featured-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .featured-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            background: white;
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-links i {
+            margin-right: 5px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1100px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .header-content {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .search-container {
+                margin: 0;
+                order: 3;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .logo h1 {
+                font-size: 1.4rem;
+            }
+            
+            .tools-count {
+                min-width: 120px;
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo h1 {
+                font-size: 1.3rem;
+            }
+            
+            .card-header {
+                padding: 15px;
+            }
+            
+            .card-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-tools"></i>
+                <h1>WebTool.World</h1>
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-font"></i> Text Tools</a>
+                    <div class="dropdown">
+                        <a href="Text-To-Speech.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Text to Speech</a>
+                        <a href="Speech-to-Text-Converter.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Speech to Text</a>
+                        <a href="Word-Counter.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Word Counter</a>
+                        <a href="Word-Character-Counter.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Character Counter</a>
+                        <a href="Text-CaseConverter.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Case Converter</a>
+                        <a href="Text-Repeater.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Text Repeater</a>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-robot"></i> AI Tools</a>
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i> AI Content Generator</a>
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i> AI Image Enhancer</a>
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i> AI QR code Designer</a>
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i>Chat with document / pdf</a>
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i>AI Code Explainer</a>
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i>AI Translator Tool</a>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-globe"></i> Web Tools</a>
+                    <div class="dropdown">
+                        <a href="Website-Speed-Test.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Website Speed Test</a>
+                        <a href="WHOIS-Lookup.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> WHOIS Lookup</a>
+                        <a href="dns-lookup.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> DNS Lookup</a>
+                        <a href="IP-Address-Lookup.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> IP Address Lookup</a>
+                        <a href="Keyword-Density-Checker.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Keyword Density</a>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-file-pdf"></i> File & PDF Tools</a>
+                    <div class="dropdown">
+                        <a href="pdf-to-word.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> PDF to Word</a>
+                        <a href="pdf-to-word.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> PDF to Word </a>
+                        <a href="PDF-to-Excel-Converter.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> PDF to Excel</a>
+                        <a href="excel-pdf.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Excel to PDF</a>
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i> Merge PDF</a>
+                        <a href="Add-Multiple-JPG-to-PDF.html" class="dropdown-link"><i class="fas fa-chevron-right"></i>Add Multiple JPG to PDF</a>
+                        <a href="PDF to Image Converter.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> PDF to Image</a>
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i> Lock / Unlock PDF</a>
+                    </div>
+                </li>        
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                    <div class="dropdown">
+                        <a href="Password-Generator.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Password Generator</a>
+                        <a href="Password-Strength-Checker.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Password Strength</a>
+                        <a href="Hash-Generator.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Hash Generator</a>
+                        <a href="URL-Encoder-Decoder.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> URL Encoder</a>
+                        <a href="Base64-Encode-Decode.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Base64 Encode</a>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-file-alt"></i> Frequently Use </a>
+                    <div class="dropdown">
+                        <a href="image-rotator.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Image Rotation</a>
+                        <a href="excel-pdf.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> PDF to Excel</a>
+                        <a href="Barcode-Generator.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Barcode Generator</a>
+                        <a href="Online Stopwatch.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Online Stopwatch<</a>
+                        <a href="Online Stopwatch.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Advanced Microphone Tester</a>
+                        <a href="Loan-EMI-Calculator.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Loan EMI Calculator</a>
+                        <a href="Saudi Overtime Calculator.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Saudi Overtime Calculator</a>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-exchange-alt"></i> Converters</a>
+                    <div class="dropdown">
+                        <a href="Currency-Converter.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Currency Converter</a>
+                        <a href="Time-Zone-Converter.html" class="dropdown-link"><i class="fas fa-chevron-right"></i> Time Zone Converter</a>
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i> Temperature</a>
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i> Length</a>
+                        <a href="#" class="dropdown-link"><i class="fas fa-chevron-right"></i> Weight</a>
+                    </div>
+                </li>
+            </ul>
+            
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="tools-count">
+                    <i class="fas fa-lightbulb"></i> "Discover the best tools to streamline your workflow and boost productivity"
+                </div>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search for tools...">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1 class="section-title">Featured Categories</h1>
+            <div class="featured-categories">
+                <div class="featured-grid">
+                    <div class="featured-card">
+                        <i class="fas fa-file-pdf"></i>
+                        <h3>PDF Tools</h3>
+                        <p>Convert, compress and edit PDF files</p>
+                    </div>
+                    <div class="featured-card">
+                        <i class="fas fa-image"></i>
+                        <h3>Image Tools</h3>
+                        <p>Edit, compress and convert images</p>
+                    </div>
+                    <div class="featured-card">
+                        <i class="fas fa-font"></i>
+                        <h3>Text Tools</h3>
+                        <p>Convert, count and manipulate text</p>
+                    </div>
+                    <div class="featured-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Security Tools</h3>
+                        <p>Generate passwords and encrypt data</p>
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="section-title">All Tools</h1>
+            <div class="categories-grid">
+                <!-- File & PDF Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-file-pdf"></i>
+                        <h2>File & PDF Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="pdf-to-word.html">PDF to Word <span class="badge badge-popular">Popular</span></a></li>
+                            <li><i class="fas fa-chevron-right"> </i> <a href="compare-pdf.html">PDF to PDF Compression</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="pdf-to-word.html">Word to PDF <span class="badge badge-popular">Popular</span></a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="PDF-to-Excel-Converter.html">PDF to Excel</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="excel-pdf.html">Excel to PDF</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Add-Multiple-JPG-to-PDF.html">Add Multiple JPG to PDF <span class="badge badge-new">New</span></a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Merge PDF</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Remove-Pages-PDF-Word-PDF.html">Split PDF</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="PDF-compressor.html">Compress PDF <span class="badge badge-popular">Popular</span></a></li>
+							<li><i class="fas fa-chevron-right"></i> <a href="#">Test</a></li>							
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- File & PDF Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-file-pdf"></i>
+                        <h2>File & PDF Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="PDF to Image Converter.html">PDF to Image</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Camera-Pdf-Scanner.html">Camera to PDF <span class="badge badge-new">New</span></a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Text-to-PDF.html">Text to PDF</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="File-Converter.html">File Converter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="eSignPDF.html">eSignPDF</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Lock / Unlock PDF</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Add-Water-Mark-to-PDF.html">Add Water Mark</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Remove-Pages-PDF-Word-PDF.html">Remove pages from PDF-PDF- Word</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="JPG to PDF Converter.html">JPG to PDF</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Word to PDF -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-file-word"></i>
+                        <h2>Word Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Word to PDF.html">Word to PDF</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Word to JPG</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Word to Word Compression</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Lock/unlock Word</a></li>           
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Image & Graphics Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-image"></i>
+                        <h2>Image & Graphics Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Image-Compressor.html">Image Compressor <span class="badge badge-popular">Popular</span></a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="image-rotator.html">Image Rotation</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Image-Resizer.html">Image Resizer</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Image Enhancer - Enhance Your Photos Instantly.html">Image Enhancer <span class="badge badge-new">New</span></a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Image-to-Base64.html">Image to Base64</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Image-to-Base64.html">Base64 to Image</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Image-Converter.html">Image Converter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Favicon-Generator.html">Favicon Generator</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Design Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-palette"></i>
+                        <h2>Design Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="color-Palette-Generator.html">Color Palette Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Gradient-Generator.html">Gradient Color Picker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Colour-Contrast-Checker.html">Contrast Ratio Checker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Font Pairing Tool</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Icon Finder Tool</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Pixel to Rem Converter</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Shadow Generator</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">BackGround Remover</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Date & Time Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-clock"></i>
+                        <h2>Date & Time Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Online Stopwatch.html">Online Stopwatch <span class="badge badge-popular">Popular</span></a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Online Timer - Free Countdown.html">Online Timer</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Calendar Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Age Difference Calculator.html">Age Difference Calculator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Online Timer - Free Countdown.html">Time Duration Calculator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Online Stopwatch.html">Countdown Timer Generator</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Calendar to Timestamp Converter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Working Days Calculator.html">Working Days Calculator</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="Working Days Calculator.html">Time Calculator</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Miscellaneous Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-th"></i>
+                        <h2>Miscellaneous Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Calulator.html">Normal Calculator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="QR Code Generator.html">QR Code Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="QR Code Scanner & Generator.html">QR Code Scanner</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Barcode-Generator.html">Barcode Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Age-Calculator.html">Age Calculator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Epoch Time.html">Epoch Time Converter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Random-Number-Password-Generator.html">Random Number Generator</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Geolocation & Maps Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h2>Geolocation & Maps Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Get Location Coordinates.html">Latitude & Longitude Finder</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">GPS Coordinates Converter</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">IP to Location</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Map Distance Calculator</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Geohash Encoder / Decoder</a></li>
+                        </ul>
+                    </div>
+                </div>             
+
+                <!-- System & Hardware Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-microchip"></i>
+                        <h2>System & Hardware Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Camera Tester.html">Camera Tester</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Microphone Tester.html">Advanced Microphone Tester <span class="badge badge-new">New</span></a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Speaker Tester.html">Speaker Tester</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Screen Resolution Checker.html">Screen Resolution Checker</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Browser Info Checker</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Device Info Viewer</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Operating System Detector</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Touchscreen Tester._1.html">Touchscreen Tester</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Battery Status Viewer.html">Battery Status Viewer</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Productivity Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-tasks"></i>
+                        <h2>Productivity Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="TaskMaster-To-Do List.html">To-Do List Maker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Sticky Notes with Drawing.html">Sticky Notes</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Pomodoro Timer</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Habit Tracker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Sticky Notes with Drawing.html">Online Notepad</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Daily Planner Generator</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Text & Content Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-font"></i>
+                        <h2>Text & Content Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Text-To-Speech.html">Text to Speech Converter <span class="badge badge-popular">Popular</span></a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="text-compare.html">Text-Compare</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="CSV Comparison.html">CSV Comparison</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Speech-to-Text-Converter.html">Speech to Text Converter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Word-Counter.html">Word Counter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Word-Character-Counter.html">Character Counter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Text-CaseConverter.html">Case Converter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Text-Repeater.html">Text Repeater</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Remove-Duplicate-Lines.html">Remove Line Breaks</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Text-to-Binary.html">Text to Binary</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Binary-to-Text-Converter.html">Binary to Text</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Secure-Text-Encryption.html">Text Encrypt / Decrypt</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Finance  -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i>
+                        <h2>Finance Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="ROI Calculator.html">ROI Calculator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Loan-EMI-Calculator.html">Loan EMI Calculator <span class="badge badge-popular">Popular</span></a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Compound Interest Calculator</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Network & IP Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-network-wired"></i>
+                        <h2>Network & IP Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="IP Address Finder.html">IP Address Finder</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Port Checker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="IP-Website-Ping Tool.html">Ping Test Tool</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="MAC Address.html">MAC Address Finder</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Traceroute Tool</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">User Agent Checker</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Security Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-shield-alt"></i>
+                        <h2>Security Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Password-Generator.html">Password Generator <span class="badge badge-popular">Popular</span></a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Password-Strength-Checker.html">Password Strength Checker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Hash-Generator.html">MD5/SHA1/SHA256 Hash Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="URL-Encoder-Decoder.html">URL Encoder / Decoder</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Base64-Encode-Decode.html">Base64 Encode / Decode</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">SSL Checker</a></li>
+                        </ul>
+                    </div>
+                </div>	
+
+                <!-- Web & SEO Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-globe"></i>
+                        <h2>Web & SEO Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Website-Speed-Test.html">Website Speed Test</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Website-Status-Checker.html">Website Status Checker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="WHOIS-Lookup.html">WHOIS Lookup</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="dns-lookup.html">DNS Lookup</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Internet-Speed-test.html">Internet Speed Cheeck</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="IP-Address-Lookup.html">IP Address Lookup</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="IP-Website-Ping Tool.html">IP Address Or Website Ping</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Domain Age Checker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Keyword-Density-Checker.html">Keyword Density Checker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Meta-Tag-Analyzer-1.html">Meta Tag Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Sitemap-Generator.html">Sitemap Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Robot-txt-generator.html">Robots.txt Generator</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Developer Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-code"></i>
+                        <h2>Developer Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="JSON Formatter & Validator.html">JSON Formatter & Validator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="XML Formatter & Validator.html">XML Formatter & Validator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="HTML Minifier & Formatter Tool.html">HTML Minifier / Formatter</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">CSS Minifier / Formatter</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">JavaScript Beautifier / Minifier</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Color-Picker-from-Image.html">Color Picker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Regex-Tester.html">Regex Tester</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Lorem Ipsum Generator.html">Lorem Ipsum Generator</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Unit Converter Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-exchange-alt"></i>
+                        <h2>Unit Converter Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Currency-Converter.html">Currency Converter <span class="badge badge-popular">Popular</span></a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Time-Zone-Converter.html">Time Zone Converter</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Temperature Converter</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Length Converter</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Weight Converter</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Volume Converter</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Binary / Decimal / Hex Converter</a></li>
+                            <li style="display: none;"><i class="fas fa-chevron-right"></i> <a href="#">Speed Converter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Data Storage Converter.html">Data Storage Converter</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Social Media Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-hashtag"></i>
+                        <h2>Social Media Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Hashtag Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">YouTube Thumbnail Downloader</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">YouTube Title/Tag Extractor</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Twitter Character Counter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Instagram Bio Formatter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Facebook Open Graph Checker</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Advanced Text Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-text-height"></i>
+                        <h2>Advanced Text Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Reverse Text Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Text Diff Checker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Text to Slug Converter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Random Word Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Sentence Case Converter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Diacritics Remover</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Text Cleaner</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Advanced Developer Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-laptop-code"></i>
+                        <h2>Advanced Developer Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Fake-UUID-Generator.html">UUID Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">JWT Decoder</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">YAML to JSON Converter</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Markdown Editor / Previewer</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">HTML Entity Encoder / Decoder</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Cron Expression Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Diff Checker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">CSV to JSON</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">JSON to CSV</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Code Generation Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-cogs"></i>
+                        <h2>Code Generation Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">HTML Table Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">CSS Gradient Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">CSS Box Shadow Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Button Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Responsive Grid Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">JavaScript Obfuscator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">HTML Email Template Generator</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Email Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-envelope"></i>
+                        <h2>Email Tools</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="smtp-tester.html">Email Tester</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Email Extractor</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Email Validator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Temporary Email Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Disposable Email Checker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">MX Record Checker</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">SPF/DKIM Record Checker</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Games -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-gamepad"></i>
+                        <h2>Games</h2>
+                    </div>
+                    <div class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Tic-Tac-Game.html">TIC TOC Game</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="Tic Tac With Online.html">TIC TOC Online <span class="badge badge-new">New</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- AI & Utility Tools -->
+                <div class="category-card">
+                    <div class="card-header">
+                        <i class="fas fa-robot"></i>
+                        <h2>AI & Utility Tools - Coming Soon</h2>
+                    </div>
+                    <div hidden class="tools-list">
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">AI Content Generator</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">AI Image Enhancer</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">AI QR Code Designer</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">Chat with Document / PDF</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">AI Code Explainer</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">AI Translator Tool</a></li>
+                            <li><i class="fas fa-chevron-right"></i> <a href="#">AI Math Solver</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="sitemap.xml"><i class="fa-solid fa-sitemap"></i> Sitemap</a>
+                <a href="Privacy-Policy.html"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+                <a href="Contact-Us.html"><i class="fas fa-envelope"></i> Contact Us</a>
+                <a href="about.html"><i class="fas fa-info-circle"></i> About Us</a>
+                <a href="Terms-of-Services.html"><i class="fas fa-file-contract"></i> Terms of Services</a>
+            </div>
+            <p>© 2023 WebTool.World. All rights reserved.</p>
+            <p>200+ tools across 21 categories for all your needs</p>
+        </div>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-container input');
+            const toolItems = document.querySelectorAll('.tools-list li');
+            
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                toolItems.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
+                navMenu.style.flexDirection = 'column';
+                navMenu.style.position = 'absolute';
+                navMenu.style.top = 'var(--nav-height)';
+                navMenu.style.left = '0';
+                navMenu.style.right = '0';
+                navMenu.style.background = 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)';
+                navMenu.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.15)';
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    navMenu.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
