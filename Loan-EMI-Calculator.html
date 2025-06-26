@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Loan EMI Calculator</title>
+    <title>Advanced Loan EMI Calculator with Eligibility Check</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -234,6 +234,7 @@
             align-items: center;
             gap: 12px;
             letter-spacing: 0.5px;
+            margin-top: 10px;
         }
         
         .btn-calculate:hover {
@@ -366,6 +367,90 @@
             color: #2c3e50;
         }
         
+        /* Eligibility Section */
+        .eligibility-section {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+        }
+        
+        .eligibility-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .eligibility-header i {
+            font-size: 2rem;
+            color: #1565c0;
+            margin-right: 15px;
+        }
+        
+        .eligibility-title {
+            font-size: 1.8rem;
+            color: #1565c0;
+            font-weight: 700;
+        }
+        
+        .eligibility-result {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+        }
+        
+        .eligibility-amount {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #1565c0, #0d47a1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+        
+        .eligibility-detail {
+            font-size: 1.1rem;
+            color: #455a64;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+        
+        .eligibility-note {
+            background: #e3f2fd;
+            border-left: 4px solid #1565c0;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+        
+        .eligibility-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .eligibility-progress {
+            height: 100%;
+            background: linear-gradient(to right, #42a5f5, #1565c0);
+            border-radius: 10px;
+            width: 65%;
+        }
+        
+        .eligibility-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #455a64;
+        }
+        
         @media (max-width: 900px) {
             .calculator-container {
                 flex-direction: column;
@@ -373,6 +458,10 @@
             
             .emi-amount {
                 font-size: 3rem;
+            }
+            
+            .eligibility-amount {
+                font-size: 2rem;
             }
         }
         
@@ -383,6 +472,10 @@
             
             .emi-amount {
                 font-size: 2.5rem;
+            }
+            
+            .eligibility-amount {
+                font-size: 1.8rem;
             }
             
             .details-grid {
@@ -399,7 +492,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-calculator"></i> Advanced EMI Calculator</h1>
-            <p>Calculate your Equated Monthly Installment with flexible tenure options</p>
+            <p>Calculate your Equated Monthly Installment with loan eligibility assessment</p>
         </header>
         
         <div class="calculator-container">
@@ -451,8 +544,32 @@
                     </div>
                 </div>
                 
+                <div class="input-group">
+                    <label for="monthlyIncome"><i class="fas fa-wallet"></i> Monthly Income</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <input type="number" id="monthlyIncome" value="75000" min="10000" max="500000" step="1000">
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="monthlyIncomeSlider" min="10000" max="500000" value="75000" step="1000">
+                    </div>
+                    <div class="value-display">₹ <span id="monthlyIncomeValue">75,000</span></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="existingObligations"><i class="fas fa-file-invoice-dollar"></i> Existing Obligations</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-credit-card"></i>
+                        <input type="number" id="existingObligations" value="15000" min="0" max="200000" step="1000">
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="existingObligationsSlider" min="0" max="200000" value="15000" step="1000">
+                    </div>
+                    <div class="value-display">₹ <span id="existingObligationsValue">15,000</span></div>
+                </div>
+                
                 <button class="btn-calculate" id="calculateBtn">
-                    <i class="fas fa-calculator"></i> Calculate EMI
+                    <i class="fas fa-calculator"></i> Calculate EMI & Eligibility
                 </button>
             </div>
             
@@ -500,6 +617,34 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Loan Eligibility Section -->
+                <div class="eligibility-section">
+                    <div class="eligibility-header">
+                        <i class="fas fa-user-check"></i>
+                        <h2 class="eligibility-title">Loan Eligibility</h2>
+                    </div>
+                    
+                    <div class="eligibility-result">
+                        <div class="result-label">You're Eligible for</div>
+                        <div class="eligibility-amount">₹ 22,50,000</div>
+                        <div class="eligibility-detail">
+                            Based on your income and existing obligations, you can comfortably afford this loan.
+                        </div>
+                        
+                        <div class="eligibility-bar">
+                            <div class="eligibility-progress"></div>
+                        </div>
+                        <div class="eligibility-labels">
+                            <span>₹ 0</span>
+                            <span>₹ 50 Lakhs</span>
+                        </div>
+                        
+                        <div class="eligibility-note">
+                            <i class="fas fa-info-circle"></i> Note: Eligibility is calculated based on 50% of your disposable income after existing obligations. Actual eligibility may vary based on lender policies.
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -523,6 +668,14 @@
             const tenureValueDisplay = document.querySelector('.tenure-value');
             const tenureUnitResultDisplay = document.querySelector('.tenure-unit-display');
             
+            const monthlyIncomeInput = document.getElementById('monthlyIncome');
+            const monthlyIncomeSlider = document.getElementById('monthlyIncomeSlider');
+            const monthlyIncomeValue = document.getElementById('monthlyIncomeValue');
+            
+            const existingObligationsInput = document.getElementById('existingObligations');
+            const existingObligationsSlider = document.getElementById('existingObligationsSlider');
+            const existingObligationsValue = document.getElementById('existingObligationsValue');
+            
             const calculateBtn = document.getElementById('calculateBtn');
             const emiAmount = document.querySelector('.emi-amount');
             const totalPayment = document.querySelectorAll('.result-value')[0];
@@ -531,6 +684,10 @@
             
             const principalSummary = document.querySelector('.summary-value.principal');
             const interestSummary = document.querySelector('.summary-value.interest');
+            
+            const eligibilityAmount = document.querySelector('.eligibility-amount');
+            const eligibilityDetail = document.querySelector('.eligibility-detail');
+            const eligibilityProgress = document.querySelector('.eligibility-progress');
             
             // Initialize chart
             const ctx = document.getElementById('paymentChart').getContext('2d');
@@ -620,15 +777,29 @@
                 tenureUnitDisplay.textContent = unit.charAt(0).toUpperCase() + unit.slice(1);
             }
             
+            // Update monthly income display
+            function updateMonthlyIncome() {
+                const value = parseInt(monthlyIncomeInput.value);
+                monthlyIncomeSlider.value = value;
+                monthlyIncomeValue.textContent = formatCurrency(value);
+            }
+            
+            // Update existing obligations display
+            function updateExistingObligations() {
+                const value = parseInt(existingObligationsInput.value);
+                existingObligationsSlider.value = value;
+                existingObligationsValue.textContent = formatCurrency(value);
+            }
+            
             // Update tenure unit and adjust values
             function updateTenureUnit() {
                 const unit = tenureUnitSelect.value;
                 
                 if (unit === 'years') {
                     // Convert months to years if needed
-                    if (parseInt(loanTenureInput.value) {
+                    if (parseInt(loanTenureInput.value)) {
                         loanTenureSlider.max = 30;
-                        loanTenureSlider.value = Math.min(30, Math.round(parseInt(loanTenureInput.value) / 12);
+                        loanTenureSlider.value = Math.min(30, Math.round(parseInt(loanTenureInput.value) / 12));
                         loanTenureInput.value = loanTenureSlider.value;
                     }
                 } else {
@@ -684,6 +855,53 @@
                     // Update chart
                     paymentChart.data.datasets[0].data = [principal, totalInterestAmount];
                     paymentChart.update();
+                    
+                    // Calculate loan eligibility
+                    calculateEligibility(Math.round(emi));
+                }
+            }
+            
+            // Calculate loan eligibility
+            function calculateEligibility(emi) {
+                const monthlyIncome = parseInt(monthlyIncomeInput.value);
+                const existingObligations = parseInt(existingObligationsInput.value);
+                
+                // Calculate disposable income (50% rule)
+                const disposableIncome = monthlyIncome - existingObligations;
+                const maxEMI = disposableIncome * 0.5;
+                
+                // If EMI is more than max allowed
+                if (emi > maxEMI) {
+                    eligibilityAmount.textContent = '₹ 0';
+                    eligibilityDetail.innerHTML = 'Your current EMI exceeds your disposable income.<br>Consider reducing loan amount or increasing tenure.';
+                    eligibilityProgress.style.width = '0%';
+                    return;
+                }
+                
+                // Calculate eligible loan amount
+                const rate = parseFloat(interestRateInput.value) / 12 / 100;
+                let tenureMonths = parseInt(loanTenureInput.value);
+                
+                if (tenureUnitSelect.value === 'years') {
+                    tenureMonths = tenureMonths * 12;
+                }
+                
+                // Reverse EMI formula to calculate eligible principal
+                const eligiblePrincipal = (maxEMI * (Math.pow(1 + rate, tenureMonths) - 1)) / 
+                                         (rate * Math.pow(1 + rate, tenureMonths));
+                
+                const formattedEligibleAmount = formatCurrency(Math.round(eligiblePrincipal));
+                eligibilityAmount.textContent = '₹ ' + formattedEligibleAmount;
+                
+                // Calculate progress bar percentage (max 50 lakhs)
+                const progressPercent = Math.min(100, Math.round(eligiblePrincipal / 5000000 * 100));
+                eligibilityProgress.style.width = progressPercent + '%';
+                
+                // Set eligibility message
+                if (eligiblePrincipal > parseInt(loanAmountInput.value)) {
+                    eligibilityDetail.innerHTML = `Based on your income and existing obligations, you can comfortably afford a loan up to ₹${formattedEligibleAmount}.`;
+                } else {
+                    eligibilityDetail.innerHTML = `You can afford loans up to ₹${formattedEligibleAmount}. Your current selection is above this limit.`;
                 }
             }
             
@@ -706,6 +924,18 @@
                 updateLoanTenure();
             });
             
+            monthlyIncomeInput.addEventListener('input', updateMonthlyIncome);
+            monthlyIncomeSlider.addEventListener('input', function() {
+                monthlyIncomeInput.value = this.value;
+                updateMonthlyIncome();
+            });
+            
+            existingObligationsInput.addEventListener('input', updateExistingObligations);
+            existingObligationsSlider.addEventListener('input', function() {
+                existingObligationsInput.value = this.value;
+                updateExistingObligations();
+            });
+            
             tenureUnitSelect.addEventListener('change', updateTenureUnit);
             
             // Calculate on button click
@@ -715,6 +945,8 @@
             updateLoanAmount();
             updateInterestRate();
             updateLoanTenure();
+            updateMonthlyIncome();
+            updateExistingObligations();
             calculateEMI();
         });
     </script>
