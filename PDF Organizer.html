@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Organizer</title>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .app-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .upload-section {
+            padding: 30px;
+            text-align: center;
+            background: rgba(248, 249, 250, 0.8);
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .file-drop-area {
+            border: 3px dashed #4a69bd;
+            border-radius: 12px;
+            padding: 40px 20px;
+            margin: 20px 0;
+            background: rgba(74, 105, 189, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-drop-area.active {
+            background: rgba(74, 105, 189, 0.15);
+            border-color: #1e3a8a;
+        }
+        
+        .file-drop-area i {
+            font-size: 48px;
+            color: #4a69bd;
+            margin-bottom: 15px;
+        }
+        
+        .file-drop-area h3 {
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+        
+        .file-drop-area p {
+            margin-bottom: 20px;
+            color: #475569;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4a69bd 0%, #1e3a8a 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(30, 58, 138, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .editor-section {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .page-counter {
+            background: #e2e8f0;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .thumbnails-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            min-height: 300px;
+        }
+        
+        .thumbnail {
+            background: #f8fafc;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: grab;
+            border: 2px solid transparent;
+        }
+        
+        .thumbnail:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            border-color: #4a69bd;
+        }
+        
+        .thumbnail.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .thumbnail .page-number {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(30, 58, 138, 0.9);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .thumbnail .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(220, 38, 38, 0.9);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .thumbnail:hover .delete-btn {
+            opacity: 1;
+        }
+        
+        .thumbnail .page-label {
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 500;
+            background: #f1f5f9;
+        }
+        
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        
+        .empty-state i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #cbd5e1;
+        }
+        
+        .instructions {
+            background: rgba(248, 250, 252, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .instructions h2 {
+            margin-bottom: 15px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 25px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #334155;
+        }
+        
+        footer {
+            text-align: center;
+            color: rgba(255,255,255,0.85);
+            padding: 20px;
+            font-size: 0.9rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .drag-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 58, 138, 0.1);
+            border: 3px dashed #1e3a8a;
+            border-radius: 10px;
+            display: none;
+            z-index: 10;
+        }
+        
+        @media (max-width: 768px) {
+            .thumbnails-container {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .thumbnails-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            display: none;
+        }
+        
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #fff;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 2000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-file-pdf"></i> PDF Organizer</h1>
+            <p class="subtitle">Upload, rearrange, and manage PDF pages with our intuitive drag-and-drop interface</p>
+        </header>
+        
+        <div class="app-container">
+            <div class="upload-section">
+                <h2>Upload Your PDF Document</h2>
+                <div class="file-drop-area" id="dropArea">
+                    <i class="fas fa-file-pdf"></i>
+                    <h3>Drag & Drop your PDF here</h3>
+                    <p>or</p>
+                    <button class="btn" id="browseBtn">Browse Files</button>
+                    <input type="file" id="fileInput" class="file-input" accept=".pdf">
+                </div>
+            </div>
+            
+            <div class="editor-section">
+                <div class="controls">
+                    <button class="btn" id="downloadBtn" disabled>
+                        <i class="fas fa-download"></i> Download Organized PDF
+                    </button>
+                    <div class="page-counter">
+                        <i class="fas fa-copy"></i>
+                        <span id="pageCount">0 Pages</span>
+                    </div>
+                    <button class="btn" id="clearBtn" disabled>
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                </div>
+                
+                <div class="thumbnails-container" id="thumbnailsContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>No PDF pages loaded</h3>
+                        <p>Upload a PDF to get started</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2><i class="fas fa-info-circle"></i> How to Use the PDF Organizer</h2>
+            <ul>
+                <li><strong>Upload a PDF</strong> by dragging it to the upload area or clicking "Browse Files"</li>
+                <li><strong>Drag and drop</strong> thumbnails to rearrange pages in your document</li>
+                <li><strong>Delete pages</strong> by clicking the trash icon on any thumbnail</li>
+                <li><strong>Download your organized PDF</strong> when you're finished editing</li>
+                <li><strong>Clear all pages</strong> to start over with a new document</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <h2 id="loadingText">Processing PDF...</h2>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-exclamation-circle"></i> <span id="notificationText"></span>
+    </div>
+    
+    <footer>
+        <p>PDF Organizer &copy; 2023 | All processing happens in your browser - your files never leave your device</p>
+    </footer>
+
+    <script>
+        // Initialize PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+        
+        // DOM Elements
+        const dropArea = document.getElementById('dropArea');
+        const browseBtn = document.getElementById('browseBtn');
+        const fileInput = document.getElementById('fileInput');
+        const thumbnailsContainer = document.getElementById('thumbnailsContainer');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const pageCount = document.getElementById('pageCount');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        
+        // State
+        let pdfPages = [];
+        let currentDraggedElement = null;
+        let pdfLibDoc = null; // Global variable for PDFLib document
+        
+        // Event Listeners
+        browseBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileUpload);
+        downloadBtn.addEventListener('click', downloadOrganizedPDF);
+        clearBtn.addEventListener('click', clearAllPages);
+        
+        // Drag and drop events
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            dropArea.classList.add('active');
+        }
+        
+        function unhighlight() {
+            dropArea.classList.remove('active');
+        }
+        
+        dropArea.addEventListener('drop', handleDrop, false);
+        
+        // Handle file drop
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+        
+        // Handle file selection
+        function handleFileUpload(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+        
+        // Show notification
+        function showNotification(message, isError = true) {
+            notificationText.textContent = message;
+            notification.style.display = 'block';
+            notification.style.background = isError ? '#ef4444' : '#10b981';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Show loading overlay
+        function showLoading(text) {
+            loadingText.textContent = text;
+            loadingOverlay.style.display = 'flex';
+        }
+        
+        // Hide loading overlay
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+        
+        // Process PDF files
+        async function handleFiles(files) {
+            if (files.length === 0) return;
+            
+            const file = files[0];
+            if (file.type !== 'application/pdf') {
+                showNotification('Please upload a PDF file.');
+                return;
+            }
+            
+            try {
+                showLoading('Loading PDF...');
+                const arrayBuffer = await file.arrayBuffer();
+                
+                // Create a copy of the ArrayBuffer to prevent detachment issues
+                const arrayBufferCopy = arrayBuffer.slice(0);
+                
+                // Load the PDF with PDFLib for manipulation
+                pdfLibDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+                
+                // Process the PDF for rendering using the copy
+                await renderPDFPages(arrayBufferCopy);
+                
+                hideLoading();
+            } catch (error) {
+                console.error('Error processing PDF:', error);
+                showNotification(`Error processing PDF: ${error.message}`);
+                hideLoading();
+            }
+        }
+        
+        // Process and render PDF pages
+        async function renderPDFPages(arrayBuffer) {
+            try {
+                // Load the PDF document with PDF.js for rendering
+                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                const pdf = await loadingTask.promise;
+                const numPages = pdf.numPages;
+                
+                // Clear existing pages
+                pdfPages = [];
+                
+                // Process each page
+                for (let i = 0; i < numPages; i++) {
+                    showLoading(`Processing page ${i+1} of ${numPages}...`);
+                    
+                    const page = await pdf.getPage(i + 1);
+                    
+                    // Get page viewport
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    
+                    // Create canvas for rendering
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    
+                    // Render PDF page to canvas
+                    await page.render({
+                        canvasContext: context,
+                        viewport: viewport
+                    }).promise;
+                    
+                    // Get image data
+                    const imageData = canvas.toDataURL('image/jpeg');
+                    
+                    // Store page data
+                    pdfPages.push({
+                        imageData: imageData,
+                        originalPageIndex: i,
+                        width: viewport.width,
+                        height: viewport.height
+                    });
+                }
+                
+                renderThumbnails();
+                updateUIState();
+            } catch (error) {
+                console.error('Error rendering PDF:', error);
+                throw error;
+            }
+        }
+        
+        // Render thumbnails
+        function renderThumbnails() {
+            thumbnailsContainer.innerHTML = '';
+            
+            if (pdfPages.length === 0) {
+                thumbnailsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>No PDF pages loaded</h3>
+                        <p>Upload a PDF to get started</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            pdfPages.forEach((page, index) => {
+                const aspectRatio = page.width / page.height;
+                const thumbHeight = 180;
+                const thumbWidth = thumbHeight * aspectRatio;
+                
+                const thumbnail = document.createElement('div');
+                thumbnail.className = 'thumbnail';
+                thumbnail.draggable = true;
+                thumbnail.dataset.index = index;
+                thumbnail.innerHTML = `
+                    <img src="${page.imageData}" alt="Page ${index + 1}" style="width: ${thumbWidth}px; height: ${thumbHeight}px;">
+                    <div class="page-number">${index + 1}</div>
+                    <button class="delete-btn" title="Delete page"><i class="fas fa-trash"></i></button>
+                    <div class="page-label">Page ${index + 1}</div>
+                    <div class="drag-overlay">Drop Here</div>
+                `;
+                
+                // Add drag events
+                thumbnail.addEventListener('dragstart', handleDragStart);
+                thumbnail.addEventListener('dragover', handleDragOver);
+                thumbnail.addEventListener('dragenter', handleDragEnter);
+                thumbnail.addEventListener('dragleave', handleDragLeave);
+                thumbnail.addEventListener('drop', handleDropThumbnail);
+                thumbnail.addEventListener('dragend', handleDragEnd);
+                
+                // Add delete event
+                thumbnail.querySelector('.delete-btn').addEventListener('click', () => deletePage(index));
+                
+                thumbnailsContainer.appendChild(thumbnail);
+            });
+        }
+        
+        // Drag and drop functions
+        function handleDragStart(e) {
+            currentDraggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.dataset.index);
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+        
+        function handleDragEnter(e) {
+            this.querySelector('.drag-overlay').style.display = 'block';
+        }
+        
+        function handleDragLeave() {
+            this.querySelector('.drag-overlay').style.display = 'none';
+        }
+        
+        function handleDropThumbnail(e) {
+            e.preventDefault();
+            this.querySelector('.drag-overlay').style.display = 'none';
+            
+            const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+            const toIndex = parseInt(this.dataset.index);
+            
+            if (fromIndex === toIndex) return;
+            
+            // Reorder pages
+            const movedPage = pdfPages.splice(fromIndex, 1)[0];
+            pdfPages.splice(toIndex, 0, movedPage);
+            
+            renderThumbnails();
+        }
+        
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.drag-overlay').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+        
+        // Delete a page
+        function deletePage(index) {
+            pdfPages.splice(index, 1);
+            renderThumbnails();
+            updateUIState();
+        }
+        
+        // Clear all pages
+        function clearAllPages() {
+            if (pdfPages.length === 0) return;
+            
+            if (confirm('Are you sure you want to remove all pages?')) {
+                pdfPages = [];
+                pdfLibDoc = null;
+                renderThumbnails();
+                updateUIState();
+                showNotification('All pages cleared successfully!', false);
+            }
+        }
+        
+        // Download organized PDF
+        async function downloadOrganizedPDF() {
+            if (pdfPages.length === 0 || !pdfLibDoc) return;
+            
+            try {
+                showLoading('Creating your organized PDF...');
+                downloadBtn.disabled = true;
+                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                
+                // Create a new PDF
+                const newPdf = await PDFLib.PDFDocument.create();
+                
+                // Add pages in current order
+                for (const page of pdfPages) {
+                    const [copiedPage] = await newPdf.copyPages(pdfLibDoc, [page.originalPageIndex]);
+                    newPdf.addPage(copiedPage);
+                }
+                
+                // Save and download
+                const pdfBytes = await newPdf.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'organized-document.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Organized PDF';
+                downloadBtn.disabled = false;
+                hideLoading();
+                showNotification('PDF downloaded successfully!', false);
+            } catch (error) {
+                console.error('Error creating PDF:', error);
+                showNotification('Error creating the organized PDF. Please try again.');
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Organized PDF';
+                downloadBtn.disabled = false;
+                hideLoading();
+            }
+        }
+        
+        // Update UI state
+        function updateUIState() {
+            pageCount.textContent = `${pdfPages.length} Page${pdfPages.length !== 1 ? 's' : ''}`;
+            downloadBtn.disabled = pdfPages.length === 0;
+            clearBtn.disabled = pdfPages.length === 0;
+        }
+        
+        // Initialize
+        renderThumbnails();
+        updateUIState();
+    </script>
+</body>
+</html>
