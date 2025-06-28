@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Background Remover</title>
+
+
+    <style>
+
+        /* General Styles */
+
+        body {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            min-height: 100vh;
+
+            
+
+            font-family: 'Arial', sans-serif;
+
+            margin: 0;
+
+            padding: 20px;
+
+        }
+
+
+        /* Main Container */
+
+        .container {
+
+            background: #ffffff;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+
+            text-align: center;
+
+            width: 100%;
+
+            max-width: 270px;
+
+            animation: fadeIn 1s ease-in-out;
+
+        }
+
+
+        h1 {
+
+            font-size: 1.8rem;
+
+            color: #333;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        input[type="file"] {
+
+            margin: 10px 0;
+
+            padding: 12px;
+
+            border: 2px dashed #007bff;
+
+            border-radius: 8px;
+
+            width: 100%;
+
+            max-width: 300px;
+
+            cursor: pointer;
+
+            text-align: center;
+
+        }
+
+
+        button {
+
+            padding: 12px 20px;
+
+            background: #007bff;
+
+            color: #fff;
+
+            border: none;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            margin-top: 10px;
+
+            font-size: 1rem;
+
+            width: 100%;
+
+            max-width: 250px;
+
+            transition: background 0.3s ease-in-out, transform 0.2s;
+
+        }
+
+
+        button:hover {
+
+            background: #0056b3;
+
+            transform: translateY(-3px);
+
+        }
+
+
+        .download-btn {
+
+            background-color: #28a745;
+
+            display: none;
+
+        }
+
+
+        .download-btn:hover {
+
+            background-color: #218838;
+
+        }
+
+
+        .loading {
+
+            display: none;
+
+            margin-top: 15px;
+
+            font-size: 1rem;
+
+            color: #ff4500;
+
+        }
+
+
+        /* Ads Section */
+
+        .ad-container {
+
+            margin: 15px 0;
+
+            padding: 10px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 8px;
+
+            background: #f8f8f8;
+
+            text-align: center;
+
+        }
+
+
+        /* Image Result */
+
+        #result img {
+
+            max-width: 100%;
+
+            border-radius: 10px;
+
+            margin-top: 10px;
+
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
+            transition: transform 0.3s ease;
+
+        }
+
+
+        #result img:hover {
+
+            transform: scale(1.05);
+
+        }
+
+
+        /* Animations */
+
+        @keyframes fadeIn {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(-20px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <div class="container">
+
+        <h1>Background image remover</h1>
+
+
+        <!-- JavaScript Ad Placement -->
+
+        <div class="ad-container">
+
+            <p>Advertisement</p>
+
+            
+
+</div>
+
+
+        <input type="file" id="imageInput" accept="image/*">
+
+        <button id="removeBgBtn">Remove Background</button>
+
+        <p class="loading" id="loadingText">Processing... Please wait.</p>
+
+        <button id="downloadBtn" class="download-btn">Download Image</button>
+
+
+        <div id="result"></div>
+
+    </div>
+
+
+    <script>
+
+        const imageInput = document.getElementById('imageInput');
+
+        const removeBgBtn = document.getElementById('removeBgBtn');
+
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        const resultDiv = document.getElementById('result');
+
+        const loadingText = document.getElementById('loadingText');
+
+        let imageUrl = null;
+
+
+        removeBgBtn.addEventListener('click', function () {
+
+            if (imageInput.files.length === 0) {
+
+                alert('Please select an image first.');
+
+                return;
+
+            }
+
+
+            const file = imageInput.files[0];
+
+            const formData = new FormData();
+
+            formData.append('image_file', file);
+
+
+            // Replace 'YOUR_API_KEY' with your actual remove.bg API key
+
+            const apiKey = 'Np1JXvjMg3UmrTHBBSNALXrp';
+
+            const apiUrl = 'https://api.remove.bg/v1.0/removebg';
+
+
+            loadingText.style.display = 'block'; // Show loading message
+
+
+            fetch(apiUrl, {
+
+                method: 'POST',
+
+                headers: {
+
+                    'X-Api-Key': apiKey,
+
+                },
+
+                body: formData,
+
+            })
+
+            .then(response => response.blob())
+
+            .then(blob => {
+
+                imageUrl = URL.createObjectURL(blob);
+
+                resultDiv.innerHTML = `<img src="${imageUrl}" alt="Background Removed">`;
+
+                downloadBtn.style.display = 'inline-block';
+
+                loadingText.style.display = 'none'; // Hide loading message
+
+            })
+
+            .catch(error => {
+
+                console.error('Error:', error);
+
+                resultDiv.innerHTML = '<p style="color:red;">Something went wrong. Please try again.</p>';
+
+                loadingText.style.display = 'none';
+
+            });
+
+        });
+
+
+        // Download Image Function
+
+        downloadBtn.addEventListener('click', function () {
+
+            if (!imageUrl) {
+
+                alert('No image available to download.');
+
+                return;
+
+            }
+
+
+            const link = document.createElement('a');
+
+            link.href = imageUrl;
+
+            link.download = 'background-removed-image.png';
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            document.body.removeChild(link);
+
+        });
+
+    </script>
+
+
+</body>
+
+</html>
