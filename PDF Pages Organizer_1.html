@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Pages Organizer</title>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            animation: fadeIn 1s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            overflow: hidden;
+            margin-bottom: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-header i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #3498db;
+            border-radius: 15px;
+            padding: 50px 20px;
+            text-align: center;
+            background: rgba(241, 248, 255, 0.7);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #3498db, #2ecc71, #e74c3c, #f39c12);
+            animation: progress 3s linear infinite;
+        }
+        
+        @keyframes progress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .upload-area:hover {
+            background: rgba(227, 242, 253, 0.9);
+            border-color: #2980b9;
+            transform: scale(1.01);
+        }
+        
+        .upload-area i {
+            font-size: 5rem;
+            color: #3498db;
+            margin-bottom: 25px;
+            text-shadow: 0 3px 6px rgba(52, 152, 219, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .upload-area:hover i {
+            transform: scale(1.1);
+        }
+        
+        .upload-area h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 700;
+        }
+        
+        .upload-area p {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: width 0.4s;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.5);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            box-shadow: 0 6px 15px rgba(39, 174, 96, 0.4);
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.5);
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.5);
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .thumbnails-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
+        }
+        
+        .thumbnail {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            transition: all 0.4s;
+            position: relative;
+            cursor: move;
+            transform-style: preserve-3d;
+        }
+        
+        .thumbnail:hover {
+            transform: translateY(-8px) rotate(2deg) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .thumbnail.dragging {
+            opacity: 0.7;
+            transform: scale(0.97);
+        }
+        
+        .thumbnail canvas {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            background: #f8fafd;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .page-number {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(44, 62, 80, 0.85);
+            color: white;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        
+        .thumbnail-controls {
+            padding: 15px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #eee;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: #e9ecef;
+            color: #3498db;
+            transform: rotate(15deg);
+        }
+        
+        .delete-btn:hover {
+            color: #e74c3c;
+            transform: scale(1.2);
+        }
+        
+        .actions-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .status-bar {
+            padding: 18px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #eaeaea;
+        }
+        
+        .status-bar i {
+            font-size: 1.6rem;
+            color: #3498db;
+            margin-right: 12px;
+        }
+        
+        .status-text {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(52, 152, 219, 0.2);
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+            margin: 30px auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            padding: 35px 0;
+            opacity: 0.9;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            font-size: 1.1rem;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: 18px 28px;
+            background: #27ae60;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transform: translateX(200%);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 400px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: #e74c3c;
+        }
+        
+        .notification i {
+            font-size: 1.8rem;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .instructions h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 25px;
+        }
+        
+        .instructions li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            color: #34495e;
+        }
+        
+        @media (max-width: 768px) {
+            .thumbnails-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+                width: 100%;
+                max-width: 300px;
+                margin-bottom: 10px;
+            }
+            
+            .actions-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .upload-area {
+                padding: 30px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-file-pdf"></i> PDF Pages Organizer</h1>
+            <p>Upload, rearrange, rotate, and download your PDFs with this easy-to-use tool</p>
+        </header>
+        
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-upload"></i> Upload PDF
+            </div>
+            <div class="card-body">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Upload a PDF File</h3>
+                    <p>Drag & drop your PDF here or click to browse</p>
+                    <button class="btn" id="browseBtn">Browse Files</button>
+                    <input type="file" id="fileInput" accept=".pdf">
+                </div>
+                
+                <div id="loader" class="loader hidden"></div>
+                
+                <div class="status-bar" id="statusBar">
+                    <div>
+                        <i class="fas fa-info-circle"></i>
+                        <span class="status-text">Please upload a PDF file to begin</span>
+                    </div>
+                    <span id="pageCount"></span>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-lightbulb"></i> How to use this tool:</h3>
+                    <ol>
+                        <li>Upload a PDF file using the button above</li>
+                        <li>Rearrange pages by dragging and dropping thumbnails</li>
+                        <li>Rotate pages using the rotation buttons</li>
+                        <li>Delete unwanted pages with the trash icon</li>
+                        <li>Download your modified PDF when ready</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card hidden" id="editorCard">
+            <div class="card-header">
+                <i class="fas fa-edit"></i> Organize Pages
+            </div>
+            <div class="card-body">
+                <div class="thumbnails-container" id="thumbnailsContainer">
+                    <!-- Thumbnails will be generated here -->
+                </div>
+                
+                <div class="actions-container">
+                    <button class="btn btn-success" id="downloadBtn">
+                        <i class="fas fa-download"></i> Download Modified PDF
+                    </button>
+                    <button class="btn" id="resetBtn">
+                        <i class="fas fa-history"></i> Reset Document
+                    </button>
+                    <button class="btn btn-danger" id="clearBtn">
+                        <i class="fas fa-trash-alt"></i> Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>PDF Pages Organizer &copy; 2023 | All processing happens in your browser - no server uploads!</p>
+        </footer>
+        
+        <div class="notification" id="notification">
+            <i class="fas fa-check-circle"></i> <span id="notificationText">Operation completed successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        // Set the worker path for PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js';
+        
+        // DOM elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const browseBtn = document.getElementById('browseBtn');
+        const thumbnailsContainer = document.getElementById('thumbnailsContainer');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const editorCard = document.getElementById('editorCard');
+        const loader = document.getElementById('loader');
+        const statusText = document.querySelector('.status-text');
+        const pageCount = document.getElementById('pageCount');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        
+        // Application state
+        let pdfDoc = null;
+        let pdfPages = [];
+        let originalPages = [];
+        let currentFile = null;
+        
+        // Event listeners
+        browseBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileUpload);
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = '#e3f2fd';
+            uploadArea.style.borderColor = '#2980b9';
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.backgroundColor = 'rgba(241, 248, 255, 0.7)';
+            uploadArea.style.borderColor = '#3498db';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = 'rgba(241, 248, 255, 0.7)';
+            uploadArea.style.borderColor = '#3498db';
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileUpload();
+            }
+        });
+        
+        downloadBtn.addEventListener('click', downloadModifiedPDF);
+        resetBtn.addEventListener('click', resetDocument);
+        clearBtn.addEventListener('click', clearAll);
+        
+        // Show notification
+        function showNotification(message, isError = false) {
+            notificationText.textContent = message;
+            notification.className = isError ? 'notification error' : 'notification';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+        
+        // Handle PDF upload
+        async function handleFileUpload() {
+            const file = fileInput.files[0];
+            if (!file || file.type !== 'application/pdf') {
+                showNotification('Please upload a valid PDF file.', true);
+                return;
+            }
+            
+            if (file.size > 20 * 1024 * 1024) { // 20MB limit
+                showNotification('File size exceeds 20MB limit. Please upload a smaller file.', true);
+                return;
+            }
+            
+            currentFile = file;
+            loader.classList.remove('hidden');
+            statusText.textContent = 'Processing your PDF...';
+            
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                
+                // Initialize pages array
+                pdfPages = [];
+                for (let i = 1; i <= pdfDoc.numPages; i++) {
+                    pdfPages.push({ pageNumber: i, rotation: 0 });
+                }
+                
+                originalPages = [...pdfPages];
+                await renderThumbnails();
+                editorCard.classList.remove('hidden');
+                
+                statusText.textContent = 'PDF loaded successfully! Drag pages to reorder.';
+                pageCount.textContent = `${pdfPages.length} pages`;
+                loader.classList.add('hidden');
+                showNotification('PDF loaded successfully!');
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                loader.classList.add('hidden');
+                statusText.textContent = 'Error loading PDF. Please try another file.';
+                showNotification('Error loading PDF. Please try another file.', true);
+            }
+        }
+        
+        // Render PDF thumbnails
+        async function renderThumbnails() {
+            thumbnailsContainer.innerHTML = '';
+            
+            for (let i = 0; i < pdfPages.length; i++) {
+                const pageInfo = pdfPages[i];
+                const page = await pdfDoc.getPage(pageInfo.pageNumber);
+                
+                // Set up viewport for rendering
+                const viewport = page.getViewport({ scale: 0.6, rotation: pageInfo.rotation });
+                
+                // Create canvas for thumbnail
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                
+                // Render page to canvas
+                await page.render({ 
+                    canvasContext: context, 
+                    viewport: viewport 
+                }).promise;
+                
+                // Create thumbnail container
+                const thumbnail = document.createElement('div');
+                thumbnail.className = 'thumbnail';
+                thumbnail.draggable = true;
+                thumbnail.dataset.index = i;
+                
+                // Set up drag events
+                thumbnail.addEventListener('dragstart', handleDragStart);
+                thumbnail.addEventListener('dragover', handleDragOver);
+                thumbnail.addEventListener('drop', handleDrop);
+                thumbnail.addEventListener('dragend', handleDragEnd);
+                
+                // Add page number
+                const pageNumber = document.createElement('div');
+                pageNumber.className = 'page-number';
+                pageNumber.textContent = `Page ${pageInfo.pageNumber}`;
+                
+                // Add controls
+                const controls = document.createElement('div');
+                controls.className = 'thumbnail-controls';
+                
+                const rotateLeftBtn = document.createElement('button');
+                rotateLeftBtn.className = 'control-btn';
+                rotateLeftBtn.innerHTML = '<i class="fas fa-undo"></i>';
+                rotateLeftBtn.title = 'Rotate Left';
+                rotateLeftBtn.onclick = () => rotatePage(i, -90);
+                
+                const rotateRightBtn = document.createElement('button');
+                rotateRightBtn.className = 'control-btn';
+                rotateRightBtn.innerHTML = '<i class="fas fa-redo"></i>';
+                rotateRightBtn.title = 'Rotate Right';
+                rotateRightBtn.onclick = () => rotatePage(i, 90);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'control-btn delete-btn';
+                deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                deleteBtn.title = 'Delete Page';
+                deleteBtn.onclick = () => deletePage(i);
+                
+                controls.appendChild(rotateLeftBtn);
+                controls.appendChild(rotateRightBtn);
+                controls.appendChild(deleteBtn);
+                
+                thumbnail.appendChild(pageNumber);
+                thumbnail.appendChild(canvas);
+                thumbnail.appendChild(controls);
+                
+                thumbnailsContainer.appendChild(thumbnail);
+            }
+        }
+        
+        // Drag and drop functions
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.index);
+            e.target.classList.add('dragging');
+            setTimeout(() => e.target.classList.add('hidden'), 0);
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+            const toElement = e.target.closest('.thumbnail');
+            
+            if (!toElement) return;
+            
+            const toIndex = parseInt(toElement.dataset.index);
+            
+            if (fromIndex !== toIndex) {
+                // Move page in the array
+                const [movedPage] = pdfPages.splice(fromIndex, 1);
+                pdfPages.splice(toIndex, 0, movedPage);
+                
+                // Re-render thumbnails
+                renderThumbnails();
+                
+                statusText.textContent = 'Page order updated!';
+                showNotification('Page moved successfully!');
+            }
+        }
+        
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging', 'hidden');
+        }
+        
+        // Page manipulation functions
+        function rotatePage(index, degrees) {
+            pdfPages[index].rotation = (pdfPages[index].rotation + degrees + 360) % 360;
+            renderThumbnails();
+            statusText.textContent = `Page rotated ${degrees > 0 ? 'right' : 'left'}!`;
+            showNotification(`Page rotated ${degrees > 0 ? 'clockwise' : 'counter-clockwise'}`);
+        }
+        
+        function deletePage(index) {
+            if (pdfPages.length <= 1) {
+                showNotification('You cannot delete the last page.', true);
+                return;
+            }
+            
+            pdfPages.splice(index, 1);
+            renderThumbnails();
+            pageCount.textContent = `${pdfPages.length} pages`;
+            statusText.textContent = 'Page deleted!';
+            showNotification('Page deleted successfully!');
+        }
+        
+        function resetDocument() {
+            if (!confirm('Are you sure you want to reset all changes?')) return;
+            
+            pdfPages = [...originalPages];
+            renderThumbnails();
+            pageCount.textContent = `${pdfPages.length} pages`;
+            statusText.textContent = 'Document reset to original state!';
+            showNotification('Document reset successfully!');
+        }
+        
+        function clearAll() {
+            if (!confirm('Are you sure you want to clear all pages?')) return;
+            
+            pdfPages = [];
+            renderThumbnails();
+            editorCard.classList.add('hidden');
+            statusText.textContent = 'All pages cleared. Upload a new PDF.';
+            fileInput.value = '';
+            pageCount.textContent = '';
+            showNotification('All pages cleared!');
+        }
+        
+        // Fixed Download Function
+        async function downloadModifiedPDF() {
+            if (!pdfPages.length) {
+                showNotification('No pages to download!', true);
+                return;
+            }
+            
+            loader.classList.remove('hidden');
+            statusText.textContent = 'Creating your modified PDF...';
+            
+            try {
+                // Create a new PDF document
+                const { PDFDocument } = PDFLib;
+                const newPdfDoc = await PDFDocument.create();
+                
+                // Load the original PDF
+                const arrayBuffer = await currentFile.arrayBuffer();
+                const originalPdfDoc = await PDFDocument.load(arrayBuffer);
+                
+                // Copy pages in the current order with rotations
+                for (const pageInfo of pdfPages) {
+                    const [copiedPage] = await newPdfDoc.copyPages(originalPdfDoc, [pageInfo.pageNumber - 1]);
+                    
+                    // Apply rotation
+                    const rotationAngle = pageInfo.rotation;
+                    if (rotationAngle !== 0) {
+                        copiedPage.setRotation(rotationAngle);
+                    }
+                    
+                    newPdfDoc.addPage(copiedPage);
+                }
+                
+                // Save the modified PDF
+                const pdfBytes = await newPdfDoc.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'modified-document.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                statusText.textContent = 'PDF downloaded successfully!';
+                showNotification('PDF downloaded successfully!');
+            } catch (error) {
+                console.error('Error creating PDF:', error);
+                statusText.textContent = 'Error creating PDF. Please try again.';
+                showNotification('Error creating PDF. Please try again.', true);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
