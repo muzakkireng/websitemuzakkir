@@ -222,25 +222,6 @@
             color: white;
         }
 
-        .format-control {
-            margin-bottom: 15px;
-        }
-
-        .format-control label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .format-select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid #555;
-        }
-
         .quality-control {
             margin-bottom: 20px;
         }
@@ -389,65 +370,6 @@
             font-size: 0.9rem;
         }
 
-        .crop-control {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-        }
-
-        .crop-control h4 {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .crop-inputs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .crop-input {
-            flex: 1;
-            min-width: 100px;
-        }
-
-        .crop-input label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-        }
-
-        .crop-input input {
-            width: 100%;
-            padding: 8px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid #555;
-        }
-
-        .time-info {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            text-align: center;
-            color: #00c9ff;
-        }
-
-        .batch-control {
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .batch-control input {
-            width: 20px;
-            height: 20px;
-        }
-
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
@@ -463,10 +385,6 @@
             
             h1 {
                 font-size: 2.2rem;
-            }
-            
-            .crop-inputs {
-                flex-direction: column;
             }
         }
     </style>
@@ -487,7 +405,7 @@
                     <h3>Drag & Drop Your Image</h3>
                     <p>or</p>
                     <button class="browse-btn" id="browseBtn">Browse Files</button>
-                    <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
                 </div>
                 
                 <div class="controls">
@@ -501,45 +419,12 @@
                         <div class="size-btn" data-size="1024">1MB</div>
                     </div>
                     
-                    <div class="format-control">
-                        <label for="formatSelect">Output Format:</label>
-                        <select id="formatSelect" class="format-select">
-                            <option value="jpeg">JPEG</option>
-                            <option value="png">PNG</option>
-                            <option value="webp">WEBP</option>
-                            <option value="original">Original Format</option>
-                        </select>
-                    </div>
-                    
                     <div class="quality-control">
                         <label for="qualitySlider">Compression Quality:</label>
                         <div class="slider-container">
-                            <input type="range" id="qualitySlider" class="quality-slider" min="0.05" max="1.0" step="0.05" value="0.75">
+                            <input type="range" id="qualitySlider" class="quality-slider" min="0.1" max="1.0" step="0.05" value="0.75">
                             <span id="qualityValue" class="quality-value">0.75</span>
                         </div>
-                    </div>
-                    
-                    <div class="crop-control">
-                        <h4><i class="fas fa-crop-alt"></i> Crop Image</h4>
-                        <div class="crop-inputs">
-                            <div class="crop-input">
-                                <label for="cropWidth">Width (px)</label>
-                                <input type="number" id="cropWidth" placeholder="Original" min="50">
-                            </div>
-                            <div class="crop-input">
-                                <label for="cropHeight">Height (px)</label>
-                                <input type="number" id="cropHeight" placeholder="Original" min="50">
-                            </div>
-                            <div class="crop-input">
-                                <label for="cropQuality">Quality</label>
-                                <input type="number" id="cropQuality" placeholder="0-100" min="0" max="100" value="85">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="batch-control">
-                        <input type="checkbox" id="batchMode">
-                        <label for="batchMode">Batch process multiple images</label>
                     </div>
                     
                     <div class="action-btns">
@@ -548,7 +433,6 @@
                     </div>
                     
                     <div id="status" class="status"></div>
-                    <div id="timeInfo" class="time-info"></div>
                 </div>
             </div>
             
@@ -563,7 +447,6 @@
                             <p><span class="info-label">File Name:</span> <span id="originalName">-</span></p>
                             <p><span class="info-label">File Size:</span> <span id="originalSize">-</span></p>
                             <p><span class="info-label">Dimensions:</span> <span id="originalDimensions">-</span></p>
-                            <p><span class="info-label">Format:</span> <span id="originalFormat">-</span></p>
                         </div>
                     </div>
                     
@@ -574,7 +457,6 @@
                             <p><span class="info-label">Target Size:</span> <span id="targetSize">50KB</span></p>
                             <p><span class="info-label">File Size:</span> <span id="compressedSize">-</span></p>
                             <p><span class="info-label">Dimensions:</span> <span id="compressedDimensions">-</span></p>
-                            <p><span class="info-label">Format:</span> <span id="compressedFormat">-</span></p>
                             <p><span class="info-label">Reduction:</span> <span id="reductionPercent">-</span></p>
                             <p><span class="info-label">Status:</span> <span id="sizeStatus">-</span></p>
                         </div>
@@ -624,12 +506,6 @@
         const sizeBtns = document.querySelectorAll('.size-btn');
         const targetSizeDisplay = document.getElementById('targetSize');
         const resizeInfo = document.getElementById('resizeInfo');
-        const formatSelect = document.getElementById('formatSelect');
-        const timeInfo = document.getElementById('timeInfo');
-        const batchMode = document.getElementById('batchMode');
-        const cropWidth = document.getElementById('cropWidth');
-        const cropHeight = document.getElementById('cropHeight');
-        const cropQuality = document.getElementById('cropQuality');
         
         // Preview elements
         const originalPreview = document.getElementById('originalPreview');
@@ -637,10 +513,8 @@
         const originalName = document.getElementById('originalName');
         const originalSize = document.getElementById('originalSize');
         const originalDimensions = document.getElementById('originalDimensions');
-        const originalFormat = document.getElementById('originalFormat');
         const compressedSize = document.getElementById('compressedSize');
         const compressedDimensions = document.getElementById('compressedDimensions');
-        const compressedFormat = document.getElementById('compressedFormat');
         const reductionPercent = document.getElementById('reductionPercent');
         const sizeStatus = document.getElementById('sizeStatus');
         
@@ -650,9 +524,6 @@
         let targetSizeKB = 50; // Default target size
         let originalFile = null;
         let compressionInProgress = false;
-        let batchFiles = [];
-        let currentFileIndex = 0;
-        let compressionStartTime = 0;
         
         // Event Listeners
         browseBtn.addEventListener('click', () => fileInput.click());
@@ -696,19 +567,7 @@
         
         function handleFileSelect(e) {
             if (e.target.files.length) {
-                if (batchMode.checked) {
-                    batchFiles = Array.from(e.target.files);
-                    currentFileIndex = 0;
-                    processNextBatchFile();
-                } else {
-                    handleFiles(e.target.files[0]);
-                }
-            }
-        }
-        
-        function processNextBatchFile() {
-            if (currentFileIndex < batchFiles.length) {
-                handleFiles(batchFiles[currentFileIndex]);
+                handleFiles(e.target.files[0]);
             }
         }
         
@@ -729,7 +588,6 @@
                     originalName.textContent = file.name;
                     originalSize.textContent = formatFileSize(file.size);
                     originalDimensions.textContent = `${originalImage.width} × ${originalImage.height}`;
-                    originalFormat.textContent = file.type.split('/')[1].toUpperCase();
                     
                     // Enable compress button
                     compressBtn.disabled = false;
@@ -738,12 +596,10 @@
                     compressedPreview.src = '';
                     compressedSize.textContent = '-';
                     compressedDimensions.textContent = '-';
-                    compressedFormat.textContent = '-';
                     reductionPercent.textContent = '-';
                     sizeStatus.textContent = '-';
                     downloadBtn.disabled = true;
                     resizeInfo.style.display = 'none';
-                    timeInfo.textContent = '';
                     
                     showStatus('Image loaded successfully. Select target size and click Compress', 'success');
                 };
@@ -778,27 +634,11 @@
             if (compressedImageBlob) {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(compressedImageBlob);
-                link.download = `compressed-${targetSizeKB}kb.${getFileExtension()}`;
+                link.download = `compressed-${targetSizeKB}kb.jpg`;
                 link.click();
                 showStatus('Image downloaded successfully!', 'success');
-                
-                // Process next file in batch if applicable
-                if (batchMode.checked && batchFiles.length > 0) {
-                    currentFileIndex++;
-                    if (currentFileIndex < batchFiles.length) {
-                        setTimeout(processNextBatchFile, 1000);
-                    }
-                }
             }
         });
-        
-        function getFileExtension() {
-            const format = formatSelect.value;
-            if (format === 'original' && originalFile) {
-                return originalFile.name.split('.').pop();
-            }
-            return format;
-        }
         
         // Image compression function
         async function compressImage() {
@@ -813,7 +653,6 @@
             compressBtn.disabled = true;
             downloadBtn.disabled = true;
             resizeInfo.style.display = 'none';
-            compressionStartTime = Date.now();
             
             showStatus('Compressing image to ' + targetSizeKB + 'KB...', 'processing');
             
@@ -822,46 +661,21 @@
                 const ctx = canvas.getContext('2d');
                 
                 // Set initial canvas dimensions to match the image
-                let outputWidth = originalImage.width;
-                let outputHeight = originalImage.height;
+                canvas.width = originalImage.width;
+                canvas.height = originalImage.height;
                 
-                // Apply cropping if specified
-                if (cropWidth.value || cropHeight.value) {
-                    outputWidth = cropWidth.value ? parseInt(cropWidth.value) : originalImage.width;
-                    outputHeight = cropHeight.value ? parseInt(cropHeight.value) : originalImage.height;
-                    
-                    // Maintain aspect ratio if only one dimension is provided
-                    if (cropWidth.value && !cropHeight.value) {
-                        outputHeight = Math.round(originalImage.height * (outputWidth / originalImage.width));
-                    } else if (!cropWidth.value && cropHeight.value) {
-                        outputWidth = Math.round(originalImage.width * (outputHeight / originalImage.height));
-                    }
-                    
-                    // Set canvas dimensions
-                    canvas.width = outputWidth;
-                    canvas.height = outputHeight;
-                    
-                    // Draw image on canvas with cropping
-                    ctx.drawImage(
-                        originalImage,
-                        0, 0, originalImage.width, originalImage.height,
-                        0, 0, outputWidth, outputHeight
-                    );
-                } else {
-                    // No cropping - use original dimensions
-                    canvas.width = originalImage.width;
-                    canvas.height = originalImage.height;
-                    ctx.drawImage(originalImage, 0, 0);
-                }
+                // Draw image on canvas
+                ctx.drawImage(originalImage, 0, 0);
                 
                 // Start with the slider quality
                 let quality = parseFloat(qualitySlider.value);
-                let minQuality = 0.05;
+                let minQuality = 0.1;
                 let maxQuality = 1.0;
                 let bestBlob = null;
                 let bestDiff = Infinity;
+                let resized = false;
                 const targetBytes = targetSizeKB * 1024;
-                const maxIterations = 15;
+                const maxIterations = 10;
                 let iteration = 0;
                 
                 // Binary search for optimal quality
@@ -869,20 +683,8 @@
                     iteration++;
                     
                     // Convert canvas to blob with current quality
-                    const format = formatSelect.value === 'original' ? 
-                        originalFile.type.split('/')[1] : formatSelect.value;
-                    
                     const blob = await new Promise(resolve => {
-                        if (format === 'png') {
-                            // PNG compression
-                            canvas.toBlob(resolve, 'image/png');
-                        } else if (format === 'webp') {
-                            // WebP compression
-                            canvas.toBlob(resolve, 'image/webp', quality);
-                        } else {
-                            // Default to JPEG
-                            canvas.toBlob(resolve, 'image/jpeg', quality);
-                        }
+                        canvas.toBlob(resolve, 'image/jpeg', quality);
                     });
                     
                     if (!blob) {
@@ -900,8 +702,8 @@
                         bestBlob = blob;
                     }
                     
-                    // Check if we're within 5% of target
-                    if (diff < targetBytes * 0.05) {
+                    // Check if we're within 10% of target
+                    if (diff < targetBytes * 0.1) {
                         compressedImageBlob = blob;
                         break;
                     }
@@ -918,7 +720,7 @@
                     }
                     
                     // Ensure quality is within bounds
-                    quality = Math.max(0.05, Math.min(1.0, quality));
+                    quality = Math.max(0.1, Math.min(1.0, quality));
                 }
                 
                 // Finalize with the best blob we found
@@ -929,23 +731,18 @@
                 }
                 
                 // Check if we need to resize to achieve the target
-                let compressedSizeKB = compressedImageBlob.size / 1024;
-                let resizedCount = 0;
-                const maxResizeCount = 2;
-                let currentWidth = outputWidth;
-                let currentHeight = outputHeight;
-                
-                while (resizedCount < maxResizeCount && compressedSizeKB > targetSizeKB * 1.1) {
-                    resizedCount++;
-                    showStatus(`Resizing image (step ${resizedCount}) to achieve target size...`, 'processing');
+                const compressedSizeKB = compressedImageBlob.size / 1024;
+                if (compressedSizeKB > targetSizeKB * 1.1) {
+                    showStatus('Resizing image to achieve target size...', 'processing');
+                    resized = true;
                     
                     // Calculate the required reduction factor
                     const sizeRatio = targetSizeKB / compressedSizeKB;
-                    const dimensionRatio = targetSizeKB < 200 ? Math.pow(sizeRatio, 0.6) : Math.sqrt(sizeRatio);
+                    const dimensionRatio = Math.sqrt(sizeRatio);
                     
-                    // Calculate new dimensions with min 50px constraint
-                    const newWidth = Math.max(50, Math.floor(currentWidth * dimensionRatio));
-                    const newHeight = Math.max(50, Math.floor(currentHeight * dimensionRatio));
+                    // Calculate new dimensions with min 100px constraint
+                    const newWidth = Math.max(100, Math.floor(originalImage.width * dimensionRatio));
+                    const newHeight = Math.max(100, Math.floor(originalImage.height * dimensionRatio));
                     
                     // Resize the canvas
                     canvas.width = newWidth;
@@ -953,41 +750,28 @@
                     ctx.drawImage(originalImage, 0, 0, newWidth, newHeight);
                     
                     // Compress with the best quality we found
-                    const format = formatSelect.value === 'original' ? 
-                        originalFile.type.split('/')[1] : formatSelect.value;
-                    
                     compressedImageBlob = await new Promise(resolve => {
-                        if (format === 'png') {
-                            canvas.toBlob(resolve, 'image/png');
-                        } else if (format === 'webp') {
-                            canvas.toBlob(resolve, 'image/webp', quality);
-                        } else {
-                            canvas.toBlob(resolve, 'image/jpeg', quality);
-                        }
+                        canvas.toBlob(resolve, 'image/jpeg', quality);
                     });
                     
                     if (!compressedImageBlob) {
                         throw new Error('Resize failed');
                     }
                     
-                    // Update current dimensions and size
-                    currentWidth = newWidth;
-                    currentHeight = newHeight;
-                    compressedSizeKB = compressedImageBlob.size / 1024;
+                    // Update compressed dimensions
+                    compressedDimensions.textContent = `${newWidth} × ${newHeight}`;
                     
                     // Show resize info
                     resizeInfo.style.display = 'block';
-                    resizeInfo.innerHTML = `<i class="fas fa-info-circle"></i> Image was resized ${resizedCount} times to achieve target size`;
+                } else {
+                    // Keep original dimensions
+                    compressedDimensions.textContent = `${originalImage.width} × ${originalImage.height}`;
                 }
-                
-                // Update compressed dimensions
-                compressedDimensions.textContent = `${currentWidth} × ${currentHeight}`;
                 
                 // Show compressed preview
                 compressedPreview.src = URL.createObjectURL(compressedImageBlob);
                 const fileSizeKB = compressedImageBlob.size / 1024;
                 compressedSize.textContent = formatFileSize(compressedImageBlob.size);
-                compressedFormat.textContent = formatSelect.value.toUpperCase();
                 
                 // Calculate reduction percentage
                 const originalSizeKB = originalFile.size / 1024;
@@ -1003,10 +787,6 @@
                 } else {
                     sizeStatus.innerHTML = `<span style="color: #00c9ff">${(targetSizeKB - fileSizeKB).toFixed(1)}KB under target</span>`;
                 }
-                
-                // Calculate compression time
-                const compressionTime = Date.now() - compressionStartTime;
-                timeInfo.textContent = `Compression time: ${compressionTime}ms`;
                 
                 // Enable download button
                 downloadBtn.disabled = false;
