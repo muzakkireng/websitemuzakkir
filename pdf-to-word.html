@@ -197,4 +197,36 @@
     <!-- OneDrive SDK -->
     <script src="https://js.live.net/v7.2/OneDrive.js"></script>
 </body>
+    <script>
+// Add this at the end of the existing script section
+
+// Prevent copying
+document.addEventListener('copy', function(e) {
+    e.preventDefault();
+    alert('Copying content is disabled on this website.');
+});
+
+// Prevent right-click context menu
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert('Right-click is disabled on this website.');
+});
+
+// Disable text selection
+document.addEventListener('mousedown', function(e) {
+    if (e.detail > 1) { // Prevent double-click text selection
+        e.preventDefault();
+    }
+});
+</script>
+
+<style>
+/* Add this at the end of the existing CSS */
+body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+</style>
 </html>
