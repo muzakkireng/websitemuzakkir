@@ -502,37 +502,38 @@
             }, 1000);
         });
     </script>
-    <script>
-// Add this at the end of the existing script section
+<script>
+        // Block right-click context menu
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-// Prevent copying
-document.addEventListener('copy', function(e) {
-    e.preventDefault();
-    alert('Copying content is disabled on this website.');
-});
+        // Block keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Disable F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                alert("F12 is disabled!");
+            }
+            // Disable Shift + C
+            else if (e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                alert("Shift+C is disabled!");
+            }
+            // Disable Ctrl + U
+            else if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                alert("Ctrl+U is disabled!");
+            }
+            // Disable Ctrl + C / Ctrl + V
+            else if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'C' || e.key === 'V')) {
+                e.preventDefault();
+                alert("Copy/Paste is disabled!");
+            }
+        });
 
-// Prevent right-click context menu
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    alert('Right-click is disabled on this website.');
-});
-
-// Disable text selection
-document.addEventListener('mousedown', function(e) {
-    if (e.detail > 1) { // Prevent double-click text selection
-        e.preventDefault();
-    }
-});
-</script>
-
-<style>
-/* Add this at the end of the existing CSS */
-body {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-</style>
+        // Extra: Disable copy/paste via right-click or edit menu
+        document.addEventListener('copy', (e) => e.preventDefault());
+        document.addEventListener('paste', (e) => e.preventDefault());
+        document.addEventListener('cut', (e) => e.preventDefault());
+    </script>
 </body>
 </html>
